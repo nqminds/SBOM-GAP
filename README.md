@@ -1,6 +1,6 @@
 # Vulnerability analyses tools
 
-1. ### Please download the vulnerability-reports folder and place it in the vulnerability-analisis-tools module:
+1. ### Please download the vulnerability-reports folder and place it in SBOM-CLI module:
 
    - vulnerability-reports directory can be downloaded from [here](https://drive.google.com/file/d/1ZV302sOZXYu7JUiM5fVgrMi3lYxGw1VH/view?usp=drive_link). This also contains all the (National Vulnerability Database)[NVD](https://nvd.nist.gov/) CPE/CVE/CWE data. (recommended)
 
@@ -52,7 +52,7 @@ npm install
 npm link
 ```
 
-7. ### Download the Git Advisory Database from [here](https://github.com/github/advisory-database) and replace this path in ./config/config.json with your local advisory-database/advisories.
+8. ### Download the Git Advisory Database from [here](https://github.com/github/advisory-database) and replace this path in ./config/config.json with your local advisory-database/advisories.
 
 ```json
 {
@@ -64,7 +64,7 @@ The above is necessary only for getting information about GHSA vulnerability cod
 
 ---
 
-8. ### For speeding NIST API requsts an API key cen be obtained from [here](https://nvd.nist.gov/developers/request-an-api-key). Please create a cyber/.env file in the root directory cyber/ and add the key as:
+9. ### For speeding NIST API requsts an API key cen be obtained from [here](https://nvd.nist.gov/developers/request-an-api-key). Please create a cyber/.env file in the root directory cyber/ and add the key as:
 
 ```yaml
 NIST_API_KEY=your_NIST_api_key;
@@ -72,7 +72,7 @@ NIST_API_KEY=your_NIST_api_key;
 
 ---
 
-9. ### To improve the classification of weaknesses, include an OpenAi API key to the global cyber/.env. An API key can be obtain from [here](https://platform.openai.com/api-keys):
+10. ### To improve the classification of weaknesses, include an OpenAi API key to the global cyber/.env. An API key can be obtain from [here](https://platform.openai.com/api-keys):
 
 ```yaml
 OPENAI_API_KEY=your_OpenAi_api_key
@@ -146,7 +146,7 @@ nqmvul -generateCCPPReport <path_to_c/cpp_project> <project_name>
 
 ---
 
-13. ### After generating a Software Bill Of Material (SBOM) use the visualization tool for a more detailed representation. <span style="color: yellow;">Only CycloneDx json format is supported.</span>
+13. ### After generating a Software Bill Of Material (SBOM) use the [visualization tool](https://tbc) for a more detailed representation. <span style="color: yellow;">Only CycloneDx json format is supported.</span>
     ![Example Image](./images/app.png)
 
 ---
@@ -154,7 +154,7 @@ nqmvul -generateCCPPReport <path_to_c/cpp_project> <project_name>
 ### Command Line Tool Usage
 
 ```sh
-nqmvul -help;
+nqmvul -help
 ```
 
 Presents the list of commands
@@ -175,7 +175,7 @@ The -listCpeDetails flag will parse an SBOM and return detailed information abou
 nqmvul -getCves <CPE>
 ```
 
-The -listCVEs will return the known CVEs and CWS for a CPE. The CPE must be in CPE2.3 format e.g. "cpe:2.3:a:busybox:busybox:1.33.2"
+The -listCVEs will return the known CVEs and CWS for a CPE. The CPE must be in CPE2.3 format e.g. "cpe:2.3:\a:\busybox:busybox:1.33.2"
 
 ```sh
 nqmvul -writeCves <path_to_sbom.json> <path_to_output_directory>
@@ -187,7 +187,7 @@ The -writeCVEs flag will write all the CVE data of an sbom into a json format to
 nqmvul -getHistoricalCpes <CPE>
 ```
 
-The -getHistoricalCpes flag will return all known versions of the input CPE. The CPE must be in CPE2.3 format e.g. "cpe:2.3:a:busybox:busybox:1.33.2"
+The -getHistoricalCpes flag will return all known versions of the input CPE. The CPE must be in CPE2.3 format e.g. "cpe:2.3:\a:\busybox:busybox:1.33.2"
 
 ```sh
 nqmvul -getHistoricalCves <CVE>
@@ -260,13 +260,13 @@ The -classifyCwe flag will try and classify the CWE_ID as one of the following t
 nqmvul -getHistory <CPE> -hist
 ```
 
-The -getHistory flag coupled with -hist will return all `previous` versions of a CPE and for each version will try and find known CVEs and CWEs (vulnerabilities). It also classifies each CWE into memory related issues or other. Can take as an argument various types of CPEs such as: cpe:2.3:a:busybox:busybox:1.33.2, cpe:/a:doxygen:doxygen:1.7.2. For cpes that contain ':_' please place them inside quotes. e.g. : ` nqmvul -getHistory "cpe:2.3:a:openssl:openssl:1.1.1:_:_:_:_:_:_:_" -hist`. Output is saved to output/output.txt
+The -getHistory flag coupled with -hist will return all `previous` versions of a CPE and for each version will try and find known CVEs and CWEs (vulnerabilities). It also classifies each CWE into memory related issues or other. Can take as an argument various types of CPEs such as: cpe:2.3:\a:\busybox:busybox:1.33.2, cpe:/a:doxygen:doxygen:1.7.2. For cpes that contain ':_' please place them inside quotes. e.g. : ` nqmvul -getHistory "cpe:2.3:a:openssl:openssl:1.1.1:_:_:_:_:_:_:_" -hist`. Output is saved to output/output.txt
 
 ```sh
 nqmvul -getHistory <CPE> -all
 ```
 
-The -getHistory flag coupled with -hist will return all `known` versions of a CPE and for each version will try and find known CVEs and CWEs (vulnerabilities). It also classifies each CWE into memory related issues or other. Can take as an argument various types of CPEs such as: cpe:2.3:a:busybox:busybox:1.33.2, cpe:/a:doxygen:doxygen:1.7.2. For cpes that contain ':_' please place them inside quotes. e.g. : ` nqmvul -getHistory "cpe:2.3:a:openssl:openssl:1.1.1:_:_:_:_:_:_:_" -hist`. Output is saved to output/output.txt
+The -getHistory flag coupled with -hist will return all `known` versions of a CPE and for each version will try and find known CVEs and CWEs (vulnerabilities). It also classifies each CWE into memory related issues or other. Can take as an argument various types of CPEs such as: cpe:2.3:\a:\busybox:busybox:1.33.2, cpe:/a:doxygen:doxygen:1.7.2. For cpes that contain ':_' please place them inside quotes. e.g. : ` nqmvul -getHistory "cpe:2.3:a:openssl:openssl:1.1.1:_:_:_:_:_:_:_" -hist`. Output is saved to output/output.txt
 
 ```sh
 nqmvul -generateCCPPReport <path_to_c/cpp_project> <project_name>
