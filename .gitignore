@@ -4,4 +4,4 @@ output/
 .env
 data/
 vulnerability-reports/*
-node-modules/*
+node-modules/
