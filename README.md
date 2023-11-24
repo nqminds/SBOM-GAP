@@ -9,7 +9,7 @@
 2. ### Clone the repository
 
 ```sh
-git clone https://github.com/nqminds/cyber.git
+git clone git@github.com:nqminds/sbom-cli.git
 ```
 
 ---
