@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  nqmvul:
+    build: .
+    volumes:
+      - .:/usr/src/app
+      - ./reports:/usr/src/app/reports
+    depends_on:
+      - syft
+      - grype
+      - ccscanner
+    networks:
+      - tooling-net
+
+  syft:
+    image: anchore/syft
+    networks:
+      - tooling-net
+
+  grype:
+    image: anchore/grype
+    networks:
+      - tooling-net
+
+  ccscanner:
+    image: ionutnqm/depscanner:latest
+    networks:
+      - tooling-net
+
+networks:
+  tooling-net:
+    driver: bridge

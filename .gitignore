@@ -1,0 +1,7 @@
+# CVE Data
+input/*
+output/
+.env
+data/
+vulnerability-reports/*
+node-modules/*
