@@ -1,12 +1,12 @@
-# Vulnerability analyses tools
+# SBOM-CLI tool
 
-1. ### Please download the vulnerability-reports folder and place it in SBOM-CLI module:
+### Please download the vulnerability-reports folder and place it in SBOM-CLI module:
 
-   - vulnerability-reports directory can be downloaded from [here](https://drive.google.com/file/d/1ZV302sOZXYu7JUiM5fVgrMi3lYxGw1VH/view?usp=drive_link). This also contains all the (National Vulnerability Database)[NVD](https://nvd.nist.gov/) CPE/CVE/CWE data. (recommended)
+   - vulnerability-reports directory can be downloaded from [here](https://drive.google.com/file/d/1ZV302sOZXYu7JUiM5fVgrMi3lYxGw1VH/view?usp=drive_link). This also contains all the (National Vulnerability Database)[NVD](https://nvd.nist.gov/) CPE/CWE data. (recommended)
 
 ---
 
-2. ### Clone the repository
+### Clone the repository
 
 ```sh
 git clone git@github.com:nqminds/sbom-cli.git
@@ -14,7 +14,7 @@ git clone git@github.com:nqminds/sbom-cli.git
 
 ---
 
-3. ### Ensure node and npm are installed.
+### Ensure node and npm are installed.
 
 ```sh
 # please use node v16
@@ -26,11 +26,11 @@ npm --version
 8.11.0
 ```
 
-4. ### Install [docker](https://www.docker.com/get-started/) and [docker-compose](https://docs.docker.com/compose/install/) on your machine
+### Install [docker](https://www.docker.com/get-started/) and [docker-compose](https://docs.docker.com/compose/install/) on your machine
 
 ---
 
-5. ### Add current user to the docker group
+### Add current user to the docker group
 
 ```sh
 sudo usermod -aG docker $USER
@@ -38,7 +38,13 @@ sudo usermod -aG docker $USER
 
 ---
 
-6. ### Install all dependencies and pull the necessary docker images
+### Make Docker Conmpose executable
+
+```sh
+sudo chmod +x /usr/local/bin/docker-compose
+```
+---
+### Install all dependencies and pull the necessary docker images
 
 ```sh
 npm install
@@ -46,13 +52,13 @@ npm install
 
 ---
 
-7. ###  Create a global symlink to nqmvul tool
+###  Create a global symlink to nqmvul tool
 
 ```sh
 npm link
 ```
 
-8. ### Download the Git Advisory Database from [here](https://github.com/github/advisory-database) and replace this path in ./config/config.json with your local advisory-database/advisories.
+### Download the Git Advisory Database from [here](https://github.com/github/advisory-database) and replace this path in ./config/config.json with your local advisory-database/advisories.
 
 ```json
 {
@@ -64,7 +70,7 @@ The above is necessary only for getting information about GHSA vulnerability cod
 
 ---
 
-9. ### For speeding NIST API requsts an API key cen be obtained from [here](https://nvd.nist.gov/developers/request-an-api-key). Please create a cyber/.env file in the root directory cyber/ and add the key as:
+9. ### For speeding NIST API requsts an API key cen be obtained from [here](https://nvd.nist.gov/developers/request-an-api-key). Please create a .env file in the root directory cyber/ and add the key as:
 
 ```yaml
 NIST_API_KEY=your_NIST_api_key;
@@ -72,14 +78,14 @@ NIST_API_KEY=your_NIST_api_key;
 
 ---
 
-10. ### To improve the classification of weaknesses, include an OpenAi API key to the global cyber/.env. An API key can be obtain from [here](https://platform.openai.com/api-keys):
+### To improve the classification of weaknesses, include an OpenAi API key to the global .env. An API key can be obtain from [here](https://platform.openai.com/api-keys):
 
 ```yaml
 OPENAI_API_KEY=your_OpenAi_api_key
 ```
 ---
 
-11. ### To generate a Software Bill Of Materials (SBOM) for the ecosystems bellow use the command (Uses [syft](https://github.com/anchore/syft) and [grype](https://github.com/anchore/grype)):
+### To generate a Software Bill Of Materials (SBOM) for the ecosystems bellow use the command (Uses [syft](https://github.com/anchore/syft) and [grype](https://github.com/anchore/grype)):
 
 ```sh
 nqmvul -generateSbom <project_path> <project_name>
@@ -111,7 +117,7 @@ nqmvul -generateSbom <project_path> <project_name>
 
 ---
 
-12. ### To generate a Software Bill Of Materials (SBOM) for other C/C++ ecosystems (Uses [ccscanner](https://github.com/lkpsg/ccscanner) and [grype](https://github.com/anchore/grype)).
+### To generate a Software Bill Of Materials (SBOM) for other C/C++ ecosystems (Uses [ccscanner](https://github.com/lkpsg/ccscanner) and [grype](https://github.com/anchore/grype)).
 
 ```sh
 nqmvul -generateCCPPReport <path_to_c/cpp_project> <project_name>
@@ -146,7 +152,7 @@ nqmvul -generateCCPPReport <path_to_c/cpp_project> <project_name>
 
 ---
 
-13. ### After generating a Software Bill Of Material (SBOM) use the [visualization tool](https://tbc) for a more detailed representation. <span style="color: yellow;">Only CycloneDx json format is supported.</span>
+### After generating a Software Bill Of Material (SBOM) use the [visualization tool](http://sbom.nqminds.com/) for a more detailed representation. <span style="color: yellow;">Only CycloneDx json format is supported.</span>
     ![Example Image](./images/app.png)
 
 ---
