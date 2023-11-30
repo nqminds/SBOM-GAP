@@ -153,7 +153,7 @@ nqmvul -generateCCPPReport <path_to_c/cpp_project> <project_name>
 ---
 
 ### After generating a Software Bill Of Material (SBOM) use the [visualization tool](http://sbom.nqminds.com/) for a more detailed representation. <span style="color: yellow;">Only CycloneDx json format is supported.</span>
-    ![Example Image](./images/app.png)
+![Example Image](images/app.png)
 
 ---
 
