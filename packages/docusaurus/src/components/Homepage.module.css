@@ -1,0 +1,60 @@
+@import url("../css/custom.css");
+
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.featureImg {
+  height: 150px;
+  width: 150px;
+}
+
+.iconContainer {
+  box-shadow: 0px 0px 20px 0px rgba(0,0,0,.05);
+  transition: background .3s,border .3s,border-radius .3s,box-shadow .3s;
+  margin: 1em;
+  padding: 1em 2em;
+  height: 100%;
+  position: relative;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin: 2em 0px;
+}
+
+.button {
+  font-family: var(--ifm-typography-accent-font-family),Sans-serif;
+  font-size: var(--ifm-typography-accent-font-size);
+  font-weight: 600;
+  text-transform: var(--ifm-typography-accent-text-transform);
+  line-height: var(--ifm-typography-accent-line-height);
+  fill: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+  background-color: rgba(255,255,255,0);
+  padding: 0px 2em 0px 0px;
+  text-decoration: none !important;
+  position: absolute;
+  bottom: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0px;
+  right: 0px;
+}
+
+.button:hover{
+  fill: var(--ifm-color-accent);
+  color: var(--ifm-color-accent);
+  font-size: 18px;
+  transition: .2s;
+}
+
+.pdfLink {
+  width: "100%";
+  display: flex;
+  justify-content: flex-end;
+}
