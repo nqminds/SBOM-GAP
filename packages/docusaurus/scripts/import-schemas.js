@@ -7,7 +7,7 @@ const yaml_filepath = "../schemas/src";
 const output_dir = "./docs/schemas";
 const hedgedoc_server = config.HEDGEDOC_SERVER;
 // Relative path to yaml schemas
-const relative_git_path =`git/${config.GITHUB_OWNER}/${config.GITHUB_REPO}/contents/packages/schemas/src`
+const relative_git_path =`git/${config.GITHUB_OWNER}/${config.GITHUB_REPO}/contents/packages/schemas/`
 
 const path = url.resolve(hedgedoc_server, relative_git_path)
 const { spawn } = require('child_process');
