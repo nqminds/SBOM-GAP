@@ -1,0 +1,15 @@
+{
+  "name": "schemas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "schemaTools parse-yaml-files ./src"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nqminds/verifiable-schemas-toolchain": "^1.0.1"
+  }
+}
