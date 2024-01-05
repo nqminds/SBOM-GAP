@@ -4,9 +4,11 @@
   "description": "A documentation toolchain which enables you to collaboratively edit documents and schemas through the use of hedgedoc",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@nqminds/verifiable-schemas-toolchain": "^1.0.1"
+  }
 }
