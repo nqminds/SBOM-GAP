@@ -1,0 +1,48 @@
+name: Node.js CI and Deploy
+
+# on:
+#   push:
+#     branches:
+#       - main
+on: []
+
+
+jobs:
+  build-and-deploy:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies in root
+      run: npm install
+
+    - name: Install dependencies in /packages/docusaurus
+      run: |
+        cd packages/docusaurus
+        npm install
+
+    - name: Build in /packages/docusaurus
+      run: |
+        cd packages/docusaurus
+        npm run build
+        
+    - name: Deploy to Remote Server
+      run: |
+        mkdir -p $HOME/.ssh
+        echo "${{ secrets.DEPLOY_KEY }}" > $HOME/.ssh/deploy_key
+        chmod 600 $HOME/.ssh/deploy_key
+        rsync -avz --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/deploy_key -p ${{ secrets.REMOTE_SERVER_PORT }}" packages/docusaurus/build/ ${{ secrets.REMOTE_SERVER_USERNAME }}@${{ secrets.REMOTE_SERVER_HOST }}:/var/www/${{ secrets.REMOTE_SERVER_FOLDER }}/
+      env:
+        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
