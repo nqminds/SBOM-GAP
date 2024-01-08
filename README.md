@@ -52,3 +52,12 @@ on:
 | REMOTE_SERVER_PORT     | SSH Port number                                            |
 | REMOTE_SERVER_USERNAME | SSH username                                               |
 | REMOTE_SERVER_FOLDER   | Folder name for `/build` files to be placed in `/var/www/` |
+
+
+NOTE: You may be required to run the following on the remote server
+
+```bash
+sudo chown -R user:group /var/www/***/
+sudo chmod -R 755 /var/www/***/
+
+```
