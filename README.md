@@ -30,3 +30,25 @@ Hedgedoc only checks for files in the `default branch`, so if your changes aren'
 Hedgedoc updates are created as a PR, so keep your eye out for them.
 
 The hedgedoc server can host serveral docusaurus sites. 
+
+
+## Continous Deployment
+
+In order to get this to work, edit the `deploy.yaml` file at `/github/workflows/deploy.yaml`.
+
+The below example shows the deployment whenever there is a push to the main branch
+```yaml
+on:
+  push:
+    branches:
+      - main
+```
+### Setup github secrets:
+
+| Key name               | description                                                |
+| ---------------------- | ---------------------------------------------------------- |
+| DEPLOY_KEY             | Private SSH  key for server                                |
+| REMOTE_SERVER_HOST     | SSH host (name or IP)                                      |
+| REMOTE_SERVER_PORT     | SSH Port number                                            |
+| REMOTE_SERVER_USERNAME | SSH username                                               |
+| REMOTE_SERVER_FOLDER   | Folder name for `/build` files to be placed in `/var/www/` |
