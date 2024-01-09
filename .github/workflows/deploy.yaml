@@ -1,9 +1,10 @@
-name: Node.js CI and Deploy
+name: Hedgedoc Deploy
 
 on:
   push:
     branches:
-      # - main
+      # This condition is always false, so the workflow will never run
+      - 'this-branch-does-not-exist'
 
 
 
