@@ -1,10 +1,10 @@
 name: Node.js CI and Deploy
 
-# on:
-#   push:
-#     branches:
-#       - main
-on: []
+on:
+  push:
+    branches:
+      # - main
+
 
 
 jobs:
