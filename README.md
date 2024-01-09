@@ -54,6 +54,14 @@ on:
 | REMOTE_SERVER_FOLDER   | Folder name for `/build` files to be placed in `/var/www/` |
 
 
+NOTE: You may be required to run the following on the remote server
+
+```bash
+sudo chown -R user:group /var/www/***/
+sudo chmod -R 755 /var/www/***/
+
+```
+
 ### NGINX
 
 Create the config:
@@ -90,3 +98,4 @@ restart nginx
 ```bash
 sudo service nginx restart
 ```
+
