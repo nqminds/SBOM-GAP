@@ -10,7 +10,7 @@ Before starting, you are required to setup the config.json
   "TAGLINE": "Description of project",
   "DOCUSAURUS_URL": "https://your-docusaurus-site.example.com",
   "PROJECT_NAME": "Docusaurus",
-  "HEDGEDOC_SERVER": "http://hedgedoc.nqminds.com:3001",
+  "HEDGEDOC_SERVER": "https://hedgedoc.nqminds.com",
   "GITHUB_OWNER": "nqminds",
   "GITHUB_REPO": "documentation-toolchain"
 }
