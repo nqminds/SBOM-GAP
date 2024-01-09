@@ -6,9 +6,12 @@
 
 import {themes as prismThemes} from 'prism-react-renderer';
 import configs from "../../config.json";
+import {resolve} from "url"
+
 // @ts-ignore
 const {TITLE, TAGLINE, DOCUSAURUS_URL, PROJECT_NAME, HEDGEDOC_SERVER, GITHUB_OWNER, GITHUB_REPO} = configs;
 const documentGithubPath = `git/${GITHUB_OWNER}/${GITHUB_REPO}/contents/packages/docusaurus/`;
+const editUrl = resolve(HEDGEDOC_SERVER, documentGithubPath)
 
 
 const config = {
@@ -50,6 +53,16 @@ const config = {
     [
       "@docusaurus/plugin-content-docs",
       {
+        id: "docs",
+        path: "./docs/working-docs",
+        routeBasePath: "docs",
+        remarkPlugins: [require('remark-mermaid-dataurl')],
+        editUrl,
+      },
+    ],
+    [
+      "@docusaurus/plugin-content-docs",
+      {
         id: "schemas",
         path: "./docs/schemas",
         routeBasePath: "schemas",
@@ -70,6 +83,20 @@ const config = {
           src: 'img/nquiringminds.svg',
         },
         items: [
+          {
+          type: 'doc',
+          docId: 'intro',
+          docsPluginId: "docs",
+          position: 'left',
+          label: 'Working docs',
+        },
+        {
+          type: 'doc',
+          docId: 'schemas',
+          docsPluginId: "schemas",
+          position: 'left',
+          label: 'Schemas',
+        },
 
         ],
       },
@@ -79,7 +106,10 @@ const config = {
           {
             title: 'Docs',
             items: [
-              // Insert links here
+              {
+                label: 'Working Docs',
+                to: '/docs',
+              }
             ],
           },
           {
