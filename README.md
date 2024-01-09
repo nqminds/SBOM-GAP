@@ -52,3 +52,41 @@ on:
 | REMOTE_SERVER_PORT     | SSH Port number                                            |
 | REMOTE_SERVER_USERNAME | SSH username                                               |
 | REMOTE_SERVER_FOLDER   | Folder name for `/build` files to be placed in `/var/www/` |
+
+
+### NGINX
+
+Create the config:
+
+`<your_config_file>.conf` in `/etc/nginx/sites-available/`
+
+with template:
+```nginx
+server {
+    listen 3000;
+    listen [::]:3000;
+
+    server_name <name>.nqminds.com;
+
+    location / {
+        root /var/www/<name>;
+        index index.html;
+        try_files $uri $uri/ /index.html;
+    }
+}
+```
+
+then create a symbolic link:
+```bash
+sudo ln -s /etc/nginx/sites-available/your_config_file /etc/nginx/sites-enabled/
+```
+
+test the configuration:
+```bash
+sudo nginx -t
+```
+
+restart nginx
+```bash
+sudo service nginx restart
+```
