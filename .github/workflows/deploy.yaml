@@ -5,6 +5,7 @@ on:
     branches:
       # This condition is always false, so the workflow will never run
       - 'this-branch-does-not-exist'
+  workflow_dispatch:
 
 
 
