@@ -4,7 +4,7 @@ A documentation toolchain which enables you to collaboratively edit documents an
 ## How it works
 
 ```mermaid
-graph
+graph TD;
 
 %% GitHub
 subgraph GitHub
@@ -16,7 +16,7 @@ subgraph GitHub
 end
 
 %% Server Hosting Pages using NGINX
-subgraph Server
+subgraph Docusaurus
   nginxServer(Server with NGINX)
   nginxDocusaurus(Docusaurus Pages)
   nginxSchemas(Schemas Pages)
@@ -25,23 +25,24 @@ end
 
 subgraph HedgeDoc
     hedgedocPages[(Hedgedoc database)]
-
 end
+
 %% Arrows and Actions
 ghRepo -->|Trigger GitHub Action| ghAction1
 ghAction1 -->|Edits to Docusaurus files| docusaurusServer
 ghAction1 -->|Edits to Docusaurus schemas| schemasServer
-docusaurusServer --> ghAction2
+ghAction1 -->|Triggers Continous Deployment| ghAction2
 schemasServer -->|schemaTools parse-yaml-files| ghAction2
 
 ghAction2 --> nginxServer
 nginxServer -->|Serve Docusaurus Pages| nginxDocusaurus
 nginxServer -->|Serve Schemas Pages| nginxSchemas
 
-nginxDocusaurus --> hedgedocPages
-nginxSchemas --> hedgedocPages
+nginxDocusaurus --> editPage
+nginxSchemas --> editPage
 
-hedgedocPages --> ghRepo
+editPage --> hedgedocPages -->|Serve Schemas Pages| ghRepo
+
 ```
 
 
