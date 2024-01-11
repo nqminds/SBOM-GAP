@@ -1,6 +1,56 @@
 # documentation-toolchain
 A documentation toolchain which enables you to collaboratively edit documents and schemas through the use of hedgedoc.
 
+## How it works
+
+```mermaid
+graph
+
+%% GitHub
+subgraph GitHub
+  ghRepo(GitHub Repository)
+  ghAction1(Git Push to Docusaurus-Branch)
+  ghAction2(Continous Deployment)
+  docusaurusServer[(/docusaurus/)]
+  schemasServer[(/schemas/ Server)]
+end
+
+%% Server Hosting Pages using NGINX
+subgraph Docusaurus
+  nginxServer(Server with NGINX)
+  nginxDocusaurus(Docusaurus Pages)
+  nginxSchemas(Schemas Pages)
+  editPage(Edit Page)
+end
+
+subgraph HedgeDoc
+    hedgedocPages[(Hedgedoc database)]
+    api[API Endpoint]
+end
+
+%% Arrows and Actions
+ghRepo -->|Trigger GitHub Action| ghAction1
+ghAction1 -->|Edits to Docusaurus files| docusaurusServer
+ghAction1 -->|Edits to Docusaurus schemas| schemasServer
+docusaurusServer -->|Triggers Continous Deployment| ghAction2
+schemasServer -->|schemaTools parse-yaml-files| ghAction2
+ghAction2 --> nginxServer
+nginxServer -->|Serve Docusaurus Pages| nginxDocusaurus
+nginxServer -->|Serve Schemas Pages| nginxSchemas
+
+nginxDocusaurus --> editPage
+nginxSchemas --> editPage
+
+editPage --> api
+ghRepo --> |Pull from default branch| api
+
+api -->hedgedocPages -->|Periodic or Triggered Git Push| ghRepo
+
+classDef centered fill:#00B0F0,stroke:#333,stroke-width:2px,align:center;
+class ghAction1,ghAction2,editPage,api centered;
+style HedgeDoc height:200px;
+```
+
 ## Config.json
 
 Before starting, you are required to setup the config.json
