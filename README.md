@@ -8,31 +8,32 @@ graph TD;
 
 %% GitHub
 subgraph GitHub
+  db[(Sensory Claims)]
   ghRepo(GitHub Repository)
   ghAction1(Git Push to HedgeDoc-Branch)
   ghAction2(Git Pull)
 end
 
 %% HedgeDoc Server
-subgraph HedgeDoc 
+subgraph HedgeDoc
   hedgeDoc(HedgeDoc Server)
+  hedgeEdit1(User Edits)
+  hedgeEdit2(User Edits)
+  hedgeEdit3(User Edits)
+  hedgeTimer(Timer/Trigger)
 end
 
 %% Server Hosting Pages using NGINX
-subgraph Docusaurus Server
+subgraph Docusaurus
   nginxServer(Server with NGINX)
   nginxPage(Web Pages)
 end
 
 %% Arrows and Actions
-ghRepo -->|Trigger GitHub Action| ghAction1
-ghAction1 -->|Deploy to HedgeDoc-Branch| hedgeDoc
-hedgeDoc -->|Updates GitHub Repo| ghAction2
-ghAction2 -->|Pull Changes| nginxServer
-nginxServer -->|Serve Pages| nginxPage
-nginxPage -->|User Interaction| hedgeDoc
-
+GitHub --> Docusaurus
+Docusaurus --> HedgeDoc
 ```
+
 
 ## Config.json
 
