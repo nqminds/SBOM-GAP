@@ -31,9 +31,8 @@ end
 ghRepo -->|Trigger GitHub Action| ghAction1
 ghAction1 -->|Edits to Docusaurus files| docusaurusServer
 ghAction1 -->|Edits to Docusaurus schemas| schemasServer
-ghAction1 -->|Triggers Continous Deployment| ghAction2
+docusaurusServer -->|Triggers Continous Deployment| ghAction2
 schemasServer -->|schemaTools parse-yaml-files| ghAction2
-
 ghAction2 --> nginxServer
 nginxServer -->|Serve Docusaurus Pages| nginxDocusaurus
 nginxServer -->|Serve Schemas Pages| nginxSchemas
@@ -43,6 +42,9 @@ nginxSchemas --> editPage
 
 editPage --> hedgedocPages -->|Periodic or Triggered| ghRepo
 
+style ghAction1 fill:#9f6,stroke:#333,stroke-width:2px
+
+style editPage align:center;
 ```
 
 ## Config.json
