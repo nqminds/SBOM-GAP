@@ -7,8 +7,6 @@ on:
       - 'this-branch-does-not-exist'
   workflow_dispatch:
 
-
-
 jobs:
   build-and-deploy:
 
@@ -26,6 +24,15 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+
+    - name: Determine target branch
+      id: determine-branch
+      run: |
+        TARGET_BRANCH="Hedgedoc-update"
+        if [ -z "$(git ls-remote origin refs/heads/Hedgedoc-update)" ]; then
+          TARGET_BRANCH="main"
+        fi
+        echo "TARGET_BRANCH=$TARGET_BRANCH" >> $GITHUB_ENV
 
     - name: Install dependencies in root
       run: npm install
