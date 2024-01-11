@@ -40,11 +40,12 @@ nginxServer -->|Serve Schemas Pages| nginxSchemas
 nginxDocusaurus --> editPage
 nginxSchemas --> editPage
 
-editPage --> hedgedocPages -->|Periodic or Triggered| ghRepo
+editPage --> hedgedocPages -->|Periodic or Triggered | ghRepo
+ghRepo --> |Pull from default branch| hedgedocPages
 
-style ghAction1 fill:#9f6,stroke:#333,stroke-width:2px
+classDef centered fill:#9f6,stroke:#333,stroke-width:2px,align::center;
 
-style editPage align:center;
+class ghAction1,ghAction2,editPage centered;
 ```
 
 ## Config.json
