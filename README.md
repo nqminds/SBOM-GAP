@@ -1,6 +1,37 @@
 # documentation-toolchain
 A documentation toolchain which enables you to collaboratively edit documents and schemas through the use of hedgedoc.
 
+## How it works
+
+```mermaid
+graph TD;
+
+%% GitHub
+subgraph GitHub
+  ghRepo(GitHub Repository)
+  ghAction1(Git Push)
+  ghAction2(Git Pull)
+end
+
+%% HedgeDoc Server
+subgraph HedgeDoc
+  hedgeDoc(HedgeDoc Server)
+end
+
+%% Server Hosting Pages using NGINX
+subgraph Server
+  nginxServer(Server with NGINX)
+  nginxPage(Web Pages)
+end
+
+%% Arrows and Actions
+ghRepo -->|Trigger GitHub Action| ghAction1
+ghAction1 -->|Deploy| hedgeDoc
+hedgeDoc -->|Updates| ghAction2
+ghAction2 -->|Pull Changes| nginxServer
+nginxServer -->|Serve Pages| nginxPage
+```
+
 ## Config.json
 
 Before starting, you are required to setup the config.json
