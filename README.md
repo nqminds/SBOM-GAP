@@ -46,7 +46,7 @@ ghRepo --> |Pull from default branch| api
 
 api -->hedgedocPages -->|Periodic or Triggered Git Push| ghRepo
 
-classDef centered fill:#9f6,stroke:#333,stroke-width:2px,align:center;
+classDef centered fill:#00B0F0,stroke:#333,stroke-width:2px,align:center;
 class ghAction1,ghAction2,editPage,api centered;
 style HedgeDoc height:200px;
 ```
