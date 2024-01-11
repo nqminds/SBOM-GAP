@@ -7,31 +7,18 @@ A documentation toolchain which enables you to collaboratively edit documents an
 graph TD;
 
 %% GitHub
-subgraph GitHub
+subgraph git[GitHub]
   db[(Sensory Claims)]
-  ghRepo(GitHub Repository)
-  ghAction1(Git Push to HedgeDoc-Branch)
-  ghAction2(Git Pull)
 end
 
 %% HedgeDoc Server
-subgraph HedgeDoc
-  hedgeDoc(HedgeDoc Server)
-  hedgeEdit1(User Edits)
-  hedgeEdit2(User Edits)
-  hedgeEdit3(User Edits)
-  hedgeTimer(Timer/Trigger)
+subgraph hedgedoc[Hedgedoc Server]
 end
 
 %% Server Hosting Pages using NGINX
-subgraph Docusaurus
-  nginxServer(Server with NGINX)
-  nginxPage(Web Pages)
+subgraph docusaurus[Docusaurus server with NGINX]
 end
 
-%% Arrows and Actions
-GitHub --> Docusaurus
-Docusaurus --> HedgeDoc
 ```
 
 
