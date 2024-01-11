@@ -25,6 +25,7 @@ end
 
 subgraph HedgeDoc
     hedgedocPages[(Hedgedoc database)]
+    api[API Endpoint]
 end
 
 %% Arrows and Actions
@@ -40,12 +41,14 @@ nginxServer -->|Serve Schemas Pages| nginxSchemas
 nginxDocusaurus --> editPage
 nginxSchemas --> editPage
 
-editPage --> hedgedocPages -->|Periodic or Triggered | ghRepo
-ghRepo --> |Pull from default branch| hedgedocPages
+editPage --> api
+ghRepo --> |Pull from default branch| api
 
-classDef centered fill:#9f6,stroke:#333,stroke-width:2px,align::center;
+api -->hedgedocPages -->|Periodic or Triggered Git Push| ghRepo
 
-class ghAction1,ghAction2,editPage centered;
+classDef centered fill:#9f6,stroke:#333,stroke-width:2px,align:center;
+
+class ghAction1,ghAction2,editPage,api centered;
 ```
 
 ## Config.json
