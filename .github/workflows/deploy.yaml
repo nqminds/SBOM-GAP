@@ -1,4 +1,4 @@
-name: Hedgedoc Deploy
+name: HedgeDoc x Docusaurus Deploy
 
 on:
   push:
@@ -9,49 +9,60 @@ on:
 
 jobs:
   build-and-deploy:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [20]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Determine target branch
-      id: determine-branch
-      run: |
-        TARGET_BRANCH="Hedgedoc-update"
-        if [ -z "$(git ls-remote origin refs/heads/Hedgedoc-update)" ]; then
-          TARGET_BRANCH="main"
-        fi
-        echo "TARGET_BRANCH=$TARGET_BRANCH" >> $GITHUB_ENV
+      - name: Determine target branch
+        id: determine-branch
+        run: |
+          TARGET_BRANCH="Hedgedoc-update"
+          if [ -z "$(git ls-remote origin refs/heads/Hedgedoc-update)" ]; then
+            TARGET_BRANCH="main"
+          fi
+          echo "TARGET_BRANCH=$TARGET_BRANCH" >> $GITHUB_ENV
 
-    - name: Install dependencies in root
-      run: npm install
+      - name: Install dependencies in root
+        run: npm install
 
-    - name: Install dependencies in /packages/docusaurus
-      run: |
-        cd packages/docusaurus
-        npm install
+      - name: Validate schemas
+        run: |
+          node ./node_modules/.bin/schemaTools validate-schemas packages/schemas/src
 
-    - name: Build in /packages/docusaurus
-      run: |
-        cd packages/docusaurus
-        npm run build
-        
-    - name: Deploy to Remote Server
-      run: |
-        mkdir -p $HOME/.ssh
-        echo "${{ secrets.DEPLOY_KEY }}" > $HOME/.ssh/deploy_key
-        chmod 600 $HOME/.ssh/deploy_key
-        rsync -avz --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/deploy_key -p ${{ secrets.REMOTE_SERVER_PORT }}" packages/docusaurus/build/ ${{ secrets.REMOTE_SERVER_USERNAME }}@${{ secrets.REMOTE_SERVER_HOST }}:/var/www/${{ secrets.REMOTE_SERVER_FOLDER }}/
-      env:
-        SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+          if [ $? -ne 0 ]; then
+            echo "Error detected. Test failed."
+            exit 1
+          fi
+
+      - name: Check workflow status
+        if: failure()
+        run: exit 1
+
+      - name: Install dependencies in /packages/docusaurus
+        run: |
+          cd packages/docusaurus
+          npm install
+
+      - name: Build in /packages/docusaurus
+        run: |
+          cd packages/docusaurus
+          npm run build
+
+      - name: Deploy to Remote Server
+        run: |
+          mkdir -p $HOME/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > $HOME/.ssh/deploy_key
+          chmod 600 $HOME/.ssh/deploy_key
+          rsync -avz --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/deploy_key -p ${{ secrets.REMOTE_SERVER_PORT }}" packages/docusaurus/build/ ${{ secrets.REMOTE_SERVER_USERNAME }}@${{ secrets.REMOTE_SERVER_HOST }}:/var/www/maxad/
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
