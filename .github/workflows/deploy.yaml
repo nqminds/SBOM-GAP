@@ -63,6 +63,6 @@ jobs:
           mkdir -p $HOME/.ssh
           echo "${{ secrets.DEPLOY_KEY }}" > $HOME/.ssh/deploy_key
           chmod 600 $HOME/.ssh/deploy_key
-          rsync -avz --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/deploy_key -p ${{ secrets.REMOTE_SERVER_PORT }}" packages/docusaurus/build/ ${{ secrets.REMOTE_SERVER_USERNAME }}@${{ secrets.REMOTE_SERVER_HOST }}:/var/www/maxad/
+          rsync -avz --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/deploy_key -p ${{ secrets.REMOTE_SERVER_PORT }}" packages/docusaurus/build/ ${{ secrets.REMOTE_SERVER_USERNAME }}@${{ secrets.REMOTE_SERVER_HOST }}:/var/www/${{ secrets.REMOTE_SERVER_FOLDER }}/
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
