@@ -1,7 +1,7 @@
 name: HedgeDoc x Docusaurus Deploy
 
 on:
-  push:
+  pull_request:
     branches:
       # This condition is always false, so the workflow will never run
       - 'this-branch-does-not-exist'
