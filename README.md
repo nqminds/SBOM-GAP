@@ -157,4 +157,4 @@ NOTE: if hosting on `nqm-thoughtful-thermaltake` use ip address `192.168.1.114`
 
 ### Zonomi
 
-Sign into [the admin account](https://zonomi.com/app/dns/) and create a new IPv4 Addresses (A) for the selected domain, pointing it to the externap IP address 
+Sign into [the admin account](https://zonomi.com/app/dns/) and create a new IPv4 Addresses (A) for the selected domain, pointing it to the externap IP address.
