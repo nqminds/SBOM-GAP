@@ -89,9 +89,10 @@ In order to get this to work, edit the `deploy.yaml` file at `/github/workflows/
 The below example shows the deployment whenever there is a push to the main branch
 ```yaml
 on:
-  push:
+  pull_request:
     branches:
       - main
+  workflow_dispatch:
 ```
 ### Setup github secrets:
 
@@ -105,7 +106,6 @@ on:
 
 
 NOTE: You may be required to run the following on the remote server
-
 ```bash
 sudo chown -R user:group /var/www/***/
 sudo chmod -R 755 /var/www/***/
@@ -148,4 +148,8 @@ restart nginx
 ```bash
 sudo service nginx restart
 ```
+
+### Port Forwarding / Port Triggering
+
+
 
