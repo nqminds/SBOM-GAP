@@ -89,9 +89,10 @@ In order to get this to work, edit the `deploy.yaml` file at `/github/workflows/
 The below example shows the deployment whenever there is a push to the main branch
 ```yaml
 on:
-  push:
+  pull_request:
     branches:
       - main
+  workflow_dispatch:
 ```
 ### Setup github secrets:
 
@@ -105,7 +106,6 @@ on:
 
 
 NOTE: You may be required to run the following on the remote server
-
 ```bash
 sudo chown -R user:group /var/www/***/
 sudo chmod -R 755 /var/www/***/
@@ -121,8 +121,8 @@ Create the config:
 with template:
 ```nginx
 server {
-    listen 3000;
-    listen [::]:3000;
+    listen <port_number>;
+    listen [::]:<port_number>;
 
     server_name <name>.nqminds.com;
 
@@ -149,3 +149,12 @@ restart nginx
 sudo service nginx restart
 ```
 
+### Port Forwarding / Port Triggering
+
+On the office router, create a new custom port service for the (unused) `<port_number>` you've setup in NGINX.config
+
+NOTE: if hosting on `nqm-thoughtful-thermaltake` use ip address `192.168.1.114`
+
+### Zonomi
+
+Sign into [the admin account](https://zonomi.com/app/dns/) and create a new IPv4 Addresses (A) for the selected domain, pointing it to the externap IP address.
