@@ -167,7 +167,7 @@ Create an htpasswd File:
 Use the htpasswd command to generate a file with encrypted username and password pairs. If you don't have the htpasswd command, you can usually install it with a package manager.
 
 ```bash
-sudo htpasswd -c /etc/nginx/.htpasswd username
+sudo htpasswd -c /etc/nginx/.htpasswd_<app_name> username
 ```
 You will be prompted to enter and confirm the password for the specified username. If the file already exists, omit the -c option.
 
@@ -181,7 +181,7 @@ server {
 
     location /restricted {
         auth_basic "Restricted Access";
-        auth_basic_user_file /etc/nginx/.htpasswd;
+        auth_basic_user_file /etc/nginx/.htpasswd_<app_name>;
 
         # Other location directives go here
     }
