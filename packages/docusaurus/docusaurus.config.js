@@ -81,6 +81,7 @@ const config = {
         logo: {
           alt: 'NquiringMinds',
           src: 'img/nquiringminds.svg',
+          width: 300,
         },
         items: [
           {
