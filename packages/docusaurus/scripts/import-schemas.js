@@ -3,7 +3,7 @@
 const config = require('../../../config.json'); // Adjust the path as needed
 const url = require("url");
 
-const yaml_filepath = "../schemas/src";
+const yaml_filepath = "../schemas/src/";
 const output_dir = "./docs/schemas";
 const hedgedoc_server = config.HEDGEDOC_SERVER;
 // Relative path to yaml schemas
