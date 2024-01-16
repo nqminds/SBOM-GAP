@@ -158,3 +158,48 @@ NOTE: if hosting on `nqm-thoughtful-thermaltake` use ip address `192.168.1.114`
 ### Zonomi
 
 Sign into [the admin account](https://zonomi.com/app/dns/) and create a new IPv4 Addresses (A) for the selected domain, pointing it to the externap IP address.
+
+
+
+### Password protecting (if required)
+
+Create an htpasswd File:
+Use the htpasswd command to generate a file with encrypted username and password pairs. If you don't have the htpasswd command, you can usually install it with a package manager.
+
+```bash
+sudo htpasswd -c /etc/nginx/.htpasswd username
+```
+You will be prompted to enter and confirm the password for the specified username. If the file already exists, omit the -c option.
+
+Configure Nginx:
+Open your Nginx configuration file (often located in /etc/nginx/nginx.conf or /etc/nginx/conf.d/default.conf) and add or modify the relevant location block to include the authentication directives.
+
+```nginx
+server {
+    listen 80;
+    server_name example.com;
+
+    location /restricted {
+        auth_basic "Restricted Access";
+        auth_basic_user_file /etc/nginx/.htpasswd;
+
+        # Other location directives go here
+    }
+
+    # Other server configurations go here
+}
+```
+Adjust the location block to match the path you want to protect.
+
+Test and Reload Nginx:
+After saving the configuration changes, test the configuration to ensure there are no syntax errors:
+
+```bash
+sudo nginx -t
+```
+If the test is successful, reload Nginx to apply the changes:
+
+```bash
+sudo systemctl reload nginx
+```
+Now, when someone tries to access the specified location, they will be prompted for a username and password.
