@@ -22,6 +22,7 @@
 }
 
 .navbar__logo {
+  max-width: 300px;
   width: 100%;
   height: 70px;
 }
