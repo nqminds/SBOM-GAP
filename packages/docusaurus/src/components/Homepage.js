@@ -38,7 +38,7 @@ function IconContainer({png, title, description, docsLink}) {
   );
 }
 
-export default function HomepageWGList() {
+export default function HomepageList() {
   return (
     <section className={styles.features}>
       <div className="container">
