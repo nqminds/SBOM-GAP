@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Markdown from 'markdown-to-jsx'
 
-
-
 export default function ExternalContent({link}) {
   const [content, setContent] = useState('');
 
