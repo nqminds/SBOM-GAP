@@ -1,0 +1,24 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "REST API for the sbom-cli tool",
+  "main": "api.mjs",
+  "scripts": {
+    "start": "node api.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nqminds/sbom-cli.git"
+  },
+  "author": "nqminds",
+  "license": "GPL-3.0-or-later",
+  "contributors": [
+    {
+      "name": "Ionut Bostan",
+      "email": "ionut@nquiringminds.com"
+    }],
+  "bugs": {
+    "url": "https://github.com/nqminds/sbom-cli/issues"
+  },
+  "homepage": "https://github.com/nqminds/sbom-cli#readme"
+}
