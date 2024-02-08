@@ -263,16 +263,11 @@ nqmvul -classifyCwe <CWE-ID>
 The -classifyCwe flag will try and classify the CWE_ID as one of the following types: not-memory-related, other-memory-related, spatial-memory-related, temporal-memory-related. Please ensure the CWE_ID is valid and of the following form: e.g. 354. If the CWE_ID doesn't exist in the current database it will return "not found".
 
 ```sh
-nqmvul -getHistory <CPE> -hist
+nqmvul -getHistory <CPE>
 ```
 
-The -getHistory flag coupled with -hist will return all `previous` versions of a CPE and for each version will try and find known CVEs and CWEs (vulnerabilities). It also classifies each CWE into memory related issues or other. Can take as an argument various types of CPEs such as: cpe:2.3:\a:\busybox:busybox:1.33.2, cpe:/a:doxygen:doxygen:1.7.2. For cpes that contain ':_' please place them inside quotes. e.g. : ` nqmvul -getHistory "cpe:2.3:a:openssl:openssl:1.1.1:_:_:_:_:_:_:_" -hist`. Output is saved to output/output.txt
+The -getHistory flag will return all `previous` versions of a CPE and for each version will try and find known CVEs and CWEs (vulnerabilities). It also classifies each CWE into memory related issues or other. Can take as an argument various types of CPEs such as: cpe:2.3:\a:\busybox:busybox:1.33.2, cpe:/a:doxygen:doxygen:1.7.2. For cpes that contain ':_' please place them inside quotes. e.g. : ` nqmvul -getHistory "cpe:2.3:a:openssl:openssl:1.1.1:_:_:_:_:_:_:_" . Output is saved to output/output.txt
 
-```sh
-nqmvul -getHistory <CPE> -all
-```
-
-The -getHistory flag coupled with -hist will return all `known` versions of a CPE and for each version will try and find known CVEs and CWEs (vulnerabilities). It also classifies each CWE into memory related issues or other. Can take as an argument various types of CPEs such as: cpe:2.3:\a:\busybox:busybox:1.33.2, cpe:/a:doxygen:doxygen:1.7.2. For cpes that contain ':_' please place them inside quotes. e.g. : ` nqmvul -getHistory "cpe:2.3:a:openssl:openssl:1.1.1:_:_:_:_:_:_:_" -hist`. Output is saved to output/output.txt
 
 ```sh
 nqmvul -generateCCPPReport <path_to_c/cpp_project> <project_name>

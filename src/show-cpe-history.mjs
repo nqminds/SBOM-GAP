@@ -7,6 +7,7 @@ import { dirname } from "path";
 import { cleanCpe } from "./get-syft-cpes.mjs";
 import { fetchCVEsForCPE } from "./list-vulnerabilities.mjs";
 import { classifyCwe } from "./classify_cwe.mjs";
+import { previousCpeVersion } from "./utils.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -15,10 +16,9 @@ const __dirname = dirname(__filename);
  * Search the cpe_data.csv for a list of all known versions of a cpe
  *
  * @param {string} cpe - cpe
- * @param {string} hist - 'all' if we require all known cpes, defaults to 'hist' for past cpes versions
- * @returns {string[]} - Returns all previous/later relases of a cpe
+ * @returns {string[]} - Returns all previous/later releases of a cpe
  */
-export async function mapHistorycalCpes(cpe, hist = "hist") {
+export async function mapHistoricalCpes(cpe) {
   const cpeDataPath = path.resolve(
     __dirname,
     "../vulnerability-reports/cpe_data.csv"
@@ -29,33 +29,23 @@ export async function mapHistorycalCpes(cpe, hist = "hist") {
   cpeVersions[cpe] = [];
 
   return new Promise((resolve, reject) => {
-    let vendor;
-    let product;
-    let version;
+    const vendor = cpeParts[3];
+    const product = cpeParts[4];
+
     fs.createReadStream(cpeDataPath)
       .pipe(csvParser())
       .on("data", (row) => {
         const cpeName = row.cpe_name;
 
-        vendor = cpeParts[3];
-        product = cpeParts[4];
-        version = cpeParts[5];
         if (
           cpeName &&
-          hist === "all" &&
           cpeName.includes(`:${vendor}:`) &&
           cpeName.includes(`:${product}:`)
         ) {
-          cpeVersions[cpe].push(cpeName);
-          // TODO: Return all previous versions
-        } else if (
-          cpeName &&
-          hist === "hist" &&
-          cpeName.includes(`:${vendor}:`) &&
-          cpeName.includes(`:${product}:`) &&
-          cpeName.includes(`:${version.toString()}`)
-        ) {
-          cpeVersions[cpe].push(cpeName);
+          // Check if the CPE from the row is a previous version of the input CPE
+          if (previousCpeVersion(cpe, cpeName)) {
+            cpeVersions[cpe].push(cpeName);
+          }
         }
       })
       .on("end", () => resolve(cpeVersions))
@@ -63,18 +53,18 @@ export async function mapHistorycalCpes(cpe, hist = "hist") {
   });
 }
 
+
 /**
  * Function to find historycal CPEs and their weaknesses
  *
  * @param {string} cpe - CPE
- * @param {string} hist - 'all' if we require all known cpes, defaults to 'hist' for past cpes versions
  * @returns {string[]} - Returns CPE-CVE-CWE-Type
  */
-export async function mapCpeCveCwe(cpe, hist = "hist") {
+export async function mapCpeCveCwe(cpe) {
   const cpeCveMap = [];
   const allPromises = [];
   const cpe_23 = cleanCpe(cpe);
-  const cpeVersions = await mapHistorycalCpes(cpe_23, hist);
+  const cpeVersions = await mapHistoricalCpes(cpe_23);
 
   for (const key in cpeVersions) {
     for (const element of cpeVersions[key]) {
