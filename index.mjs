@@ -56,7 +56,7 @@ async function main() {
     -getGhsa                GHSA code. e.g GHSA-j8xg-fqg3-53r7
     -extractGhsas           Absolute path to grype vulnerability report file
     -classifyCwe            CWE Id, e.g. CWE-354
-    -getHistory             CPE e.g. cpe:2.3:a:busybox:busybox:1.33.2 -all or -hist
+    -getHistory             CPE e.g. cpe:2.3:a:busybox:busybox:1.33.2
     -generateCCPPReport     Absolute path to project and a project name
     `);
   }
@@ -327,19 +327,8 @@ async function main() {
               spinnerIndex = (spinnerIndex + 1) % spinnerChars.length;
             }, 250);
 
-            if (args[2]) {
-              const hist = args[2].replace("-", "");
-              if (hist !== "hist" && hist !== "all") {
-                console.log(hist);
-                console.error(`
-                Flag ${hist} unrecognized, please use -hist for historical versions or -all to see all known versions
-              `);
-                break;
-              }
-              cpeCveCweMap = await mapCpeCveCwe(args[1], hist);
-            } else {
-              cpeCveCweMap = await mapCpeCveCwe(args[1]);
-            }
+            cpeCveCweMap = await mapCpeCveCwe(args[1]);
+          
             clearInterval(spinner);
             process.stdout.write("\r");
 
