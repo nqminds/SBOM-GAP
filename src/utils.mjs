@@ -217,7 +217,7 @@ export async function genGrypeReport(sbomFilePath, projectName) {
  * @param {json} cvesData - JSON object
  * @returns {json} - A JSON object containing the average vulnerability score
  */
-export function calculateAverageBaseScore(cvesData) {
+export async function calculateAverageBaseScore(cvesData) {
   let totalScore = 0;
   let count = 0;
 
@@ -225,8 +225,12 @@ export function calculateAverageBaseScore(cvesData) {
     const cveArray = cvesData[key];
     cveArray.forEach(cve => {
       if (cve.baseScore) {
-        totalScore += cve.baseScore;
-        count++;
+        let score = parseFloat(cve.baseScore);
+        if (score !== 0) {
+          console.log(cve.baseScore)
+          totalScore += cve.baseScore;
+          count++;
+        }
       }
     });
   }
