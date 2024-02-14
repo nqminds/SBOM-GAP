@@ -16,9 +16,13 @@
     {
       "name": "Ionut Bostan",
       "email": "ionut@nquiringminds.com"
-    }],
+    }
+  ],
   "bugs": {
     "url": "https://github.com/nqminds/sbom-cli/issues"
   },
-  "homepage": "https://github.com/nqminds/sbom-cli#readme"
+  "homepage": "https://github.com/nqminds/sbom-cli#readme",
+  "dependencies": {
+    "formidable": "^3.5.1"
+  }
 }
