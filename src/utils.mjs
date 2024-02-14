@@ -214,7 +214,7 @@ export async function genGrypeReport(sbomFilePath, projectName) {
 
 /**
  * 
- * @param {json} cvesData - path to sbom file or JSON object
+ * @param {json} cvesData - JSON object
  * @returns {json} - A JSON object containing the average vulnerability score
  */
 export function calculateAverageBaseScore(cvesData) {
@@ -233,4 +233,35 @@ export function calculateAverageBaseScore(cvesData) {
 
   const average = count > 0 ? totalScore / count : 0;
   return parseFloat(average.toFixed(2));
+}
+
+/**
+ * Reads an SBOM file or accepts an SBOM object and returns the SBOM data as JSON.
+ * 
+ * @param {string|object} sbomPath - Path to the SBOM file or the SBOM data itself.
+ * @param {string} __dirname - The directory name of the current module, to resolve relative paths.
+ * @returns {object} SBOM data as JSON.
+ */
+export async function readOrParseSbom(sbomPath, __dirname) {
+  let sbomJson;
+  
+  if (typeof sbomPath === "string") {
+    let resolvedPath = sbomPath;
+    if (!fs.existsSync(resolvedPath)) {
+      resolvedPath = path.resolve(__dirname, sbomPath);
+    }
+
+    if (!fs.existsSync(resolvedPath)) {
+      throw new Error(`File not found at ${resolvedPath}`);
+    }
+
+    const sbomData = fs.readFileSync(resolvedPath, 'utf8');
+    sbomJson = JSON.parse(sbomData);
+  } else if (typeof sbomPath === "object" && sbomPath !== null) {
+    sbomJson = sbomPath;
+  } else {
+    throw new Error("Invalid input. Please provide either a path to an SBOM file or the SBOM data itself.");
+  }
+
+  return sbomJson;
 }
