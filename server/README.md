@@ -1,4 +1,7 @@
+To start, run:
+```sh 
 npm start
+```
 
 ### Calling the `/sbomRiskAverage` API endpoint
 
@@ -24,17 +27,25 @@ curl -X POST -F "file=@/path/to/your/SBOM.json" http://localhost:PORT/sbomRiskAv
 
 #### Javascrip
 ```javascript
-const fetch = require('node-fetch');
-const FormData = require('form-data');
-const fs = require('fs');
+async function testApi() {
+  const url = 'http://localhost:PORT/sbomRiskAverage';
+  const form = new FormData();
+  form.append('file', fs.createReadStream('/path/to/sbom.json'));
 
-const file = fs.createReadStream('/path/to/your/SBOM.json');
-const form = new FormData();
-form.append('file', file);
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      body: form,
+      headers: {
+        ...form.getHeaders() // Include form headers
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.error('Error testing API:', error);
+  }
+}
 
-fetch('http://localhost:PORT/sbomRiskAverage', { method: 'POST', body: form })
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error('Error:', error));
-
+testApi();
 ```
