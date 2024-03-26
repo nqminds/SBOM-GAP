@@ -1,0 +1,267 @@
+@import url(banners.css);
+@import url(../fonts/Montserrat/mosteratt.css);
+@import url(../fonts/Varela-Round/varela-round.css);
+
+
+:root {
+  --ifm-color-primary: #000000;
+  --ifm-color-secondary: #d3dddf;
+  --ifm-color-text-header: #0ea8ea;
+  --ifm-color-text: #353535;
+  --ifm-color-accent: #0ea8ea;
+  --ifm-color-011c40: #011c40;
+  --ifm-color-f898f31: #fffefe;
+  --ifm-color-table-row: hsla(0, 0%, 0%, 0.1);
+
+  --ifm-typography-primary-font-family: "Varela Round";
+  --ifm-typography-primary-font-size: 45px;
+  --ifm-typography-primary-font-weight: 300;
+  --ifm-typography-primary-text-transform: capitalize;
+  --ifm-typography-primary-line-height: 1.2em;
+
+  --ifm-typography-text-font-family: "Montserrat";
+  --ifm-typography-text-font-size: 16px;
+  --ifm-typography-text-font-weight: 300;
+  --ifm-typography-text-line-height: 1.4em;
+
+  --ifm-typography-accent-font-family: "Montserrat";
+  --ifm-typography-accent-font-size: 16px;
+  --ifm-typography-accent-font-weight: 500;
+  --ifm-typography-accent-text-transform: capitalize;
+  --ifm-typography-accent-line-height: 1.2em;
+
+  --ifm-typography-6ed476c-font-family: "Varela Round";
+  --ifm-typography-6ed476c-font-size: 20px;
+  --ifm-typography-6ed476c-font-weight: 400;
+  --ifm-typography-6ed476c-text-transform: capitalize;
+
+  --ifm-typography-ef2c50b-font-family: "Varela Round";
+  --ifm-typography-ef2c50b-font-size: 15px;
+  --ifm-typography-ef2c50b-font-weight: 300;
+
+  --ifm-typography-f8a9e51-font-family: "Varela Round";
+  --ifm-typography-f8a9e51-font-size: 35px;
+  --ifm-typography-f8a9e51-font-weight: 300;
+  --ifm-typography-f8a9e51-text-transform: capitalize;
+  --ifm-typography-f8a9e51-line-height: 1.2em;
+
+  --ifm-typography-2c11d45-font-family: "Varela Round";
+  --ifm-typography-2c11d45-font-size: 50px;
+  --ifm-typography-2c11d45-font-weight: 500;
+  --ifm-typography-2c11d45-text-transform: capitalize;
+  --ifm-typography-2c11d45-line-height: 1.2em;
+
+  background-color: var(--ifm-color-b500f0a);
+}
+
+
+input[type="checkbox"] { /* change "blue" browser chrome to yellow */
+  filter: invert(100%) hue-rotate(18deg) brightness(1.7);
+}
+
+h1 {
+  color: var(--ifm-color-text-header);
+  font-family: var(--ifm-typography-primary-font-family),Sans-serif;
+  font-size: var(--ifm-typography-primary-font-size);
+  font-weight: var(--ifm-typography-primary-font-weight);
+  text-transform: var(--ifm-typography-primary-text-transform);
+  line-height: var(--ifm-typography-primary-line-height);
+}
+
+h2 {
+  color: var(--ifm-color-011c40);
+  font-family: var(--ifm-typography-f8a9e51-font-family),Sans-serif;
+  font-size: var(--ifm-typography-f8a9e51-font-size);
+  font-weight: var(--ifm-typography-f8a9e51-font-weight);
+  text-transform: var(--ifm-typography-f8a9e51-text-transform);
+  line-height: var(--ifm-typography-f8a9e51-line-height);
+  letter-spacing: var(--ifm-typography-f8a9e51-letter-spacing);
+  word-spacing: var(--ifm-typography-f8a9e51-word-spacing);
+}
+
+h3{
+  font-family: var(--ifm-typography-6ed476c-font-family),Sans-serif;
+  font-size: var(--ifm-typography-6ed476c-font-size);
+  font-weight: var(--ifm-typography-6ed476c-font-weight);
+  text-transform: var(--ifm-typography-6ed476c-text-transform);
+  line-height: var(--ifm-typography-6ed476c-line-height);
+  letter-spacing: var(--ifm-typography-6ed476c-letter-spacing);
+  word-spacing: var(--ifm-typography-6ed476c-word-spacing);
+}
+
+p, li {
+  color: var(--ifm-color-text);
+  font-family: var(--ifm-typography-text-font-family),Sans-serif;
+  font-size: var(--ifm-typography-text-font-size);
+  font-weight: var(--ifm-typography-text-font-weight);
+  line-height: var(--ifm-typography-text-line-height);
+}
+
+a {
+  color: var(--ifm-color-text-header);
+  text-decoration: none;
+}
+a:hover{
+  color: var(--ifm-color-accent)!important;
+  text-decoration: underline;
+}
+
+.button_src-components-Homepage-module {
+  color: var(--ifm-color-text-header) !important;
+}
+
+.hero__title {
+  font-size: var(--ifm-typography-2c11d45-font-size);
+  font-weight: var(--ifm-typography-2c11d45-font-weight);
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.1);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+/* Easiest way of removing breadcrumbs, Couldn't fix on the docusaurus config */
+.breadcrumbs {
+  display: none;
+}
+
+.menu__link {
+  text-transform: var(--ifm-typography-primary-text-transform);
+}
+
+.menu__link--active, .table-of-contents__link--active {
+  font-weight: var(--ifm-typography-6ed476c-font-weight);
+  color: var(--ifm-color-text-header)!important;
+
+}
+
+.menu__link:hover {
+  color: var(--ifm-color-text-header) !important;
+}
+
+table {
+  display: inline-table;
+  width: 100%;
+}
+
+table thead {
+  background-color: var(--ifm-color-primary);
+  color: var(--ifm-color-f898f31);
+}
+
+table th {
+  border: none;
+}
+
+tbody tr:nth-child(even) {
+  background-color: var(--ifm-color-table-row);
+}
+
+img[title="Diagram generated via mermaid"] {
+  display: grid;
+  justify-content: center;
+  padding-bottom: 1em;
+  width: 100%;
+}
+
+.demoHeader {
+  color: var(--ifm-color-011c40);
+  font-family: var(--ifm-typography-f8a9e51-font-family),Sans-serif;
+  font-size: var(--ifm-typography-f8a9e51-font-size);
+  font-weight: var(--ifm-typography-f8a9e51-font-weight);
+  text-transform: var(--ifm-typography-f8a9e51-text-transform);
+  line-height: var(--ifm-typography-f8a9e51-line-height);
+  letter-spacing: var(--ifm-typography-f8a9e51-letter-spacing);
+  word-spacing: var(--ifm-typography-f8a9e51-word-spacing);
+}
+
+img {
+  width: 100%;
+  display: block; /* Remove default inline alignment */
+  margin: 0 auto
+}
+
+/* Enable horizontal scrolling for tables */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+/* Optional: Adjust the max-width to fit your content */
+.table-wrapper table {
+  max-width: 100%;
+}
+
+@media (min-width: 1850px) {
+  .controls {
+    position: fixed;
+    top: 20px; /* Adjust as needed */
+    right: 75px; /* Adjust as needed */
+    z-index: 9999; /* Ensure it's on top of other elements */
+  }
+}
+
+
+
+.menu-select {
+  color: var(--ifm-color-text-header);
+  text-decoration: none;
+  font-family: "Varela Round";
+  font-size: 17px;
+  font-weight: 500; 
+  text-transform: capitalize;
+  background-color: inherit;
+  border: 0px;
+  padding-left: calc(20px + 0.3em);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+}
+
+.menu-select option {
+  text-align: left; /* Reset text alignment for options */
+  padding-left: 0 !important;
+}
+
+.menu-select:hover {
+  text-decoration: underline;
+}
+.menu-select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+
+}
+
+.menu-select-icon {
+  position: absolute;
+  top: 50%;
+  left: 0px; /* Adjust the left position as needed */
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--ifm-color-text-header)
+}
+
+/* Define keyframe animation for rotating */
+@keyframes rotate260 {
+  0% {
+      transform: rotate(0deg);
+      animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1); /* Start slow */
+  }
+  50% {
+      transform: rotate(180deg);
+      animation-timing-function: linear; /* Linear timing for pause */
+  }
+  100% {
+      transform: rotate(360deg);
+      animation-timing-function: cubic-bezier(0.85, 0, 0.15, 1); /* End fast */
+  }
+}
+
+/* Apply animation to the egg timer */
+.rotate-animation {
+  animation: rotate260 8s cubic-bezier(0.42, 0, 0.58, 1) infinite; /* 8s duration */
+}

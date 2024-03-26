@@ -5,3 +5,7 @@ output/
 data/
 vulnerability-reports/*
 node_modules/
+
+
+# Schemas DIR
+/packages/schemas/output
