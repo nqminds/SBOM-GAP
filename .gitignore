@@ -9,3 +9,5 @@ node_modules/
 
 # Schemas DIR
 /packages/schemas/output
+
+*/package-lock.json
