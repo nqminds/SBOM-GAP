@@ -116,11 +116,9 @@ function EditThisPageWrapper(props) {
 
   async function moveCurrentFile(moveTo, newId) {
     try {
-      if(props.editUrl !== "https://hedgedoc.nqminds.com/git/nqminds/maxad/contents/packages/docusaurus/docs/working-docs/1-intro.mdx") {
+      await octokit.moveFile(getRelativePath(props.editUrl), getRelativePath(moveTo), newId);
+      callback(success);
 
-        await octokit.moveFile(getRelativePath(props.editUrl), getRelativePath(moveTo), newId);
-        callback(success);
-      }
     } catch (err) {
       console.log(err)
       callback(fail);

@@ -56,9 +56,19 @@ const config = {
     [
       "@docusaurus/plugin-content-docs",
       {
-        id: "docs",
-        path: "./docs/working-docs",
-        routeBasePath: "docs",
+        id: "app",
+        path: "./docs/working-docs/app",
+        routeBasePath: "app",
+        remarkPlugins: [require('remark-mermaid-dataurl')],
+        editUrl,
+      },
+    ],
+    [
+      "@docusaurus/plugin-content-docs",
+      {
+        id: "cli",
+        path: "./docs/working-docs/cli",
+        routeBasePath: "cli",
         remarkPlugins: [require('remark-mermaid-dataurl')],
         editUrl,
       },
@@ -87,18 +97,26 @@ const config = {
         },
         items: [{
           type: 'doc',
-          docId: 'intro',
-          docsPluginId: "docs",
+          docId: 'app',
+          docsPluginId: "app",
           position: 'left',
-          label: 'Working docs',
+          label: 'Web App',
         },
         {
           type: 'doc',
-          docId: 'schemas',
-          docsPluginId: "schemas",
+          docId: 'cli',
+          docsPluginId: "cli",
           position: 'left',
-          label: 'Schemas',
+          label: 'CLI tool',
         },
+
+        // {
+        //   type: 'doc',
+        //   docId: 'schemas',
+        //   docsPluginId: "schemas",
+        //   position: 'left',
+        //   label: 'Schemas',
+        // },
 
         ],
       },
@@ -109,18 +127,23 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Working Docs',
-                to: '/docs',
+                label: 'Web app',
+                to: '/app',
+              },
+              {
+                label: 'CLI tool',
+                to: '/cli',
               }
             ],
           },
-          {
-            title: 'Schemas',
-            items: [{
-              label: 'Data schemas',
-              to: '/schemas',
-          }],
-          },
+          
+          // {
+          //   title: 'Schemas',
+          //   items: [{
+          //     label: 'Data schemas',
+          //     to: '/schemas',
+          // }],
+          // },
           {
             title: 'More',
             items: [

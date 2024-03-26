@@ -4,16 +4,16 @@ import Link from '@docusaurus/Link';
 
 const Sections = [
   {
-    title: 'Docs',
-    png: require('../../static/img/documentation.png').default,
+    title: 'Web App',
+    png: require('../../static/img/web-app.png').default,
     description: "",
-    docsLink: "/docs/",
+    docsLink: "/app/",
   },
   {
-    title: 'Schemas',
-    png: require('../../static/img/schema.png').default,
+    title: 'CLI Tool',
+    png: require('../../static/img/cli.png').default,
     description: "",
-    docsLink: "/schemas/",
+    docsLink: "/cli/",
   },
 ];
 

@@ -26,8 +26,13 @@ class OctokitTools {
   }
 
   async getFiles(path) {
-    const files = await this.request(`GET /repos/${path}`);
-    return files;
+    try {
+      const files = await this.request(`GET /repos/${path}`);
+      return files;
+    } catch(err) {
+      return null;
+    }
+
   }
 
   async deleteFile(path) {
