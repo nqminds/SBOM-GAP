@@ -1,20 +1,44 @@
 name: HedgeDoc x Docusaurus Deploy
 
 on:
-  pull_request:
+  push:
     branches:
-      # This condition is always false, so the workflow will never run
-      - 'this-branch-does-not-exist'
+      - main
+    paths:
+      - 'packages/docusaurus/**'  # Adjust the path as needed
+      - 'packages/schemas/**'  # Adjust the path as needed
   workflow_dispatch:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-m
     strategy:
       matrix:
         node-version: [20]
+        
+    outputs:
+      result: ${{ steps.check-workflow-status.outputs.result }}
 
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+  
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Check commit message for keyword
+        run: |
+          KEYWORD="Move file"
+          if git log --format=%B -n 1 HEAD | grep -q "$KEYWORD"; then
+            echo "Commit contains the keyword."
+            exit 1 # Exit without failure
+          else
+            echo "Commit does not contain the keyword."
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -23,17 +47,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Determine target branch
-        id: determine-branch
-        run: |
-          TARGET_BRANCH="Hedgedoc-update"
-          if [ -z "$(git ls-remote origin refs/heads/Hedgedoc-update)" ]; then
-            TARGET_BRANCH="main"
-          fi
-          echo "TARGET_BRANCH=$TARGET_BRANCH" >> $GITHUB_ENV
-
       - name: Install dependencies in root
-        run: npm install
+        run: npm install --ignore-scripts
 
       - name: Validate schemas
         run: |
@@ -45,18 +60,22 @@ jobs:
           fi
 
       - name: Check workflow status
-        if: failure()
-        run: exit 1
+        id: check-workflow-status
+        run: echo "::set-output name=result::success"
 
       - name: Install dependencies in /packages/docusaurus
         run: |
           cd packages/docusaurus
           npm install
 
+      - name: Set up environment variables
+        run: |
+          echo "OCTOKIT_TOKEN=${{ secrets.OCTOKIT_TOKEN }}" >> $GITHUB_ENV
+
       - name: Build in /packages/docusaurus
         run: |
           cd packages/docusaurus
-          npm run build
+          npm run build 2>/dev/null
 
       - name: Deploy to Remote Server
         run: |
