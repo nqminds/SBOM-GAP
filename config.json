@@ -1,10 +1,10 @@
 
 {
-  "TITLE": "@Docusaurus",
+  "TITLE": "@nqminds/sbom-cli",
   "TAGLINE": "Description of project",
   "DOCUSAURUS_URL": "https://your-docusaurus-site.example.com",
-  "PROJECT_NAME": "Docusaurus",
+  "PROJECT_NAME": "SBOM Analysis",
   "HEDGEDOC_SERVER": "https://hedgedoc.nqminds.com",
   "GITHUB_OWNER": "nqminds",
-  "GITHUB_REPO": "documentation-toolchain"
+  "GITHUB_REPO": "sbom-cli"
 }
