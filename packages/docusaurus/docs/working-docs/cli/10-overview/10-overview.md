@@ -8,7 +8,8 @@ nqmvul is a Software Bill of Materials (SBOM) generation tool designed for enhan
 This tool offers actionable intelligence that enables teams to identify, understand, and mitigate vulnerabilities effectively.
 
 ## Features
-Comprehensive SBOM Generation: Generate detailed SBOMs for a variety of filesystems. Understand the composition of your software at a granular level.
+### Comprehensive SBOM Generation: 
+Generate detailed SBOMs for a variety of filesystems. Understand the composition of your software at a granular level.
 
 ### In-depth Vulnerability Analysis: 
 Utilise integrated tools like Syft, Grype, and CCS scanner to conduct thorough vulnerability assessments. Gain insights into vulnerabilities associated with your software components.
