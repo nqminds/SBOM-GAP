@@ -1,5 +1,5 @@
 {
-  "name": "schemas",
+  "name": "@nqminds/sbom-tools-schemas",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
