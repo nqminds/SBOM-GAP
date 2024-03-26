@@ -138,15 +138,95 @@ nqmvul -help
     -extractGhsas           Absolute path to grype vulnerability report file
     -classifyCwe            CWE Id, e.g. CWE-354
     -getHistory             CPE e.g. cpe:2.3:a:busybox:busybox:1.33.2
-    -generateCCPPReport     Absolute path to project and a project name```
+    -generateCCPPReport     Absolute path to project and a project name
+```
 
 
 
-The -getCpes flag will parse an SBOM and return a list of CPEs in the 2.3 format.
+The `-getCpes` flag will parse an SBOM and return a list of CPEs in the 2.3 format.
+
 ```sh
 nqmvul -getCpes <path_to_sbom.json>
 ```
 
 ```sh
+nqmvul -getCpes /home/Repositories/Sbom_cli/sbom-cli/vulnerability-reports/sboms/cyber_sbom.json
+[
+  'cpe:2.3:a:@aashutoshrathi/word-wrap:@aashutoshrathi/word-wrap:1.2.6:*:*:*:*:*:*:*',
+  'cpe:2.3:a:@ampproject/remapping:@ampproject/remapping:2.2.1:*:*:*:*:*:*:*',
+  'cpe:2.3:a:@apidevtools/json-schema-ref-parser:@apidevtools/json-schema-ref-parser:9.0.9:*:*:*:*:*:*:*',
+  'cpe:2.3:a:@babel/code-frame:@babel/code-frame:7.12.11:*:*:*:*:*:*:*',
+  'cpe:2.3:a:@babel/code-frame:@babel/code-frame:7.12.13:*:*:*:*:*:*:*',
+  'cpe:2.3:a:@babel/code-frame:@babel/code-frame:7.23.4:*:*:*:*:*:*:*',
+  'cpe:2.3:a:@babel/compat-data:@babel/compat-data:7.14.0:*:*:*:*:*:*:*',
+  'cpe:2.3:a:@babel/compat-data:@babel/compat-data:7.23.3:*:*:*:*:*:*:*',
+  'cpe:2.3:a:@babel/core:@babel/core:7.14.3:*:*:*:*:*:*:*',
+  'cpe:2.3:a:@babel/core:@babel/core:7.23.3:*:*:*:*:*:*:*',
+]
+```
+The `-listCpeDetails` flag will parse an SBOM and return detailed information about each CPE, such as CVEs and CWEs
+```sh
+nqmvul -getCves <CPE>
+```
+
+
+```sh
+ nqmvul -getCves cpe:2.3:a:busybox:busybox:1.33.2 
+Fetching CVEs from API for:  cpe:2.3:a:busybox:busybox:1.33.2
+[
+  {
+    id: 'CVE-2021-42376',
+    description: "A NULL pointer dereference in Busybox's hush applet leads to denial of service when processing a crafted shell command, due to missing validation after a \\x03 delimiter character. This may be used for DoS under very rare conditions of filtered command input.",
+    weakness: [ 'CWE-476', 'CWE-476' ],
+    baseScore: 5.5,
+    baseSeverity: 'MEDIUM'
+  },
+  {
+    id: 'CVE-2022-28391',
+    description: "BusyBox through 1.35.0 allows remote attackers to execute arbitrary code if netstat is used to print a DNS PTR record's value to a VT compatible terminal. Alternatively, the attacker could choose to change the terminal's colors.",
+    weakness: [ 'NVD-CWE-noinfo' ],
+    baseScore: 8.8,
+    baseSeverity: 'HIGH'
+  },
+  {
+    id: 'CVE-2022-48174',
+    description: 'There is a stack overflow vulnerability in ash.c:6030 in busybox before 1.35. In the environment of Internet of Vehicles, this vulnerability can be executed from command to arbitrary code execution.',
+    weakness: [ 'CWE-787' ],
+    baseScore: 9.8,
+    baseSeverity: 'CRITICAL'
+  },
+  {
+    id: 'CVE-2023-39810',
+    description: 'An issue in the CPIO command of Busybox v1.33.2 allows attackers to execute a directory traversal.',
+    weakness: [ 'CWE-22' ],
+    baseScore: 7.8,
+    baseSeverity: 'HIGH'
+  }
+]
 
 ```
+
+The `-writeCVEs` flag will write all the CVE data of an sbom into a json format to output_directory/cveData.json
+
+```sh
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
