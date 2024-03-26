@@ -1,10 +1,10 @@
 
 {
-  "TITLE": "SBOM Analysis",
-  "TAGLINE": "Description of project",
-  "DOCUSAURUS_URL": "https://your-docusaurus-site.example.com",
-  "PROJECT_NAME": "@nqminds/sbom-tools-documentation",
+  "TITLE": "SBOM Generation and Analysis Platform",
+  "TAGLINE": "Empowering Secure Development with In-Depth Vulnerability Insights",
+  "DOCUSAURUS_URL": "https://sbom-gap.nqminds.com",
+  "PROJECT_NAME": "@nqminds/SBOM-GAP",
   "HEDGEDOC_SERVER": "https://hedgedoc.nqminds.com",
   "GITHUB_OWNER": "nqminds",
-  "GITHUB_REPO": "sbom-cli"
+  "GITHUB_REPO": "SBOM-GAP"
 }
