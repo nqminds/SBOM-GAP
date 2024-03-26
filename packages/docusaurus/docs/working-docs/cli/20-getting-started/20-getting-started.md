@@ -72,44 +72,17 @@ If you're using GHSA vulnerability codes, download the Git Advisory Database and
 }
 ```
 
-### Obtain and Configure NIST API Key: 
+### Obtain and Configure [NIST API Key](https://nvd.nist.gov/developers/request-an-api-key): 
 For improved performance with NIST API requests, obtain an API key and add it to a .env file in the root directory.
 
 ```yaml=
 NIST_API_KEY=your_NIST_api_key;
 ```
 
-### Include OpenAI API Key:
+### Include [OpenAI API Key](https://platform.openai.com/api-keys):
 For advanced classification of weaknesses, include your OpenAI API key in the .env file.
 
 ```yaml=
 OPENAI_API_KEY=your_OpenAi_api_key
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
