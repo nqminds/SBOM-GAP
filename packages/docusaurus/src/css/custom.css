@@ -54,6 +54,11 @@
   background-color: var(--ifm-color-b500f0a);
 }
 
+
+input[type="checkbox"] { /* change "blue" browser chrome to yellow */
+  filter: invert(100%) hue-rotate(18deg) brightness(1.7);
+}
+
 h1 {
   color: var(--ifm-color-text-header);
   font-family: var(--ifm-typography-primary-font-family),Sans-serif;
@@ -99,6 +104,10 @@ a {
 a:hover{
   color: var(--ifm-color-accent)!important;
   text-decoration: underline;
+}
+
+.button_src-components-Homepage-module {
+  color: var(--ifm-color-text-header) !important;
 }
 
 .hero__title {
@@ -150,10 +159,11 @@ tbody tr:nth-child(even) {
   background-color: var(--ifm-color-table-row);
 }
 
-.mermaid {
+img[title="Diagram generated via mermaid"] {
   display: grid;
   justify-content: center;
   padding-bottom: 1em;
+  width: 100%;
 }
 
 .demoHeader {
@@ -171,4 +181,87 @@ img {
   width: 100%;
   display: block; /* Remove default inline alignment */
   margin: 0 auto
+}
+
+/* Enable horizontal scrolling for tables */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+/* Optional: Adjust the max-width to fit your content */
+.table-wrapper table {
+  max-width: 100%;
+}
+
+@media (min-width: 1850px) {
+  .controls {
+    position: fixed;
+    top: 20px; /* Adjust as needed */
+    right: 75px; /* Adjust as needed */
+    z-index: 9999; /* Ensure it's on top of other elements */
+  }
+}
+
+
+
+.menu-select {
+  color: var(--ifm-color-text-header);
+  text-decoration: none;
+  font-family: "Varela Round";
+  font-size: 17px;
+  font-weight: 500; 
+  text-transform: capitalize;
+  background-color: inherit;
+  border: 0px;
+  padding-left: calc(20px + 0.3em);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+}
+
+.menu-select option {
+  text-align: left; /* Reset text alignment for options */
+  padding-left: 0 !important;
+}
+
+.menu-select:hover {
+  text-decoration: underline;
+}
+.menu-select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+
+}
+
+.menu-select-icon {
+  position: absolute;
+  top: 50%;
+  left: 0px; /* Adjust the left position as needed */
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--ifm-color-text-header)
+}
+
+/* Define keyframe animation for rotating */
+@keyframes rotate260 {
+  0% {
+      transform: rotate(0deg);
+      animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1); /* Start slow */
+  }
+  50% {
+      transform: rotate(180deg);
+      animation-timing-function: linear; /* Linear timing for pause */
+  }
+  100% {
+      transform: rotate(360deg);
+      animation-timing-function: cubic-bezier(0.85, 0, 0.15, 1); /* End fast */
+  }
+}
+
+/* Apply animation to the egg timer */
+.rotate-animation {
+  animation: rotate260 8s cubic-bezier(0.42, 0, 0.58, 1) infinite; /* 8s duration */
 }

@@ -7,18 +7,21 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import configs from "../../config.json";
 import {resolve} from "url"
+import 'dotenv/config';
 
 // @ts-ignore
 const {TITLE, TAGLINE, DOCUSAURUS_URL, PROJECT_NAME, HEDGEDOC_SERVER, GITHUB_OWNER, GITHUB_REPO} = configs;
 const documentGithubPath = `git/${GITHUB_OWNER}/${GITHUB_REPO}/contents/packages/docusaurus/`;
 const editUrl = resolve(HEDGEDOC_SERVER, documentGithubPath)
 
-
 const config = {
   title: TITLE,
   tagline: TAGLINE,
   favicon: 'img/favicon.svg',
-
+  customFields: {
+    // Put your custom environment here
+    octokitToken: process.env.OCTOKIT_TOKEN,
+  },
   url: DOCUSAURUS_URL,
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -80,10 +83,9 @@ const config = {
         logo: {
           alt: 'NquiringMinds',
           src: 'img/nquiringminds.svg',
-          width: 300,
+          width: "100px !important"
         },
-        items: [
-          {
+        items: [{
           type: 'doc',
           docId: 'intro',
           docsPluginId: "docs",
@@ -130,11 +132,11 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} NquiringMinds ${TITLE}. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} ${TITLE}. Built with Docusaurus.`,
       },
-      prism: {
-        theme: prismThemes.github,
-        darkTheme: prismThemes.dracula,
+      colorMode: {
+        defaultMode: 'light', // or 'dark' if you prefer
+        disableSwitch: true, // Disables the theme switcher
       },
     }),
 };

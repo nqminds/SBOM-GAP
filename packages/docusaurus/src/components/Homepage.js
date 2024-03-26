@@ -38,17 +38,10 @@ function IconContainer({png, title, description, docsLink}) {
   );
 }
 
-export default function HomepageList() {
+export default function HomepageWGList() {
   return (
     <section className={styles.features}>
       <div className="container">
-        <h1>HELLO WORLD</h1>
-        <div>
-          <p>
-            Edit this page at /packages/docusaurus/src/components/Homepage.js
-          </p>
-
-        </div>
         <div className={styles.row}>
           {Sections.map((props, idx) => (
             <IconContainer key={idx} {...props} />

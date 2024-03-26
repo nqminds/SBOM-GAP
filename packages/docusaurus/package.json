@@ -17,22 +17,29 @@
     "prepare": "node ./scripts/import-schemas.js"
   },
   "dependencies": {
-    "@docusaurus/core": "3.0.1",
-    "@docusaurus/preset-classic": "3.0.1",
+    "@docusaurus/core": "^3.1.1",
+    "@docusaurus/preset-classic": "3.1.1",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@mdx-js/react": "^3.0.0",
+    "@octokit/core": "^6.0.1",
     "clsx": "^2.0.0",
     "docusaurus-lunr-search": "^3.3.1",
-    "dynamic-import-polyfill": "^0.1.1",
-    "markdown-to-jsx": "^7.4.0",
+    "markdown-to-jsx": "^7.4.5",
     "prism-react-renderer": "^2.3.0",
     "react": "^18.0.0",
+    "react-datepicker": "^4.25.0",
     "react-dom": "^18.0.0",
-    "remark-mermaid-dataurl": "^2.1.1"
-    },
+    "react-modal": "^3.16.1",
+    "remark-mermaid-dataurl": "^2.1.1",
+    "url": "^0.11.3"
+  },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.0.1",
+    "@docusaurus/module-type-aliases": "3.1.1",
     "@docusaurus/types": "3.0.1",
-    "docs-to-pdf": "^0.6.2"
+    "docs-to-pdf": "^0.6.2",
+    "dotenv": "^16.4.5"
   },
   "browserslist": {
     "production": [
