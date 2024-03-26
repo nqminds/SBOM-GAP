@@ -14,31 +14,31 @@ For each component, the system lists the number of vulnerabilities and divides t
 # Key Features
 
 ## SBOM Visualisation Page:
-
-Comprehensive Component Analysis:
+![Cyber-app](./cyber.png)
+### Comprehensive Component Analysis:
 The SBOM Visualization page presents a detailed analysis of each software component within the uploaded SBOM. It lists out components along with their respective versions, licenses, and a comprehensive tally of known vulnerabilities.
 
-Severity Assessment:
-Each component's vulnerabilities are categorized based on their severity levels, providing a clear visual indicator through color-coded bars, helping users prioritize security efforts on critical vulnerabilities that could pose significant risks.
+### Severity Assessment:
+Each component's vulnerabilities are categorised based on their severity levels, providing a clear visual indicator through color-coded bars, helping users prioritise security efforts on critical vulnerabilities that could pose significant risks.
 
-Memory Safety Insight:
-The visualization distinguishes between vulnerabilities that affect memory-protected systems and those that threaten memory-unprotected systems, enabling a deeper understanding of potential attack vectors.
+### Memory Safety Insight:
+The visualisation distinguishes between vulnerabilities that affect memory-protected systems and those that threaten memory-unprotected systems, enabling a deeper understanding of potential attack vectors.
 
-Vulnerability Details:
+### Vulnerability Details:
 A dropdown for each component reveals further details of the vulnerabilities, including a description and a direct link to the National Vulnerability Database (NVD) for extended information.
 
 
-CPE History Visualization Page:
-
-Evolutionary CPE Tracking:
+## CPE History Visualisation Page:
+![sbom-gap](sbom-gap.png)
+### Evolutionary CPE Tracking:
 Track the historical evolution of a Common Platform Enumeration (CPE) through a timeline that reflects the changes in vulnerability scores over different versions, providing insights into how the security posture has evolved.
 
-Interactive Graphs:
+### Interactive Graphs:
 The interactive graphs display the average vulnerability score across different versions of a CPE, highlighting the progression and providing a visual representation of potential security improvements or regressions.
 
-Vulnerability Type Breakdown:
+### Vulnerability Type Breakdown:
 The pie chart offers a breakdown of vulnerabilities by type, such as those related to memory safety, allowing for focused attention on specific vulnerability categories that may impact the risk assessment and mitigation strategies.
 
-CPE Specific Visualisation:
+### CPE Specific Visualisation:
 The CPE History Visualization page offers a unique visual representation for a selected CPE, detailing the number of CVEs associated with each version, aiding in identifying patterns or spikes in vulnerabilities that warrant further investigation.
 
