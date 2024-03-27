@@ -8,8 +8,8 @@ This API endpoint is designed to calculate the average vulnerability score of a 
 * Supported SBOM Format
 The endpoint currently supports SBOMs in the CycloneDX JSON format only.
 
-* Request Method: POST
-URL: The endpoint can be accessed by appending /sbomRiskAverage to the host URL where the server is running.
+* Request Method: 
+POST URL: The endpoint can be accessed by appending /sbomRiskAverage to the host URL where the server is running.
 
 * Request Body
 The request must include a file containing the SBOM data. This file should be uploaded as part of a multipart/form-data request with the key file.
@@ -17,8 +17,11 @@ The request must include a file containing the SBOM data. This file should be up
 * Response
 Success: On a successful request, the server responds with a JSON object containing the average vulnerability score of all CVEs found in the SBOM.
 
-* Example Response: {7.21}
-Failure: If the request fails (e.g., due to missing file or server error), an appropriate error message is returned.
+* Example Response:
+{7.21}
+
+* Failure: 
+If the request fails (e.g., due to missing file or server error), an appropriate error message is returned.
 
 
 Example Usage:
