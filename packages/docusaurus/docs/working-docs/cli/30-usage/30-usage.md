@@ -256,7 +256,7 @@ Vulnerability report saved to: /sbom-cli/vulnerability-reports/reports/vulnerabi
 
 
 
-The `-getCpes` flag will parse an SBOM and return a list of CPEs in the 2.3 format.
+The `-getCpes` flag will parse an SBOM and return a list of CPEs in the `2.3` format.
 
 
 ```sh
@@ -334,7 +334,7 @@ Fetching CVEs from API for:  cpe:2.3:a:busybox:busybox:1.33.2
 
 ```
 
-The `-writeCVEs` flag will write all the CVE data of an sbom into a json format to output_directory/cveData.json
+The `-writeCVEs` flag will write all the CVE data of an sbom into a json format to `output_directory/cveData.json`
 
 ```sh
 nqmvul -writeCves /vulnerability-reports/sbom.json /Desktop 
@@ -376,7 +376,7 @@ cat Desktop/cveData.json
 }
 ```
 
-The `-getHistoricalCpes` flag will return all known versions of the input CPE. The CPE must be in CPE2.3 format e.g. cpe:2.3:\a:\busybox:busybox:1.33.2
+The `-getHistoricalCpes` flag will return all known versions of the input CPE. The CPE must be in `CPE2.3` format e.g. `cpe:2.3:\a:\busybox:busybox:1.33.2`
 
 
 ```sh
@@ -420,7 +420,7 @@ Fetching historical CPEs from API
   }, ... 63 more items
 ```
 
-The `-getHistoricalCves` flag will return all known versions of the input CVE. Supported CVE format: "CVE-2021-42376"
+The `-getHistoricalCves` flag will return all known versions of the input CVE. Supported CVE format: `CVE-2021-42376`
 
 ```sh
  nqmvul -getHistoricalCves CVE-2021-42376 
@@ -452,7 +452,7 @@ Fetching historical CVEs from API
 
 ```
 
-The`-getCweInfo` flag will return information such as description for each CWE. Can take one or more CWEs. If multiple CWEs are passed, they must be writen without any space e.g. 'CWE-476,CWE-681'
+The`-getCweInfo` flag will return information such as description for each CWE. Can take one or more CWEs. If multiple CWEs are passed, they must be writen without any space e.g. `CWE-476,CWE-681`
 
 ```sh
  nqmvul -getCweInfo CWE-476,CWE-681
@@ -762,7 +762,7 @@ nqmvul -classifyCwe CWE-354
 CWE_ID CWE-354 has type: not-memory-related
 ```
 
-The `-getHistory` flag will return all previous versions of a CPE and for each version will try and find known CVEs and CWEs (vulnerabilities). It also classifies each CWE into memory related issues or other. Can take as an argument various types of CPEs such as: cpe:2.3:\a:\busybox:busybox:1.33.2, cpe:/a:doxygen:doxygen:1.7.2. For cpes that contain ':' please place them inside quotes. e.g. : `nqmvul -getHistory "cpe:2.3:a:openssl:openssl:1.1.1:::::::"` . Output is saved to output/output.txt
+All previous iterations of a CPE will be returned by the `-getHistory` flag, which will also attempt to identify any known CVEs and CWEs (vulnerabilities) for each version. Each CWE is also categorised as memory-related or not. Can take as an argument various types of CPEs such as: `cpe:2.3:\a:\busybox:busybox:1.33.2`, `cpe:/a:doxygen:doxygen:1.7.2`. For cpes that contain trailing ':' please place them inside quotes. e.g. : `nqmvul -getHistory "cpe:2.3:a:openssl:openssl:1.1.1:::::::"` . Output is saved to output/output.txt
 
 
 
