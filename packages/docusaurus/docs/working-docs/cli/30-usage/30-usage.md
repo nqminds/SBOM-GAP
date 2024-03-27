@@ -104,10 +104,8 @@ Pkg-config
 nqmvul -generateCCPPReport <path_to_c/cpp_project> <project_name>
 ```
 
-Available commands
-```sh
-nqmvul -help
-```
+Available commands:
+
 ```sh
 nqmvul -help
 
@@ -209,7 +207,43 @@ Fetching CVEs from API for:  cpe:2.3:a:busybox:busybox:1.33.2
 The `-writeCVEs` flag will write all the CVE data of an sbom into a json format to output_directory/cveData.json
 
 ```sh
+nqmvul -writeCves /vulnerability-reports/sbom.json /Desktop 
+Writing CVE data to /vulnerability-reports/cveData.json
+Writing file completed
 
+
+cat Desktop/cveData.json 
+{
+  "cpe:2.3:a:busybox:busybox:1.33.2": [
+    {
+      "id": "CVE-2021-42376",
+      "description": "A NULL pointer dereference in Busybox's hush applet leads to denial of service when processing a crafted shell command, due to missing validation after a \\x03 delimiter character. This may be used for DoS under very rare conditions of filtered command input.",
+      "weakness": [
+        "CWE-476",
+        "CWE-476"
+      ],
+      "baseScore": 5.5,
+      "baseSeverity": "MEDIUM"
+    },
+    {
+      "id": "CVE-2022-28391",
+      "description": "BusyBox through 1.35.0 allows remote attackers to execute arbitrary code if netstat is used to print a DNS PTR record's value to a VT compatible terminal. Alternatively, the attacker could choose to change the terminal's colors.",
+      "weakness": [
+        "NVD-CWE-noinfo"
+      ],
+      "baseScore": 8.8,
+      "baseSeverity": "HIGH"
+    },
+    {
+      "id": "CVE-2022-48174",
+      "description": "There is a stack overflow vulnerability in ash.c:6030 in busybox before 1.35. In the environment of Internet of Vehicles, this vulnerability can be executed from command to arbitrary code execution.",
+      "weakness": [
+        "CWE-787"
+      ],
+      "baseScore": 9.8,
+      "baseSeverity": "CRITICAL"
+    }, ...
+}
 ```
 
 
