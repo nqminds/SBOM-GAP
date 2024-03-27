@@ -663,14 +663,104 @@ cat /sbom-cli/vulnerability-reports/sboms/vim_sbom.json
 
 ```
 
+The `-getGhsa` flag will return detailed information about a known GHSA vulnerability. Please ensure the GHSA vul is valid and matches the following format e.g GHSA-j8xg-fqg3-53r7.
 
+```sh
+nqmvul -getGhsa GHSA-j8xg-fqg3-53r7
+{
+  schema_version: '1.4.0',
+  id: 'GHSA-j8xg-fqg3-53r7',
+  modified: '2023-06-27T15:48:19Z',
+  published: '2023-06-22T06:30:18Z',
+  aliases: [ 'CVE-2023-26115' ],
+  summary: 'word-wrap vulnerable to Regular Expression Denial of Service',
+  details: 'All versions of the package word-wrap are vulnerable to Regular Expression Denial of Service (ReDoS) due to the usage of an insecure regular expression within the result variable.\n',
+  severity: [
+    {
+      type: 'CVSS_V3',
+      score: 'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L'
+    }
+  ],
+  affected: [
+    {
+      package: [Object],
+      ecosystem_specific: [Object],
+      ranges: [Array]
+    }
+  ],
+  references: [
+    {
+      type: 'ADVISORY',
+      url: 'https://nvd.nist.gov/vuln/detail/CVE-2023-26115'
+    },
+    {
+      type: 'WEB',
+      url: 'https://github.com/jonschlinkert/word-wrap/commit/420dce9a2412b21881202b73a3c34f0edc53cb2e'
+    },
+    {
+      type: 'PACKAGE',
+      url: 'https://github.com/jonschlinkert/word-wrap'
+    },
+    {
+      type: 'WEB',
+      url: 'https://github.com/jonschlinkert/word-wrap/blob/master/index.js#L39'
+    },
+    {
+      type: 'WEB',
+      url: 'https://github.com/jonschlinkert/word-wrap/blob/master/index.js%23L39'
+    },
+    {
+      type: 'WEB',
+      url: 'https://github.com/jonschlinkert/word-wrap/releases/tag/1.2.4'
+    },
+    {
+      type: 'WEB',
+      url: 'https://security.snyk.io/vuln/SNYK-JAVA-ORGWEBJARSNPM-4058657'
+    },
+    {
+      type: 'WEB',
+      url: 'https://security.snyk.io/vuln/SNYK-JS-WORDWRAP-3149973'
+    }
+  ],
+  database_specific: {
+    cwe_ids: [ 'CWE-1333' ],
+    severity: 'MODERATE',
+    github_reviewed: true,
+    github_reviewed_at: '2023-06-23T21:36:40Z',
+    nvd_published_at: null
+  }
+}
 
+```
+The `-extractGhsas `will return an array of GHSA codes. Before running this command please replace the gitAdvisoryDbPath path from config.json with your local advisory-database/advisories path.
 
+```sh
+nqmvul  -extractGhsas /home/ionut/Repositories/Sbom_cli/sbom-cli/vulnerability-reports/reports/vulnerability_report_cyber_sbom 
+[
+  'GHSA-93q8-gq69-wqmw', 'GHSA-93q8-gq69-wqmw',
+  'GHSA-4gmj-3p3h-gm8h', 'GHSA-rv95-896h-c2vc',
+  'GHSA-mhxj-85r3-2x55', 'GHSA-jchw-25xp-jwwc',
+  'GHSA-cxjh-pqwp-8mfp', 'GHSA-4q6p-r6v2-jvc5',
+  'GHSA-78xj-cgh5-2h22', 'GHSA-9c47-m6qq-7p4h',
+  'GHSA-9c47-m6qq-7p4h', 'GHSA-f8q6-p94x-37v3',
+  'GHSA-xvch-5gv4-984h', 'GHSA-qrpm-p2h7-hrv2',
+  'GHSA-hj48-42vr-x3v9', 'GHSA-c2qf-rxjj-qqgw',
+  'GHSA-c2qf-rxjj-qqgw', 'GHSA-c2qf-rxjj-qqgw',
+  'GHSA-c2qf-rxjj-qqgw', 'GHSA-c2qf-rxjj-qqgw',
+  'GHSA-4wf5-vphf-c2xc', 'GHSA-w5p7-h5w8-2hfq',
+  'GHSA-7p7h-4mm5-852v', 'GHSA-j8xg-fqg3-53r7'
+]
 
+```
 
+The `-classifyCwe` flag will try and classify the CWE_ID as one of the following types: n`ot-memory-related, other-memory-related, spatial-memory-related, temporal-memory-related`. Please ensure the CWE_ID is valid and of the following form: e.g. 354. If the CWE_ID doesn't exist in the current database it will return "not found".
 
+```sh
+nqmvul -classifyCwe CWE-354
+CWE_ID CWE-354 has type: not-memory-related
+```
 
-
+The `-getHistory` flag will return all previous versions of a CPE and for each version will try and find known CVEs and CWEs (vulnerabilities). It also classifies each CWE into memory related issues or other. Can take as an argument various types of CPEs such as: cpe:2.3:\a:\busybox:busybox:1.33.2, cpe:/a:doxygen:doxygen:1.7.2. For cpes that contain ':' please place them inside quotes. e.g. : `nqmvul -getHistory "cpe:2.3:a:openssl:openssl:1.1.1:::::::"` . Output is saved to output/output.txt
 
 
 
