@@ -522,10 +522,10 @@ The project_name is utilised to save the extracted dependency list as /vulnerabi
 
 
 ```sh
-nqmvul -genDependencies /home/ionut/Repositories/Dependency_scanner_tools/vim vim                                                    
+nqmvul -genDependencies /Repositories/Dependency_scanner_tools/vim vim                                                    
 Trying to generate dependency list for vim
 dependency scanning completed.
-dependency list saved to /home/ionut/Repositories/Sbom_cli/sbom-cli/vulnerability-reports/ccsDependencies/vim_dependencies
+dependency list saved to /sbom-cli/vulnerability-reports/ccsDependencies/vim_dependencies
 ```
 
 
@@ -533,7 +533,7 @@ dependency list saved to /home/ionut/Repositories/Sbom_cli/sbom-cli/vulnerabilit
 {"target": "/usr/src/project", "extractors": [{"deps": [], "type": "autoconf"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [{"depname": "attr", "version": null, "version_op": null, "unified_name": "attr", "extractor_type": "autoconf", "context": "/usr/src/project/src/configure.ac", "confidence": "High"}, {"depname": "selinux", "version": null, "version_op": null, "unified_name": "selinux", "extractor_type": "autoconf", "context": "/usr/src/project/src/configure.ac", "confidence": "High"}, {"depname": "ffi", "version": null, "version_op": null, "unified_name": "ffi", "extractor_type": "autoconf", "context": "/usr/src/project/src/configure.ac", "confidence": "High"}, {"depname": "network", "version": null, "version_op": null, "unified_name": "network", "extractor_type": "autoconf", "context": "/usr/src/project/src/configure.ac", "confidence": "High"}, {"deps": [], "type": "autoconf"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "autoconf"}, {"deps": [], "type": "make"}]}%        
 ```
 
-
+For the selected project, a conanfile.txt will be created using the `-generateConan` flag. This command cannot be executed until ccsDependencies/project_name_dependencies are created. The `-genDependencies` flag is used to create the dependency file.
 
 
 
