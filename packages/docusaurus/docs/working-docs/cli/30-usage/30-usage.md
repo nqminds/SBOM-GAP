@@ -376,13 +376,79 @@ cat Desktop/cveData.json
 }
 ```
 
-The `-getHistoricalCpes` flag will return all known versions of the input CPE. The CPE must be in CPE2.3 format e.g. "cpe:2.3:\a:\busybox:busybox:1.33.2"
+The `-getHistoricalCpes` flag will return all known versions of the input CPE. The CPE must be in CPE2.3 format e.g. cpe:2.3:\a:\busybox:busybox:1.33.2
+
 
 ```sh
-nqmvul -getHistoricalCves <CVE>
+nqmvul -getHistoricalCpes cpe:2.3:\a:\busybox:busybox:1.33.2 
+Fetching historical CPEs from API
+[
+  {
+    cpeName: 'cpe:2.3:a:busybox:busybox:1.1.1:*:*:*:*:*:*:*',
+    title: 'BusyBox 1.1.1',
+    lastModified: '2012-07-25T15:25:49.167',
+    created: '2007-08-23T21:16:59.567',
+    deprecated: false
+  },
+  {
+    cpeName: 'cpe:2.3:a:busybox:busybox:1.20.2:*:*:*:*:*:*:*',
+    title: 'BusyBox 1.20.2',
+    lastModified: '2012-07-25T15:25:52.650',
+    created: '2012-07-03T17:11:16.413',
+    deprecated: false
+  },
+  {
+    cpeName: 'cpe:2.3:a:busybox:busybox:1.20.1:*:*:*:*:*:*:*',
+    title: 'BusyBox 1.20.1',
+    lastModified: '2012-07-25T15:25:52.587',
+    created: '2012-07-03T17:11:16.507',
+    deprecated: false
+  },
+  {
+    cpeName: 'cpe:2.3:a:busybox:busybox:1.20.0:*:*:*:*:*:*:*',
+    title: 'BusyBox 1.20.0',
+    lastModified: '2012-07-25T15:25:52.540',
+    created: '2012-07-03T17:11:16.600',
+    deprecated: false
+  },
+  {
+    cpeName: 'cpe:2.3:a:busybox:busybox:1.19.4:*:*:*:*:*:*:*',
+    title: 'BusyBox 1.19.4',
+    lastModified: '2012-07-25T15:25:52.227',
+    created: '2012-07-03T17:11:16.710',
+    deprecated: false
+  }, ... 63 more items
 ```
 
+The `-getHistoricalCves` flag will return all known versions of the input CVE. Supported CVE format: "CVE-2021-42376"
+
 ```sh
+ nqmvul -getHistoricalCves CVE-2021-42376 
+Fetching historical CVEs from API
+[
+  {
+    cveId: 'CVE-2021-42376',
+    cveChangeId: '6E91C58C-F0AA-4874-8946-FE2C2DA4175A',
+    created: '2021-11-17T19:44:19.073',
+    mewCWEId: [ 'NIST CWE-476' ],
+    oldCWEId: []
+  },
+  {
+    cveId: 'CVE-2021-42376',
+    cveChangeId: '4160FCB4-8DF4-48A8-9981-C05EBE6C1C91',
+    created: '2021-11-19T16:51:46.827',
+    mewCWEId: [],
+    oldCWEId: []
+  },
+  {
+    cveId: 'CVE-2021-42376',
+    cveChangeId: '9333A583-855D-46EE-8D8A-65222D3B04D4',
+    created: '2021-11-25T03:15:07.063',
+    mewCWEId: [],
+    oldCWEId: []
+  },
+     ...
+]
 
 ```
 
