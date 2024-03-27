@@ -616,8 +616,52 @@ Mapping completed. Please see the generated file in vulnerability-reports/cpes/c
 }                                                       
 ```
 
+To be used only for C/C++ projects that are not supported by syft, such as those that do not make use of the CONAN package manager, may generate an SBOM using the `-generateCSbom` flag. The project name and format (only json or xml) are the two arguments it accepts. Before executing the command, please make sure that /vulnerability-reports/cpe_data.csv and /vulnerability-reports/conan-files/<project_name>/conanfile.txt exist. However, `-generateCCPPReport`, which handles conanfile.txt generation, has now replaced `-generateCSbom.`
+
+```sh
+nqmvul -generateCSbom vim json 
+Trying to create SBOM for vim, this may take a while...
+SBOM completed. Please see the generated file in vulnerability-reports/sboms/vim_sbom.json
 
 
+cat /sbom-cli/vulnerability-reports/sboms/vim_sbom.json 
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.4",
+  "serialNumber": "urn:uuid:c7449190-e25a-4dbd-aab8-92eb4144ff10",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2024-03-27T11:04:10.635Z",
+    "tools": [
+      {
+        "vendor": "nquiringminds",
+        "name": "nqmvul",
+        "version": "1"
+      }
+    ],
+    "component": {
+      "bom-ref": "66a9937f1b",
+      "type": "file",
+      "name": "/home/"
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "pkg:attr@2.5.1",
+      "type": "library",
+      "name": "attr",
+      "version": "2.5.1",
+      "licenses": [
+        {
+          "license": {
+            "id": ""
+          }
+        }
+      ], ...
+}
+
+```
 
 
 
