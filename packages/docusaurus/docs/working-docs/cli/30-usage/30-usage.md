@@ -765,6 +765,33 @@ The `-getHistory` flag will return all previous versions of a CPE and for each v
 
 
 
+```sh
+cpe:/a:openssl:fips_object_module:-            - CVE No Info    - CWE No Info    - Type No Info
+cpe:/a:openssl:openssl:-                       - CVE-2003-0078  - CWE-203        - not-memory-related
+                                               - CVE-2005-2946  - CWE-327        - not-memory-related
+                                               - CVE-1999-0428  - CWE-384        - not-memory-related
+                                               - CVE-2008-5077  - CWE-20         - other-memory-related
+                                               - CVE-2009-1390  - CWE-287        - not-memory-related
+                                               ...
+cpe:/a:openssl:openssl:0.9.1c                  - CVE-1999-0428  - CWE-384        - not-memory-related
+                                               - CVE-2003-0078  - CWE-203        - not-memory-related
+                                               - CVE-2005-2946  - CWE-327        - not-memory-related
+                                               - CVE-2008-5077  - CWE-20         - other-memory-related
+                                               - CVE-2009-0590  - CWE-119        - spatial-memory-related
+                                               ...
+cpe:/a:openssl:openssl:0.9.2b                  - CVE-2003-0078  - CWE-203        - not-memory-related
+                                               - CVE-2005-2946  - CWE-327        - not-memory-related
+                                               - CVE-2008-5077  - CWE-20         - other-memory-related
+                                               - CVE-2009-0590  - CWE-119        - spatial-memory-related
+                                               - CVE-2009-1390  - CWE-287        - not-memory-related
+                                               ...
+cpe:/a:openssl:openssl:0.9.3                   - CVE-2005-2946  - CWE-327        - not-memory-related
+                                               - CVE-2003-0078  - CWE-203        - not-memory-related
+                                               ...
+...
 
+                                               
+                                               
+```
 
 
