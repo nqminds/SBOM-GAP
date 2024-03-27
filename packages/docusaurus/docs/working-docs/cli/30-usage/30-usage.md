@@ -85,7 +85,7 @@ word-wrap         1.2.3      1.2.4     npm    GHSA-j8xg-fqg3-53r7  Medium
 
 Vulnerability report saved to: /vulnerability-reports/reports/vulnerability_report_cyber_sbom
 ```
-To generate a Software Bill Of Materials (SBOM) for other C/C++ ecosystems (Uses ccscanner and [grype](https://github.com/anchore/grype)).
+Use the  `-generateCCPPReport` to generate a Software Bill Of Materials (SBOM) for other C/C++ ecosystems (Uses ccscanner and [grype](https://github.com/anchore/grype)).
 Package Managers:
 Deb
 Conan
@@ -143,9 +143,6 @@ nqmvul -help
 
 The `-getCpes` flag will parse an SBOM and return a list of CPEs in the 2.3 format.
 
-```sh
-nqmvul -getCpes <path_to_sbom.json>
-```
 
 ```sh
 nqmvul -getCpes /home/Repositories/Sbom_cli/sbom-cli/vulnerability-reports/sboms/cyber_sbom.json
@@ -163,13 +160,37 @@ nqmvul -getCpes /home/Repositories/Sbom_cli/sbom-cli/vulnerability-reports/sboms
 ]
 ```
 The `-listCpeDetails` flag will parse an SBOM and return detailed information about each CPE, such as CVEs and CWEs
+
 ```sh
-nqmvul -getCves <CPE>
+nqmvul -listCpeDetails /sbom-cli/vulnerability-reports/sbom.json 
+Fetching cpe info from API ... 
+{
+  'cpe:2.3:a:busybox:busybox:1.33.2': [
+    {
+      id: 'CVE-2021-42376',
+      description: "A NULL pointer dereference in Busybox's hush applet leads to denial of service when processing a crafted shell command, due to missing validation after a \\x03 delimiter character. This may be used for DoS under very rare conditions of filtered command input.",
+      weakness: [Array],
+      baseScore: 5.5,
+      baseSeverity: 'MEDIUM'
+    }, ...],
+ 'cpe:2.3:a:thekelleys:dnsmasq:2.85': [
+    {
+      id: 'CVE-2022-0934',
+      description: 'A single-byte, non-arbitrary write/use-after-free flaw was found in dnsmasq. This flaw allows an attacker who sends a crafted packet processed by dnsmasq, potentially causing a denial of service.',
+      weakness: [Array],
+      baseScore: 7.5,
+      baseSeverity: 'HIGH'
+    }, ...],
+    
+    ...
+}
+
 ```
 
+If the `-getCves` flag is set, all CVEs that are available for a CPE will be retrieved along with any related CWEs.
 
 ```sh
- nqmvul -getCves cpe:2.3:a:busybox:busybox:1.33.2 
+nqmvul -getCves cpe:2.3:a:busybox:busybox:1.33.2 
 Fetching CVEs from API for:  cpe:2.3:a:busybox:busybox:1.33.2
 [
   {
@@ -193,13 +214,7 @@ Fetching CVEs from API for:  cpe:2.3:a:busybox:busybox:1.33.2
     baseScore: 9.8,
     baseSeverity: 'CRITICAL'
   },
-  {
-    id: 'CVE-2023-39810',
-    description: 'An issue in the CPIO command of Busybox v1.33.2 allows attackers to execute a directory traversal.',
-    weakness: [ 'CWE-22' ],
-    baseScore: 7.8,
-    baseSeverity: 'HIGH'
-  }
+  ...
 ]
 
 ```
@@ -208,7 +223,7 @@ The `-writeCVEs` flag will write all the CVE data of an sbom into a json format 
 
 ```sh
 nqmvul -writeCves /vulnerability-reports/sbom.json /Desktop 
-Writing CVE data to /vulnerability-reports/cveData.json
+Writing CVE data to cveData.json
 Writing file completed
 
 
@@ -246,10 +261,15 @@ cat Desktop/cveData.json
 }
 ```
 
+The `-getHistoricalCpes` flag will return all known versions of the input CPE. The CPE must be in CPE2.3 format e.g. "cpe:2.3:\a:\busybox:busybox:1.33.2"
 
+```sh
+nqmvul -getHistoricalCves <CVE>
+```
 
+```sh
 
-
+```
 
 
 
