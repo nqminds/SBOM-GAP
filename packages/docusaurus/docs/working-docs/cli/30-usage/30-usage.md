@@ -4,7 +4,43 @@ title: CLI Tool Usage
 
 # Commands and Options:
 
-To generate a Software Bill Of Materials (SBOM) for the ecosystems bellow use the command (Uses [syft](https://github.com/anchore/syft) and [grype](https://github.com/anchore/grype)):
+Available commands:
+
+```sh
+nqmvul -help
+
+
+    Usage:
+    nqmvul [argument] [filePath]
+    nqmvul [argument] [text]
+    nqmvul [argument] [filePath] [text]
+    nqmvul [argument] [filePath] [filePath] [text] [filePath]
+    nqmvul [argument] [text] [text]
+    nqmvul [argument] [text] [argument]
+
+    Arguments:
+    -getCpes                Path to SBOM.json file
+    -listCpeDetails         Path to SBOM.json file
+    -getCves                CPE2.3 format e.g. "cpe:2.3:a:busybox:busybox:1.33.2"
+    -writeCves              Path to SBOM.json file, absolute path to required output directory
+    -getHistoricalCpes      CPE2.3 format e.g. "cpe:2.3:a:busybox:busybox:1.33.2"
+    -getHistoricalCves      Supported CVE format: "CVE-2022-48174"
+    -getCweInfo             CWE. If multiple CWEs, separate by commas without white space. e.g. 'CWE-476,CWE-681'
+    -listVulnerabilities    Absolute path to grype vulnerability report file
+    -generateSbom           Absolute path to project and a project name
+    -generateConan          Project Name. Please ensure the dependencies exist for /vulnerability-reports/ccsDependencies/<project_name>_dependencies
+    -genDependencies        Absolute path to cppDierectory and projectName
+    -mapCpes                Project Name. Please ensure that vulnerability-reports/conan-files/<project_name>/conanfile.txt exists
+    -generateCSbom          Project Name, SBOM format (json or xml)
+    -getGhsa                GHSA code. e.g GHSA-j8xg-fqg3-53r7
+    -extractGhsas           Absolute path to grype vulnerability report file
+    -classifyCwe            CWE Id, e.g. CWE-354
+    -getHistory             CPE e.g. cpe:2.3:a:busybox:busybox:1.33.2
+    -generateCCPPReport     Absolute path to project and a project name
+```
+
+
+To generate a Software Bill Of Materials (SBOM) for the ecosystems bellow use the command `nqmvul -generateSbom <project_path> <project_name>` (Uses [syft](https://github.com/anchore/syft) and [grype](https://github.com/anchore/grype)):
 
 Alpine (apk)
 C (conan)
@@ -29,10 +65,6 @@ Red Hat (rpm)
 Ruby (gem)
 Rust (cargo.lock)
 Swift (cocoapods, swift-package-manager)
-
-```sh
-nqmvul -generateSbom <project_path> <project_name>
-```
 
 ```sh 
 nqmvul -generateSbom Repositories/cyber cyber_sbom
@@ -86,41 +118,141 @@ word-wrap         1.2.3      1.2.4     npm    GHSA-j8xg-fqg3-53r7  Medium
 Vulnerability report saved to: /vulnerability-reports/reports/vulnerability_report_cyber_sbom
 ```
 
-
-Available commands:
+Use the  `-generateCCPPReport` to generate a Software Bill Of Materials (SBOM) for other C/C++ ecosystems (Uses ccscanner and [grype](https://github.com/anchore/grype)).
+Package Managers:
+Deb
+Conan
+Vcpkg
+Clib
+CPM
+Buckaroo
+Dds
+Hunter
+Cppget
+Xrepo
+Gitsubmodule
+Pkg-config
 
 ```sh
-nqmvul -help
-
-
-    Usage:
-    nqmvul [argument] [filePath]
-    nqmvul [argument] [text]
-    nqmvul [argument] [filePath] [text]
-    nqmvul [argument] [filePath] [filePath] [text] [filePath]
-    nqmvul [argument] [text] [text]
-    nqmvul [argument] [text] [argument]
-
-    Arguments:
-    -getCpes                Path to SBOM.json file
-    -listCpeDetails         Path to SBOM.json file
-    -getCves                CPE2.3 format e.g. "cpe:2.3:a:busybox:busybox:1.33.2"
-    -writeCves              Path to SBOM.json file, absolute path to required output directory
-    -getHistoricalCpes      CPE2.3 format e.g. "cpe:2.3:a:busybox:busybox:1.33.2"
-    -getHistoricalCves      Supported CVE format: "CVE-2022-48174"
-    -getCweInfo             CWE. If multiple CWEs, separate by commas without white space. e.g. 'CWE-476,CWE-681'
-    -listVulnerabilities    Absolute path to grype vulnerability report file
-    -generateSbom           Absolute path to project and a project name
-    -generateConan          Project Name. Please ensure the dependencies exist for /vulnerability-reports/ccsDependencies/<project_name>_dependencies
-    -genDependencies        Absolute path to cppDierectory and projectName
-    -mapCpes                Project Name. Please ensure that vulnerability-reports/conan-files/<project_name>/conanfile.txt exists
-    -generateCSbom          Project Name, SBOM format (json or xml)
-    -getGhsa                GHSA code. e.g GHSA-j8xg-fqg3-53r7
-    -extractGhsas           Absolute path to grype vulnerability report file
-    -classifyCwe            CWE Id, e.g. CWE-354
-    -getHistory             CPE e.g. cpe:2.3:a:busybox:busybox:1.33.2
-    -generateCCPPReport     Absolute path to project and a project name
+nqmvul -generateCCPPReport <path_to_c/cpp_project> <project_name>
 ```
+
+```sh
+nqmvul  -generateCCPPReport absolute/path/to/qtbase qtbase_report
+Starting full report generation for project /qtbase...
+Trying to generate dependency list for qtbase_report
+dependency scanning completed.
+dependency list saved to /sbom-cli/vulnerability-reports/ccsDependencies/qtbase_report_dependencies
+Dependency list completed completed.
+Writing conan file for ../vulnerability-reports/ccsDependencies/qtbase_report_dependencies...
+Conan file generation completed.
+Mapping CPEs, please wait...
+CPE mapping completed. Check vulnerability-reports/cpes/cpeMapping.json for the mapping.
+Generating SBOM in qtbase_report format...
+SBOM generation completed. Check vulnerability-reports/sboms/qtbase_report_sbom.json for the SBOM.
+Full report generation for project qtbase_report completed successfully.
+/sbom-cli/vulnerability-reports/sboms/qtbase_report_sbom.json
+Generating Vulnerability report for qtbase_report_sbom.json
+Running grype to generate vulnerability report...
+NAME         INSTALLED     FIXED-IN  TYPE            VULNERABILITY   SEVERITY 
+addressbook  6.x-3.4                 UnknownPackage  CVE-2012-2307   Medium    
+calendar     12.2.11.3000            UnknownPackage  CVE-2023-30678  Medium    
+calendar     12.2.11.3000            UnknownPackage  CVE-2022-39915  Medium    
+calendar     12.2.11.3000            UnknownPackage  CVE-2023-21464  Low       
+calendar     12.2.11.3000            UnknownPackage  CVE-2022-33705  Low       
+chat         2021-04-09              UnknownPackage  CVE-2021-30480  High      
+db2          11.5.9                  UnknownPackage  CVE-2023-47701  High      
+db2          11.5.9                  UnknownPackage  CVE-2023-40687  High      
+db2          11.5.9                  UnknownPackage  CVE-2023-38727  High      
+db2          11.5.9                  UnknownPackage  CVE-2023-29258  High      
+db2          11.5.9                  UnknownPackage  CVE-2012-3324   High      
+db2          11.5.9                  UnknownPackage  CVE-2023-47747  Medium    
+db2          11.5.9                  UnknownPackage  CVE-2023-47746  Medium    
+db2          11.5.9                  UnknownPackage  CVE-2023-47158  Medium    
+db2          11.5.9                  UnknownPackage  CVE-2023-27859  Medium    
+directfb     1.4.13                  UnknownPackage  CVE-2014-2977   High      
+glib:2.0     2.0.7                   UnknownPackage  CVE-2023-32643  High      
+glib:2.0     2.0.7                   UnknownPackage  CVE-2023-32636  High      
+glib:2.0     2.0.7                   UnknownPackage  CVE-2023-29499  High      
+glib:2.0     2.0.7                   UnknownPackage  CVE-2021-27219  High      
+glib:2.0     2.0.7                   UnknownPackage  CVE-2021-27218  High      
+glib:2.0     2.0.7                   UnknownPackage  CVE-2020-35457  High      
+glib:2.0     2.0.7                   UnknownPackage  CVE-2019-13012  High      
+glib:2.0     2.0.7                   UnknownPackage  CVE-2023-32665  Medium    
+glib:2.0     2.0.7                   UnknownPackage  CVE-2023-32611  Medium    
+glib:2.0     2.0.7                   UnknownPackage  CVE-2021-3800   Medium    
+glib:2.0     2.0.7                   UnknownPackage  CVE-2021-28153  Medium    
+glib:2.0     2.0.7                   UnknownPackage  CVE-2012-0039   Medium    
+glib:2.0     2.0.7                   UnknownPackage  CVE-2008-4316   Medium    
+gui          7.70                    UnknownPackage  CVE-2015-2282   High      
+gui          7.70                    UnknownPackage  CVE-2022-41205  Medium    
+gui          7.70                    UnknownPackage  CVE-2015-2278   Medium    
+harfbuzz     6.0.0                   UnknownPackage  CVE-2023-25193  High      
+jpeg         2022-06-15              UnknownPackage  CVE-2022-37768  High      
+jpeg         2022-06-15              UnknownPackage  CVE-2022-37770  Medium    
+jpeg         2022-06-15              UnknownPackage  CVE-2022-37769  Medium    
+jpeg         2022-06-15              UnknownPackage  CVE-2022-35166  Medium    
+jpeg         2022-06-15              UnknownPackage  CVE-2021-39520  Medium    
+jpeg         2022-06-15              UnknownPackage  CVE-2021-39519  Medium    
+jpeg         2022-06-15              UnknownPackage  CVE-2021-39518  Medium    
+jpeg         2022-06-15              UnknownPackage  CVE-2021-39517  Medium    
+jpeg         2022-06-15              UnknownPackage  CVE-2021-39516  Medium    
+jpeg         2022-06-15              UnknownPackage  CVE-2021-39515  Medium    
+jpeg         2022-06-15              UnknownPackage  CVE-2021-39514  Medium    
+libinput     1.20.0                  UnknownPackage  CVE-2022-1215   High      
+libproxy     0.4.15                  UnknownPackage  CVE-2020-26154  Critical  
+libproxy     0.4.15                  UnknownPackage  CVE-2020-25219  High      
+mysql        8.1.0                   UnknownPackage  CVE-2024-20985  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20984  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20982  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20981  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20977  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20975  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20973  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20971  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20970  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20969  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20968  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20967  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20966  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20965  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20964  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20963  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20962  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20961  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2024-20960  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2023-22114  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2023-22103  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2023-22097  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2023-22095  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2023-22084  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2023-22078  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2023-22070  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2023-22068  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2023-22066  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2023-22059  Medium    
+mysql        8.1.0                   UnknownPackage  CVE-2023-22032  Medium    
+odbc         18.0                    UnknownPackage  CVE-2023-28304  High      
+odbc         18.0                    UnknownPackage  CVE-2023-23375  High      
+openssl      3.2.0                   UnknownPackage  CVE-2024-0727   Medium    
+openssl      3.2.0                   UnknownPackage  CVE-2023-6129   Medium    
+oracle       121030                  UnknownPackage  CVE-2015-0489   Low       
+pcre2        10.40                   UnknownPackage  CVE-2022-41409  High      
+project      2016                    UnknownPackage  CVE-2020-0760   High      
+project      2016                    UnknownPackage  CVE-2019-1264   High      
+project      2016                    UnknownPackage  CVE-2018-8575   High      
+project      2016                    UnknownPackage  CVE-2015-2503   High      
+project      2016                    UnknownPackage  CVE-2020-1322   Medium    
+textedit     -                       UnknownPackage  CVE-2005-4504   High      
+tools        12.3.5                  UnknownPackage  CVE-2014-4200   Medium    
+tools        12.3.5                  UnknownPackage  CVE-2014-4199   Medium    
+widgets      4.0.5                   UnknownPackage  CVE-2007-4034   High      
+x11          6.9                     UnknownPackage  CVE-2013-7439   High
+
+Vulnerability report saved to: /sbom-cli/vulnerability-reports/reports/vulnerability_report_qtbase_report
+
+```
+
 
 
 
@@ -128,7 +260,7 @@ The `-getCpes` flag will parse an SBOM and return a list of CPEs in the 2.3 form
 
 
 ```sh
-nqmvul -getCpes /home/Repositories/Sbom_cli/sbom-cli/vulnerability-reports/sboms/cyber_sbom.json
+nqmvul -getCpes /sbom-cli/vulnerability-reports/sboms/cyber_sbom.json
 [
   'cpe:2.3:a:@aashutoshrathi/word-wrap:@aashutoshrathi/word-wrap:1.2.6:*:*:*:*:*:*:*',
   'cpe:2.3:a:@ampproject/remapping:@ampproject/remapping:2.2.1:*:*:*:*:*:*:*',
@@ -278,24 +410,7 @@ nqmvul -getHistoricalCves <CVE>
 
 
 
-Use the  `-generateCCPPReport` to generate a Software Bill Of Materials (SBOM) for other C/C++ ecosystems (Uses ccscanner and [grype](https://github.com/anchore/grype)).
-Package Managers:
-Deb
-Conan
-Vcpkg
-Clib
-CPM
-Buckaroo
-Dds
-Hunter
-Cppget
-Xrepo
-Gitsubmodule
-Pkg-config
 
-```sh
-nqmvul -generateCCPPReport <path_to_c/cpp_project> <project_name>
-```
 
 
 
