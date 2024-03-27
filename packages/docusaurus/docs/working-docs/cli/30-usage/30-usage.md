@@ -85,24 +85,7 @@ word-wrap         1.2.3      1.2.4     npm    GHSA-j8xg-fqg3-53r7  Medium
 
 Vulnerability report saved to: /vulnerability-reports/reports/vulnerability_report_cyber_sbom
 ```
-Use the  `-generateCCPPReport` to generate a Software Bill Of Materials (SBOM) for other C/C++ ecosystems (Uses ccscanner and [grype](https://github.com/anchore/grype)).
-Package Managers:
-Deb
-Conan
-Vcpkg
-Clib
-CPM
-Buckaroo
-Dds
-Hunter
-Cppget
-Xrepo
-Gitsubmodule
-Pkg-config
 
-```sh
-nqmvul -generateCCPPReport <path_to_c/cpp_project> <project_name>
-```
 
 Available commands:
 
@@ -271,6 +254,48 @@ nqmvul -getHistoricalCves <CVE>
 
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Use the  `-generateCCPPReport` to generate a Software Bill Of Materials (SBOM) for other C/C++ ecosystems (Uses ccscanner and [grype](https://github.com/anchore/grype)).
+Package Managers:
+Deb
+Conan
+Vcpkg
+Clib
+CPM
+Buckaroo
+Dds
+Hunter
+Cppget
+Xrepo
+Gitsubmodule
+Pkg-config
+
+```sh
+nqmvul -generateCCPPReport <path_to_c/cpp_project> <project_name>
+```
 
 
 
