@@ -452,13 +452,40 @@ Fetching historical CVEs from API
 
 ```
 
+The`-getCweInfo` flag will return information such as description for each CWE. Can take one or more CWEs. If multiple CWEs are passed, they must be writen without any space e.g. 'CWE-476,CWE-681'
 
+```sh
+ nqmvul -getCweInfo CWE-476,CWE-681
+[
+  {
+    'CWE-ID': '476',
+    Name: 'NULL Pointer Dereference',
+    Description: `A NULL pointer dereference occurs when the application dereferences a pointer that it expects to be valid, but is NULL, typically causing a crash or exit.NULL pointer dereferences are frequently resultant from rarely encountered error conditions, since these are most likely to escape detection during the testing phases.used for access of nil in Go programsThis weakness can be detected using dynamic tools and techniques that interact with the software using large test suites with many diverse inputs, such as fuzz testing (fuzzing), robustness testing, and fault injection. The software's operation may slow down, but it should not become unstable, crash, or generate incorrect results.Identify error conditions that are not likely to occur during normal usage and trigger them. For example, run the program under low memory conditions, run with insufficient privileges or permissions, interrupt a transaction before it is completed, or disable connectivity to basic network services such as DNS. Monitor the software for any unexpected behavior. If you trigger an unhandled exception or similar error that was discovered and handled by the application's environment, it may still indicate unexpected conditions that were not handled by the application itself.Automated static analysis, commonly referred to as Static Application Security Testing (SAST), can find some instances of this weakness by analyzing source code (or binary/compiled code) without having to execute it. Typically, this is done by building a model of data flow and control flow, then searching for potentially-vulnerable patterns that connect "sources" (origins of input) with "sinks" (destinations where the data interacts with external components, a lower layer such as the OS, etc.)If all pointers that could have been modified are sanity-checked previous to use, nearly all NULL pointer dereferences can be prevented.The choice could be made to use a language that is not susceptible to these issues.Check the results of all functions that return a value and verify that the value is non-null before acting upon it.Identify all variables and data stores that receive information from external sources, and apply input validation to make sure that they are only initialized to expected values.Explicitly initialize all your variables and other data stores, either during declaration or just before the first usage.Use automated static analysis tools that target this type of weakness. Many modern techniques use data flow analysis to minimize the number of false positives. This is not a perfect solution, since 100% accuracy and coverage are not feasible.race condition causes a table to be corrupted if a timer activates while it is being modified, leading to resultant NULL dereference; also involves locking.large number of packets leads to NULL dereferencepacket with invalid error status value triggers NULL dereferenceChain: race condition for an argument value, possibly resulting in NULL dereferencessh component for Go allows clients to cause a denial of service (nil pointer dereference) against SSH servers.Chain: Use of an unimplemented network socket operation pointing to an uninitialized handler function (CWE-456) causes a crash because of a null pointer dereference (CWE-476).Chain: race condition (CWE-362) might allow resource to be released before operating on it, leading to NULL dereference (CWE-476)Chain: some unprivileged ioctls do not verify that a structure has been initialized before invocation, leading to NULL dereferenceChain: IP and UDP layers each track the same value with different mechanisms that can get out of sync, possibly resulting in a NULL dereferenceChain: uninitialized function pointers can be dereferenced allowing code executionChain: improper initialization of memory can lead to NULL dereferenceChain: game server can access player data structures before initialization has happened leading to NULL dereferenceChain: The return value of a function returning a pointer is not checked for success (CWE-252) resulting in the later use of an uninitialized variable (CWE-456) and a null pointer dereference (CWE-476)Chain: a message having an unknown message type may cause a reference to uninitialized memory resulting in a null pointer dereference (CWE-476) or dangling pointer (CWE-825), possibly crashing the system or causing heap corruption.Chain: unchecked return value can lead to NULL dereferenceSSL software allows remote attackers to cause a denial of service (crash) via a crafted SSL/TLS handshake that triggers a null dereference.Network monitor allows remote attackers to cause a denial of service (crash) via a malformed RADIUS packet that triggers a null dereference.Network monitor allows remote attackers to cause a denial of service (crash) via a malformed Q.931, which triggers a null dereference.Chat client allows remote attackers to cause a denial of service (crash) via a passive DCC request with an invalid ID number, which causes a null dereference.Server allows remote attackers to cause a denial of service (crash) via malformed requests that trigger a null dereference.OS allows remote attackers to cause a denial of service (crash from null dereference) or execute arbitrary code via a crafted request during authentication protocol selection.Game allows remote attackers to cause a denial of service (server crash) via a missing argument, which triggers a null pointer dereference.Network monitor allows remote attackers to cause a denial of service (crash) or execute arbitrary code via malformed packets that cause a NULL pointer dereference.Chain: System call returns wrong value (CWE-393), leading to a resultant NULL dereference (CWE-476).`,
+    Extended_Description: 'NULL pointer dereference issues can occur through a number of flaws, including race conditions, and simple programming omissions.',
+    Alternate_Terms: [ 'NPD', 'null deref', 'nil pointer dereference' ],
+    Likelihood_Of_Exploit: 'Medium',
+    Common_Consequences: [ [Object], [Object] ],
+    Related_Weaknesses: [ [Object], [Object], [Object] ]
+  },
+  {
+    'CWE-ID': '681',
+    Name: 'Incorrect Conversion between Numeric Types',
+    Description: 'When converting from one data type to another, such as long to integer, data can be omitted or translated in a way that produces unexpected values. If the resulting values are used in a sensitive context, then dangerous behaviors may occur.Avoid making conversion between numeric types. Always check for the allowed ranges.Chain: integer coercion error (CWE-192) prevents a return value from indicating an error, leading to out-of-bounds write (CWE-787)Chain: in a web browser, an unsigned 64-bit integer is foribly cast to a 32-bit integer (CWE-681) and potentially leading to an integer overflow (CWE-190). If an integer overflow occurs, this can cause heap memory corruption (CWE-122)Chain: integer signedness error (CWE-195) passes signed comparison, leading to heap overflow (CWE-122)Chain: signed short width value in image processor is sign extended during conversion to unsigned int, which leads to integer overflow and heap-based buffer overflow.Integer truncation of length value leads to heap-based buffer overflow.Size of a particular type changes for 64-bit platforms, leading to an integer truncation in document processor causes incorrect index to be generated.',
+    Extended_Description: '',
+    Alternate_Terms: [],
+    Likelihood_Of_Exploit: 'High',
+    Common_Consequences: [ [Object] ],
+    Related_Weaknesses: [ [Object], [Object], [Object] ]
+  }
+]
 
+```
 
+The `-listVunlerabilities` flag will list all vulnerabilities previously detected by grype
 
+```sh
 
-
-
+```
 
 
 
