@@ -628,7 +628,7 @@ cat /sbom-cli/vulnerability-reports/sboms/vim_sbom.json
 
 ```json=
 {
-  "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
+  "schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
   "bomFormat": "CycloneDX",
   "specVersion": "1.4",
   "serialNumber": "urn:uuid:c7449190-e25a-4dbd-aab8-92eb4144ff10",
