@@ -623,8 +623,10 @@ nqmvul -generateCSbom vim json
 Trying to create SBOM for vim, this may take a while...
 SBOM completed. Please see the generated file in vulnerability-reports/sboms/vim_sbom.json
 
+```
+cat /sbom-cli/vulnerability-reports/sboms/vim_sbom.json
 
-cat /sbom-cli/vulnerability-reports/sboms/vim_sbom.json 
+```json=
 {
   "$schema": "http://cyclonedx.org/schema/bom-1.4.schema.json",
   "bomFormat": "CycloneDX",
@@ -735,7 +737,7 @@ nqmvul -getGhsa GHSA-j8xg-fqg3-53r7
 The `-extractGhsas `will return an array of GHSA codes. Before running this command please replace the gitAdvisoryDbPath path from config.json with your local advisory-database/advisories path.
 
 ```sh
-nqmvul  -extractGhsas /home/ionut/Repositories/Sbom_cli/sbom-cli/vulnerability-reports/reports/vulnerability_report_cyber_sbom 
+nqmvul  -extractGhsas /sbom-cli/vulnerability-reports/reports/vulnerability_report_cyber_sbom 
 [
   'GHSA-93q8-gq69-wqmw', 'GHSA-93q8-gq69-wqmw',
   'GHSA-4gmj-3p3h-gm8h', 'GHSA-rv95-896h-c2vc',
@@ -753,7 +755,7 @@ nqmvul  -extractGhsas /home/ionut/Repositories/Sbom_cli/sbom-cli/vulnerability-r
 
 ```
 
-The `-classifyCwe` flag will try and classify the CWE_ID as one of the following types: n`ot-memory-related, other-memory-related, spatial-memory-related, temporal-memory-related`. Please ensure the CWE_ID is valid and of the following form: e.g. 354. If the CWE_ID doesn't exist in the current database it will return "not found".
+The `-classifyCwe` flag will try and classify the CWE_ID as one of the following types: `not-memory-related, other-memory-related, spatial-memory-related, temporal-memory-related`. Please ensure the CWE_ID is valid and of the following form: e.g. 354. If the CWE_ID doesn't exist in the current database it will return "not found".
 
 ```sh
 nqmvul -classifyCwe CWE-354
