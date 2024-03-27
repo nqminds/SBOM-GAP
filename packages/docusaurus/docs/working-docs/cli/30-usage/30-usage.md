@@ -484,12 +484,54 @@ The`-getCweInfo` flag will return information such as description for each CWE. 
 The `-listVunlerabilities` flag will list all vulnerabilities previously detected by grype
 
 ```sh
+nqmvul -listVulnerabilities /home/ionut/Repositories/Sbom_cli//sbom-cli/vulnerability-reports/reports/vulnerability_report_cyber_test
+Creating vulnerability report
+[
+  {
+    name: 'ansi-regex',
+    installed: '3.0.0',
+    fixedIn: '3.0.1',
+    type: 'npm',
+    vulnerability: 'GHSA-93q8-gq69-wqmw',
+    severity: 'High'
+  },
+  {
+    name: 'ansi-regex',
+    installed: '5.0.0',
+    fixedIn: '5.0.1',
+    type: 'npm',
+    vulnerability: 'GHSA-93q8-gq69-wqmw',
+    severity: 'High'
+  },
+  {
+    name: 'es5-ext',
+    installed: '0.10.62',
+    fixedIn: '0.10.63',
+    type: 'npm',
+    vulnerability: 'GHSA-4gmj-3p3h-gm8h',
+    severity: 'Low'
+  },
+    ...
+]
+```
 
+To extract all dependencies from a file system, use the `-genDependencies <cpp_project> <project_name>` flag. Used exclusively with C/C++ file systems.
+
+The first argument should represent the path to any C/C++ project you wish to scan.
+The project_name is utilised to save the extracted dependency list as /vulnerability-reports/ccsDependencies/project_name_dependencies.
+
+
+```sh
+nqmvul -genDependencies /home/ionut/Repositories/Dependency_scanner_tools/vim vim                                                    
+Trying to generate dependency list for vim
+dependency scanning completed.
+dependency list saved to /home/ionut/Repositories/Sbom_cli/sbom-cli/vulnerability-reports/ccsDependencies/vim_dependencies
 ```
 
 
-
-
+```json=
+{"target": "/usr/src/project", "extractors": [{"deps": [], "type": "autoconf"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [{"depname": "attr", "version": null, "version_op": null, "unified_name": "attr", "extractor_type": "autoconf", "context": "/usr/src/project/src/configure.ac", "confidence": "High"}, {"depname": "selinux", "version": null, "version_op": null, "unified_name": "selinux", "extractor_type": "autoconf", "context": "/usr/src/project/src/configure.ac", "confidence": "High"}, {"depname": "ffi", "version": null, "version_op": null, "unified_name": "ffi", "extractor_type": "autoconf", "context": "/usr/src/project/src/configure.ac", "confidence": "High"}, {"depname": "network", "version": null, "version_op": null, "unified_name": "network", "extractor_type": "autoconf", "context": "/usr/src/project/src/configure.ac", "confidence": "High"}, {"deps": [], "type": "autoconf"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "autoconf"}, {"deps": [], "type": "make"}]}%        
+```
 
 
 
