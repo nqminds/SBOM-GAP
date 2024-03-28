@@ -178,10 +178,14 @@ export function getApiKey(name) {
 export async function genGrypeReport(sbomFilePath, projectName) {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
-  const vulnerabilityReportFile = path.resolve(
-    __dirname,
-    `../vulnerability-reports/reports/vulnerability_report_${projectName}`
-  );
+  const reportDirectory = path.resolve(__dirname, '../vulnerability-reports/reports');
+  const vulnerabilityReportFile = path.join(reportDirectory, `vulnerability_report_${projectName}`);
+
+  // Ensure the report directory exists
+  if (!fs.existsSync(reportDirectory)) {
+    fs.mkdirSync(reportDirectory, { recursive: true });
+  }
+
   try {
     console.log("Running grype to generate vulnerability report...");
     const grypeArgs = [

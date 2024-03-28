@@ -18,11 +18,21 @@ const __dirname = dirname(__filename);
  * @param {string} fileName - Name of the output JSON file for the SBOM.
  */
 export function generateVulnerabilityReport(directoryPath, fileName) {
+  
+  const sbomDirectory = path.resolve(__dirname, '../vulnerability-reports/sboms');
+  const reportDirectory = path.resolve(__dirname, '../vulnerability-reports/reports');
+  const sbomFile = path.join(sbomDirectory, `${fileName}.json`);
+  const vulnerabilityReportFile = path.join(reportDirectory, `vulnerability_report_${fileName}`);
+  
+  // Ensure directories exist
+  if (!fs.existsSync(sbomDirectory)) {
+    fs.mkdirSync(sbomDirectory, { recursive: true });
+  }
+  if (!fs.existsSync(reportDirectory)) {
+    fs.mkdirSync(reportDirectory, { recursive: true });
+  }
+  
   // Execute syft command
-  const sbomFile = path.resolve(
-    __dirname,
-    `../vulnerability-reports/sboms/${fileName}.json`
-  );
   console.log("Running syft to generate SBOM...");
   const dockSyftArgs = [
     "run",
@@ -48,10 +58,6 @@ export function generateVulnerabilityReport(directoryPath, fileName) {
     throw new Error(`Error generating SBOM for ${directoryPath}: ${error}`);
   }
   // Execute grype command
-  const vulnerabilityReportFile = path.resolve(
-    __dirname,
-    `../vulnerability-reports/reports/vulnerability_report_${fileName}`
-  );
   try {
     console.log("Running grype to generate vulnerability report...");
     const grypeArgs = [
