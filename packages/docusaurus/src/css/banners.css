@@ -1,0 +1,63 @@
+@import url(custom.css);
+
+.navbar{
+  background-color: var(--ifm-color-primary);
+  box-shadow: 0px 10px 20px 0px rgba(0,0,0,.1);
+  height: 90px;
+  justify-content: center;
+  padding: 0;
+}
+
+.navbar__inner {
+  max-width: 1400px;
+}
+
+.navbar__items a, .navbar__items a:hover {
+  color: var(--ifm-color-f898f31);
+  fill: var(--ifm-color-f898f31);
+  font-family: var(--ifm-typography-ef2c50b-font-family),Sans-serif;
+  font-size: var(--ifm-typography-ef2c50b-font-size);
+  font-weight: var(--ifm-typography-ef2c50b-font-weight);
+  text-transform: var(--ifm-typography-primary-text-transform);
+}
+
+.navbar__logo {
+  max-width: 300px;
+  width: 100%;
+  height: 70px;
+}
+
+.navbar__search-input {
+  color: var(--ifm-color-f898f31);
+}
+
+.footer--dark {
+  background-color: var(--ifm-color-primary);
+}
+
+.footer__title, .footer__link-item, .footer__link-item span{
+  color: var(--ifm-color-f898f31);
+  fill: var(--ifm-color-f898f31);
+  font-family: var(--ifm-typography-ef2c50b-font-family),Sans-serif;
+}
+
+.footer__link-item:hover{
+  color: var(--ifm-color-f898f31);
+  fill: var(--ifm-color-f898f31);
+}
+
+.hero__subtitle {
+  color: var(--ifm-color-f898f31);
+}
+
+.navbar__link {
+  height: 100%;
+  color: var(--ifm-color-f898f31);
+  fill: var(--ifm-color-f898f31);
+  padding-top: 35px;
+  padding-bottom: 35px;
+  transition: .4s;
+}
+.navbar__link:hover, .navbar__link--active {
+  color: var(--ifm-color-accent)!important;
+}

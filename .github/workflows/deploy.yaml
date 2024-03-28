@@ -1,0 +1,87 @@
+name: HedgeDoc x Docusaurus Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/docusaurus/**'  # Adjust the path as needed
+      - 'packages/schemas/**'  # Adjust the path as needed
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest-m
+    strategy:
+      matrix:
+        node-version: [20]
+        
+    outputs:
+      result: ${{ steps.check-workflow-status.outputs.result }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+  
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Check commit message for keyword
+        run: |
+          KEYWORD="Move file"
+          if git log --format=%B -n 1 HEAD | grep -q "$KEYWORD"; then
+            echo "Commit contains the keyword."
+            exit 1 # Exit without failure
+          else
+            echo "Commit does not contain the keyword."
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies in root
+        run: npm install --ignore-scripts
+
+      - name: Validate schemas
+        run: |
+          node ./node_modules/.bin/schemaTools validate-schemas packages/schemas/src
+
+          if [ $? -ne 0 ]; then
+            echo "Error detected. Test failed."
+            exit 1
+          fi
+
+      - name: Check workflow status
+        id: check-workflow-status
+        run: echo "::set-output name=result::success"
+
+      - name: Install dependencies in /packages/docusaurus
+        run: |
+          cd packages/docusaurus
+          npm install
+
+      - name: Set up environment variables
+        run: |
+          echo "OCTOKIT_TOKEN=${{ secrets.OCTOKIT_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Build in /packages/docusaurus
+        run: |
+          cd packages/docusaurus
+          npm run build 2>/dev/null
+
+      - name: Deploy to Remote Server
+        run: |
+          mkdir -p $HOME/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > $HOME/.ssh/deploy_key
+          chmod 600 $HOME/.ssh/deploy_key
+          rsync -avz --exclude='.git' -e "ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/deploy_key -p ${{ secrets.REMOTE_SERVER_PORT }}" packages/docusaurus/build/ ${{ secrets.REMOTE_SERVER_USERNAME }}@${{ secrets.REMOTE_SERVER_HOST }}:/var/www/${{ secrets.REMOTE_SERVER_FOLDER }}/
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
