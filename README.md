@@ -1,5 +1,7 @@
 # SBOM-GAP(Generation and Analysis Platform) tool
 
+* For documentation and how to contribute, please follow this [link](https://sbom-gap.nqminds.com/cli/overview/).
+
 ### Please download the vulnerability-reports folder and place it in SBOM-GAP module:
 
    - vulnerability-reports directory can be downloaded from [here](https://drive.google.com/file/d/1ZV302sOZXYu7JUiM5fVgrMi3lYxGw1VH/view?usp=drive_link). This also contains all the (National Vulnerability Database)[NVD](https://nvd.nist.gov/) CPE/CWE data. (recommended)
