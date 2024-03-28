@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/nqminds/sbom-cli#readme",
   "dependencies": {
-    "formidable": "^3.5.1"
+    "express": "^4.19.2",
+    "formidable": "^3.5.1",
+    "multer": "^1.4.5-lts.1"
   }
 }
