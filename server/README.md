@@ -1,3 +1,9 @@
+Install API Dependencies:
+
+```sh
+npm install
+```
+
 To start, run:
 ```sh 
 npm start
