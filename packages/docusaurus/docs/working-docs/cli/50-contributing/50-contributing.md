@@ -21,4 +21,4 @@ Ready to contribute code? Great! You can submit pull requests with bug fixes, ne
 * Push the changes to your fork: `git push origin your-feature-branch`.
 * Go to the original repository on GitHub, and you'll see a prompt to submit a [pull request](https://github.com/nqminds/SBOM-GAP/pulls) from your new branch.
 
-Please note, all pull requests should be made against the **develop branch**. Ensure that your code adheres to the existing coding standards and include any relevant tests. Pull requests require a review before merging.
+Please note, all pull requests should be made against the **main branch**. Ensure that your code adheres to the existing coding standards and include any relevant tests. Pull requests require a review before merging.
