@@ -1,23 +1,38 @@
 import { fileURLToPath } from "url";
 import PQueue from "p-queue";
-import { promises as fs } from "fs";
-import { getCpes } from "./get-syft-cpes.mjs";
+import fs from 'fs'; 
+import { promises as fsPromise } from "fs";
+import { cleanCpe } from "./get-syft-cpes.mjs";
 import axios from "axios";
 import path from "node:path";
 import { dirname } from "path";
 import Bottleneck from "bottleneck";
 import { getApiKey } from "./utils.mjs";
+import {
+  initialiseDatabase,
+  insertOrUpdateCPEData,
+  getCPEData,
+} from "./database.mjs";
+import { readOrParseSbom } from "./utils.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const configContent = await fs.readFile(
+const databaseDir = path.join(__dirname, "../data");
+const databasePath = path.join(databaseDir, "cached_cpes.db");
+
+// Check if the directory exists, if not, create it
+if (!fs.existsSync(databaseDir)) {
+  fs.mkdirSync(databaseDir, { recursive: true });
+}
+
+const configContent = await fsPromise.readFile(
   path.join(__dirname, "../config/config.json")
 );
 const config = JSON.parse(configContent);
 const apiKey = getApiKey("nist");
 const baseUrl = config.cveBaseUrl;
-export const cveData = {};
+let cveData = {};
 const previousResponses = [];
 const headers = {};
 const queue = new PQueue({ concurrency: 1 });
@@ -111,16 +126,43 @@ export async function fetchCVEsForCPE(cpeName, nistApiKey = "") {
  * @returns {string[]} Array of  CVEs.
  */
 export async function fetchCVEsWithRateLimit(sbomPath) {
+  cveData = {}
+  const sbomJson = await readOrParseSbom(sbomPath, __dirname);
+  await initialiseDatabase(databasePath);
   try {
-    const cpes = await getCpes(sbomPath);
-    // Add all API requests to the queue
-    await Promise.all(
-      cpes.map((cpeName) => queue.add(() => fetchCVEsForCPE(cpeName)))
-    );
-    // Wait for all requests in the queue to complete
-    await queue.onIdle();
+    const cvePromises = sbomJson.components.map(async (component) => {
+      const name = component.name;
+      const version = component.version;
+      const licenses = component.licenses
+        ? component.licenses.map((lic) => lic.license.name)
+        : [];
+      const cpeName = await cleanCpe(component.cpe);
+      // Check local database for existing, up-to-date CPE data
+      const cpeData = await getCPEData(cpeName, databasePath);
+      if (cpeData) {
+        // Data is present, use it directly
+        cveData[cpeName] = JSON.parse(cpeData.cves);
+      } else {
+        // Data needs to be fetched from the API
+        const fetchedCves = await fetchCVEsForCPE(cpeName, apiKey);
+        if (fetchedCves) {
+          // Update local database with new CVE data
+          await insertOrUpdateCPEData(
+            cpeName,
+            name,
+            version,
+            licenses,
+            JSON.stringify(fetchedCves),
+            databasePath
+          );
+          cveData[cpeName] = fetchedCves;
+        }
+      }
+    });
+    // Wait for all promises to resolve
+    await Promise.all(cvePromises);
   } catch (error) {
-    throw new Error(`Error: ${Error.message}`);
+    throw new Error(`Error fetching CVEs with rate limit: ${error.message}`);
   }
   return cveData;
 }
