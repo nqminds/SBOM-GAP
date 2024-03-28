@@ -10,10 +10,10 @@ This project leverages several open-source tools and APIs, contributing signific
 * A powerful CLI tool and Go library for generating a Software Bill of Materials (SBOM) from container images and filesystems. [GitHub Repository](https://github.com/anchore/syft/tree/main)
 
 ### Grype: 
-* A vulnerability scanner for container images and filesystems, offering an easy and accessible way to find vulnerabilities in your projects.[GitHub Repository](https://github.com/anchore/grype/blob/main/README.md)
+* A vulnerability scanner for container images and filesystems, offering an easy and accessible way to find vulnerabilities in your projects. [GitHub Repository](https://github.com/anchore/grype/blob/main/README.md)
 
 ### CCScanner:
-* Is an advanced tool focused on unraveling and managing the intricacies of Third-Party Library (TPL) dependencies within the C/C++ ecosystem, a domain previously less explored due to the absence of a unified package manager.[GitHub Repository](https://github.com/lkpsg/ccscanner). [Read the Paper on arXiv](https://arxiv.org/abs/2209.02575)
+* Is an advanced tool focused on unraveling and managing the intricacies of Third-Party Library (TPL) dependencies within the C/C++ ecosystem, a domain previously less explored due to the absence of a unified package manager. [GitHub Repository](https://github.com/lkpsg/ccscanner). [Read the Paper on arXiv](https://arxiv.org/abs/2209.02575)
 
 ### CENTRIS:
 * Presents a precise and scalable methodology for identifying the reuse of modified open-source software (OSS), addressing the challenges of vulnerability propagation and license violation inherent in unmanaged OSS components. [Read the Paper on arXiv](https://arxiv.org/abs/2102.06182)
