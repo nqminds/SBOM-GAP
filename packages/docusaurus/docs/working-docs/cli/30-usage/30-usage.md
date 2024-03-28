@@ -118,7 +118,7 @@ word-wrap         1.2.3      1.2.4     npm    GHSA-j8xg-fqg3-53r7  Medium
 Vulnerability report saved to: /vulnerability-reports/reports/vulnerability_report_cyber_sbom
 ```
 
-Use the  `-generateCCPPReport` to generate a Software Bill Of Materials (SBOM) for other C/C++ ecosystems (Uses ccscanner and [grype](https://github.com/anchore/grype)).
+Use the  `-generateCCPPReport` to generate a Software Bill Of Materials (SBOM) for other C/C++ ecosystems (Uses [ccscanner](https://github.com/lkpsg/ccscanner) and [grype](https://github.com/anchore/grype)).
 Package Managers:
 Deb
 Conan
@@ -484,7 +484,7 @@ The`-getCweInfo` flag will return information such as description for each CWE. 
 The `-listVunlerabilities` flag will list all vulnerabilities previously detected by grype
 
 ```sh
-nqmvul -listVulnerabilities /home/ionut/Repositories/Sbom_cli//sbom-cli/vulnerability-reports/reports/vulnerability_report_cyber_test
+nqmvul -listVulnerabilities /sbom-cli/vulnerability-reports/reports/vulnerability_report_cyber_test
 Creating vulnerability report
 [
   {
@@ -515,7 +515,7 @@ Creating vulnerability report
 ]
 ```
 
-To extract all dependencies from a file system, use the `-genDependencies <cpp_project> <project_name>` flag. Used exclusively with C/C++ file systems.
+To extract all dependencies from a file system, use the `-genDependencies <cpp_project> <project_name>` flag. ***Used exclusively with C/C++ file systems***.
 
 The first argument should represent the path to any C/C++ project you wish to scan.
 The project_name is utilised to save the extracted dependency list as `/vulnerability-reports/ccsDependencies/project_name_dependencies`.
@@ -616,7 +616,7 @@ Mapping completed. Please see the generated file in vulnerability-reports/cpes/c
 }                                                       
 ```
 
-To be used only for C/C++ projects that are not supported by syft, such as those that do not make use of the CONAN package manager, may generate an SBOM using the `-generateCSbom` flag. The project name and format (only json or xml) are the two arguments it accepts. Before executing the command, please make sure that `/vulnerability-reports/cpe_data.csv` and `/vulnerability-reports/conan-files/<project_name>/conanfile.txt` exist. However, `-generateCCPPReport`, which handles conanfile.txt generation, has now replaced `-generateCSbom.`
+To be used only for C/C++ projects that are not supported by syft, such as those that do not make use of the CONAN package manager, may generate an SBOM using the `-generateCSbom` flag. The project name and format (only json or xml) are the two arguments it accepts. Before executing the command, please make sure that `/vulnerability-reports/cpe_data.csv` and `/vulnerability-reports/conan-files/<project_name>/conanfile.txt` exist. However, `-generateCCPPReport`, which handles `conanfile.txt` generation, has now replaced `-generateCSbom.`
 
 ```sh
 nqmvul -generateCSbom vim json 
