@@ -796,4 +796,174 @@ cpe:/a:openssl:openssl:0.9.3                   - CVE-2005-2946  - CWE-327       
                                                
 ```
 
+The nqmvul `-generateDockerSbom` command employs [Syft](https://github.com/anchore/syft) to first generate an SBOM (Software Bill of Materials) for the specified Docker image (<image_name>). Following the SBOM creation, it uses [Grype](https://github.com/anchore/grype) to analyze the identified components for vulnerabilities, producing a comprehensive vulnerability report. e.g.`-generateDockerSbom nginx:latest nginx`
+
+```sh
+nqmvul -generateDockerSbom nginx:latest nginx
+Running syft to generate SBOM for Docker image: nginx:latest...
+SBOM generation completed for Docker image. SBOM saved to /vulnerability-reports/sboms/nginx.json
+Running grype to generate vulnerability report...
+NAME                INSTALLED                FIXED-IN          TYPE  VULNERABILITY     SEVERITY
+apt                 2.6.1                                      deb   CVE-2011-3374     Negligible
+bsdutils            1:2.38.1-5+b1                              deb   CVE-2022-0563     Negligible
+bsdutils            1:2.38.1-5+b1            2.38.1-5+deb12u1  deb   CVE-2024-28085    Unknown
+coreutils           9.1-1                    (won't fix)       deb   CVE-2016-2781     Low
+coreutils           9.1-1                                      deb   CVE-2017-18018    Negligible
+curl                7.88.1-10+deb12u5                          deb   CVE-2024-2379     Negligible
+curl                7.88.1-10+deb12u5        (won't fix)       deb   CVE-2024-2398     Unknown     
+curl                7.88.1-10+deb12u5        (won't fix)       deb   CVE-2024-2004     Unknown     
+gcc-12-base         12.2.0-14                (won't fix)       deb   CVE-2023-4039     Medium      
+gcc-12-base         12.2.0-14                                  deb   CVE-2022-27943    Negligible  
+gpgv                2.2.40-1.1                                 deb   CVE-2022-3219     Negligible  
+libaom3             3.6.0-1                  (won't fix)       deb   CVE-2023-6879     Critical    
+libaom3             3.6.0-1                  (won't fix)       deb   CVE-2023-39616    High        
+libapt-pkg6.0       2.6.1                                      deb   CVE-2011-3374     Negligible  
+libblkid1           2.38.1-5+b1                                deb   CVE-2022-0563     Negligible  
+libblkid1           2.38.1-5+b1              2.38.1-5+deb12u1  deb   CVE-2024-28085    Unknown     
+libc-bin            2.36-9+deb12u4                             deb   CVE-2019-9192     Negligible  
+libc-bin            2.36-9+deb12u4                             deb   CVE-2019-1010025  Negligible  
+libc-bin            2.36-9+deb12u4                             deb   CVE-2019-1010024  Negligible  
+libc-bin            2.36-9+deb12u4                             deb   CVE-2019-1010023  Negligible  
+libc-bin            2.36-9+deb12u4                             deb   CVE-2019-1010022  Negligible  
+libc-bin            2.36-9+deb12u4                             deb   CVE-2018-20796    Negligible  
+libc-bin            2.36-9+deb12u4                             deb   CVE-2010-4756     Negligible  
+libc6               2.36-9+deb12u4                             deb   CVE-2019-9192     Negligible  
+libc6               2.36-9+deb12u4                             deb   CVE-2019-1010025  Negligible  
+libc6               2.36-9+deb12u4                             deb   CVE-2019-1010024  Negligible  
+libc6               2.36-9+deb12u4                             deb   CVE-2019-1010023  Negligible  
+libc6               2.36-9+deb12u4                             deb   CVE-2019-1010022  Negligible  
+libc6               2.36-9+deb12u4                             deb   CVE-2018-20796    Negligible  
+libc6               2.36-9+deb12u4                             deb   CVE-2010-4756     Negligible  
+libcurl4            7.88.1-10+deb12u5                          deb   CVE-2024-2379     Negligible  
+libcurl4            7.88.1-10+deb12u5        (won't fix)       deb   CVE-2024-2398     Unknown     
+libcurl4            7.88.1-10+deb12u5        (won't fix)       deb   CVE-2024-2004     Unknown     
+libdav1d6           1.0.0-2                                    deb   CVE-2024-1580     Medium      
+libdav1d6           1.0.0-2                  (won't fix)       deb   CVE-2023-32570    Medium      
+libexpat1           2.5.0-1                                    deb   CVE-2023-52425    High        
+libexpat1           2.5.0-1                                    deb   CVE-2023-52426    Negligible  
+libexpat1           2.5.0-1                                    deb   CVE-2024-28757    Unknown     
+libgcc-s1           12.2.0-14                (won't fix)       deb   CVE-2023-4039     Medium      
+libgcc-s1           12.2.0-14                                  deb   CVE-2022-27943    Negligible  
+libgcrypt20         1.10.1-3                 (won't fix)       deb   CVE-2024-2236     Medium      
+libgcrypt20         1.10.1-3                                   deb   CVE-2018-6829     Negligible  
+libgnutls30         3.7.9-2+deb12u2                            deb   CVE-2024-28835    Medium      
+libgnutls30         3.7.9-2+deb12u2                            deb   CVE-2024-28834    Medium      
+libgnutls30         3.7.9-2+deb12u2                            deb   CVE-2011-3389     Negligible  
+libgssapi-krb5-2    1.20.1-2+deb12u1                           deb   CVE-2018-5709     Negligible  
+libgssapi-krb5-2    1.20.1-2+deb12u1         (won't fix)       deb   CVE-2024-26462    Unknown     
+libgssapi-krb5-2    1.20.1-2+deb12u1         (won't fix)       deb   CVE-2024-26461    Unknown     
+libgssapi-krb5-2    1.20.1-2+deb12u1         (won't fix)       deb   CVE-2024-26458    Unknown     
+libheif1            1.15.1-1                 (won't fix)       deb   CVE-2023-49464    High        
+libheif1            1.15.1-1                 (won't fix)       deb   CVE-2023-49463    High        
+libheif1            1.15.1-1                 (won't fix)       deb   CVE-2023-49462    High        
+libheif1            1.15.1-1                 (won't fix)       deb   CVE-2023-49460    High        
+libheif1            1.15.1-1                 (won't fix)       deb   CVE-2023-29659    Medium      
+libheif1            1.15.1-1                                   deb   CVE-2024-25269    Negligible  
+libjbig0            2.1-6.1                                    deb   CVE-2017-9937     Negligible  
+libk5crypto3        1.20.1-2+deb12u1                           deb   CVE-2018-5709     Negligible  
+libk5crypto3        1.20.1-2+deb12u1         (won't fix)       deb   CVE-2024-26462    Unknown     
+libk5crypto3        1.20.1-2+deb12u1         (won't fix)       deb   CVE-2024-26461    Unknown     
+libk5crypto3        1.20.1-2+deb12u1         (won't fix)       deb   CVE-2024-26458    Unknown     
+libkrb5-3           1.20.1-2+deb12u1                           deb   CVE-2018-5709     Negligible  
+libkrb5-3           1.20.1-2+deb12u1         (won't fix)       deb   CVE-2024-26462    Unknown     
+libkrb5-3           1.20.1-2+deb12u1         (won't fix)       deb   CVE-2024-26461    Unknown     
+libkrb5-3           1.20.1-2+deb12u1         (won't fix)       deb   CVE-2024-26458    Unknown     
+libkrb5support0     1.20.1-2+deb12u1                           deb   CVE-2018-5709     Negligible  
+libkrb5support0     1.20.1-2+deb12u1         (won't fix)       deb   CVE-2024-26462    Unknown     
+libkrb5support0     1.20.1-2+deb12u1         (won't fix)       deb   CVE-2024-26461    Unknown     
+libkrb5support0     1.20.1-2+deb12u1         (won't fix)       deb   CVE-2024-26458    Unknown     
+libldap-2.5-0       2.5.13+dfsg-5            (won't fix)       deb   CVE-2023-2953     High        
+libldap-2.5-0       2.5.13+dfsg-5                              deb   CVE-2020-15719    Negligible  
+libldap-2.5-0       2.5.13+dfsg-5                              deb   CVE-2017-17740    Negligible  
+libldap-2.5-0       2.5.13+dfsg-5                              deb   CVE-2017-14159    Negligible  
+libldap-2.5-0       2.5.13+dfsg-5                              deb   CVE-2015-3276     Negligible  
+libmount1           2.38.1-5+b1                                deb   CVE-2022-0563     Negligible  
+libmount1           2.38.1-5+b1              2.38.1-5+deb12u1  deb   CVE-2024-28085    Unknown     
+libpam-modules      1.5.2-6+deb12u1          (won't fix)       deb   CVE-2024-22365    Medium      
+libpam-modules-bin  1.5.2-6+deb12u1          (won't fix)       deb   CVE-2024-22365    Medium      
+libpam-runtime      1.5.2-6+deb12u1          (won't fix)       deb   CVE-2024-22365    Medium      
+libpam0g            1.5.2-6+deb12u1          (won't fix)       deb   CVE-2024-22365    Medium      
+libpng16-16         1.6.39-2                                   deb   CVE-2021-4214     Negligible  
+libsmartcols1       2.38.1-5+b1                                deb   CVE-2022-0563     Negligible  
+libsmartcols1       2.38.1-5+b1              2.38.1-5+deb12u1  deb   CVE-2024-28085    Unknown     
+libssl3             3.0.11-1~deb12u2         (won't fix)       deb   CVE-2024-0727     Medium      
+libssl3             3.0.11-1~deb12u2         (won't fix)       deb   CVE-2023-6129     Medium      
+libssl3             3.0.11-1~deb12u2         (won't fix)       deb   CVE-2023-5678     Medium      
+libssl3             3.0.11-1~deb12u2                           deb   CVE-2010-0928     Negligible  
+libssl3             3.0.11-1~deb12u2                           deb   CVE-2007-6755     Negligible  
+libssl3             3.0.11-1~deb12u2         (won't fix)       deb   CVE-2023-6237     Unknown     
+libstdc++6          12.2.0-14                (won't fix)       deb   CVE-2023-4039     Medium      
+libstdc++6          12.2.0-14                                  deb   CVE-2022-27943    Negligible  
+libsystemd0         252.22-1~deb12u1         (won't fix)       deb   CVE-2023-50387    High        
+libsystemd0         252.22-1~deb12u1                           deb   CVE-2023-31439    Negligible  
+libsystemd0         252.22-1~deb12u1                           deb   CVE-2023-31438    Negligible  
+libsystemd0         252.22-1~deb12u1                           deb   CVE-2023-31437    Negligible  
+libsystemd0         252.22-1~deb12u1                           deb   CVE-2013-4392     Negligible  
+libsystemd0         252.22-1~deb12u1         (won't fix)       deb   CVE-2023-50868    Unknown     
+libtiff6            4.5.0-6+deb12u1          (won't fix)       deb   CVE-2023-52356    High        
+libtiff6            4.5.0-6+deb12u1          (won't fix)       deb   CVE-2023-52355    High        
+libtiff6            4.5.0-6+deb12u1          (won't fix)       deb   CVE-2023-6277     Medium      
+libtiff6            4.5.0-6+deb12u1          (won't fix)       deb   CVE-2023-3618     Medium      
+libtiff6            4.5.0-6+deb12u1          (won't fix)       deb   CVE-2023-3316     Medium      
+libtiff6            4.5.0-6+deb12u1          (won't fix)       deb   CVE-2023-2908     Medium      
+libtiff6            4.5.0-6+deb12u1          (won't fix)       deb   CVE-2023-26966    Medium      
+libtiff6            4.5.0-6+deb12u1          (won't fix)       deb   CVE-2023-26965    Medium      
+libtiff6            4.5.0-6+deb12u1          (won't fix)       deb   CVE-2023-25433    Medium      
+libtiff6            4.5.0-6+deb12u1                            deb   CVE-2023-6228     Negligible  
+libtiff6            4.5.0-6+deb12u1                            deb   CVE-2023-3164     Negligible  
+libtiff6            4.5.0-6+deb12u1                            deb   CVE-2023-1916     Negligible  
+libtiff6            4.5.0-6+deb12u1                            deb   CVE-2022-1210     Negligible  
+libtiff6            4.5.0-6+deb12u1                            deb   CVE-2018-10126    Negligible  
+libtiff6            4.5.0-6+deb12u1                            deb   CVE-2017-9117     Negligible  
+libtiff6            4.5.0-6+deb12u1                            deb   CVE-2017-5563     Negligible  
+libtiff6            4.5.0-6+deb12u1                            deb   CVE-2017-17973    Negligible  
+libtiff6            4.5.0-6+deb12u1                            deb   CVE-2017-16232    Negligible  
+libtinfo6           6.4-4                    (won't fix)       deb   CVE-2023-50495    Medium      
+libtinfo6           6.4-4                    (won't fix)       deb   CVE-2023-45918    Unknown     
+libudev1            252.22-1~deb12u1         (won't fix)       deb   CVE-2023-50387    High        
+libudev1            252.22-1~deb12u1                           deb   CVE-2023-31439    Negligible  
+libudev1            252.22-1~deb12u1                           deb   CVE-2023-31438    Negligible  
+libudev1            252.22-1~deb12u1                           deb   CVE-2023-31437    Negligible  
+libudev1            252.22-1~deb12u1                           deb   CVE-2013-4392     Negligible  
+libudev1            252.22-1~deb12u1         (won't fix)       deb   CVE-2023-50868    Unknown     
+libuuid1            2.38.1-5+b1                                deb   CVE-2022-0563     Negligible  
+libuuid1            2.38.1-5+b1              2.38.1-5+deb12u1  deb   CVE-2024-28085    Unknown     
+libxml2             2.9.14+dfsg-1.3~deb12u1  (won't fix)       deb   CVE-2024-25062    High        
+libxml2             2.9.14+dfsg-1.3~deb12u1  (won't fix)       deb   CVE-2023-45322    Medium      
+libxml2             2.9.14+dfsg-1.3~deb12u1  (won't fix)       deb   CVE-2023-39615    Medium      
+libxslt1.1          1.1.35-1                                   deb   CVE-2015-9019     Negligible  
+login               1:4.13+dfsg1-1+b1        (won't fix)       deb   CVE-2023-4641     Medium      
+login               1:4.13+dfsg1-1+b1        (won't fix)       deb   CVE-2023-29383    Low         
+login               1:4.13+dfsg1-1+b1                          deb   CVE-2019-19882    Negligible  
+login               1:4.13+dfsg1-1+b1                          deb   CVE-2007-5686     Negligible  
+mount               2.38.1-5+b1                                deb   CVE-2022-0563     Negligible  
+mount               2.38.1-5+b1              2.38.1-5+deb12u1  deb   CVE-2024-28085    Unknown     
+ncurses-base        6.4-4                    (won't fix)       deb   CVE-2023-50495    Medium      
+ncurses-base        6.4-4                    (won't fix)       deb   CVE-2023-45918    Unknown     
+ncurses-bin         6.4-4                    (won't fix)       deb   CVE-2023-50495    Medium      
+ncurses-bin         6.4-4                    (won't fix)       deb   CVE-2023-45918    Unknown     
+nginx               1.25.4-1~bookworm                          deb   CVE-2023-44487    High        
+nginx               1.25.4-1~bookworm        (won't fix)       deb   CVE-2013-0337     Low         
+nginx               1.25.4-1~bookworm                          deb   CVE-2009-4487     Negligible  
+openssl             3.0.11-1~deb12u2         (won't fix)       deb   CVE-2024-0727     Medium      
+openssl             3.0.11-1~deb12u2         (won't fix)       deb   CVE-2023-6129     Medium      
+openssl             3.0.11-1~deb12u2         (won't fix)       deb   CVE-2023-5678     Medium      
+openssl             3.0.11-1~deb12u2                           deb   CVE-2010-0928     Negligible  
+openssl             3.0.11-1~deb12u2                           deb   CVE-2007-6755     Negligible  
+openssl             3.0.11-1~deb12u2         (won't fix)       deb   CVE-2023-6237     Unknown     
+passwd              1:4.13+dfsg1-1+b1        (won't fix)       deb   CVE-2023-4641     Medium      
+passwd              1:4.13+dfsg1-1+b1        (won't fix)       deb   CVE-2023-29383    Low         
+passwd              1:4.13+dfsg1-1+b1                          deb   CVE-2019-19882    Negligible  
+passwd              1:4.13+dfsg1-1+b1                          deb   CVE-2007-5686     Negligible  
+perl-base           5.36.0-7+deb12u1         (won't fix)       deb   CVE-2023-31484    High        
+perl-base           5.36.0-7+deb12u1                           deb   CVE-2023-31486    Negligible  
+perl-base           5.36.0-7+deb12u1                           deb   CVE-2011-4116     Negligible  
+tar                 1.34+dfsg-1.2+deb12u1                      deb   CVE-2005-2541     Negligible  
+util-linux          2.38.1-5+b1                                deb   CVE-2022-0563     Negligible  
+util-linux          2.38.1-5+b1              2.38.1-5+deb12u1  deb   CVE-2024-28085    Unknown     
+util-linux-extra    2.38.1-5+b1                                deb   CVE-2022-0563     Negligible  
+util-linux-extra    2.38.1-5+b1              2.38.1-5+deb12u1  deb   CVE-2024-28085    Unknown     
+zlib1g              1:1.2.13.dfsg-1          (won't fix)       deb   CVE-2023-45853    Critical
+
+Vulnerability report saved to: /vulnerability-reports/reports/vulnerability_report_nginx```
 
