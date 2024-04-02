@@ -293,3 +293,8 @@ The `-generateCCPPReport` can be used to scan any type of C/C++ project. Running
 nqmvul -generateCCPPReport <path_to_c/cpp_project> <project_name>
 ```
 
+The nqmvul `-generateDockerSbom` command employs [Syft](https://github.com/anchore/syft) to first generate an SBOM (Software Bill of Materials) for the specified Docker image (<image_name>). Following the SBOM creation, it uses [Grype](https://github.com/anchore/grype) to analyze the identified components for vulnerabilities, producing a comprehensive vulnerability report. e.g.`-generateDockerSbom nginx:latest nginx`
+
+```sh
+nqmvul -generateDockerSbom <image_name> <project_name>
+```
