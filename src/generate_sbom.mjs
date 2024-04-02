@@ -4,6 +4,7 @@ import path from "node:path";
 import { dirname } from "path";
 import { execFileSync } from "child_process";
 import fs from "fs";
+import { genGrypeReport } from "./utils.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -85,4 +86,52 @@ export function generateVulnerabilityReport(directoryPath, fileName) {
       `Error generating vulerability report for: ${vulnerabilityReportFile}, ${error}`
     );
   }
+}
+
+
+/**
+ * Generate a vulnerability report based on the provided Docker Image.
+ *
+ *
+ * @param {string} imageName - Docker image name. e.g. nginx:latest
+ * @param {string} fileName - Name of the output JSON file for the SBOM.
+ */
+export async function generateImageVulnerabilityReport(imageName, fileName) {
+  const sbomDirectory = path.resolve(__dirname, '../vulnerability-reports/sboms');
+  const reportDirectory = path.resolve(__dirname, '../vulnerability-reports/reports');
+  const sbomFile = path.join(sbomDirectory, `${fileName}.json`);
+  
+  // Ensure directories exist
+  if (!fs.existsSync(sbomDirectory)) {
+    fs.mkdirSync(sbomDirectory, { recursive: true });
+  }
+  if (!fs.existsSync(reportDirectory)) {
+    fs.mkdirSync(reportDirectory, { recursive: true });
+  }
+
+  // Generate SBOM for the Docker image using Syft
+  console.log(`Running syft to generate SBOM for Docker image: ${imageName}...`);
+  const syftArgs = [
+    "run",
+    "--rm",
+    "anchore/syft",
+    imageName,
+    "-o",
+    "cyclonedx-json",
+  ];
+
+  try {
+    const sbomOutput = execFileSync("docker", syftArgs, {
+      encoding: "utf-8",
+      maxBuffer: 1024 * 5000,
+    });
+    fs.writeFileSync(sbomFile, sbomOutput);
+
+    console.log(`SBOM generation completed for Docker image. SBOM saved to ${sbomFile}`);
+  } catch (error) {
+    throw new Error(`Error generating SBOM for Docker image ${imageName}: ${error}`);
+  }
+
+  // Generate vulnerability report using Grype
+  await genGrypeReport(sbomFile,fileName)
 }
