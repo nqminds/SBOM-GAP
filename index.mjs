@@ -19,6 +19,7 @@ import { processVulnerabilities } from "./src/get-git-ghsas.mjs";
 import { classifyCwe } from "./src/classify_cwe.mjs";
 import { mapCpeCveCwe } from "./src/show-cpe-history.mjs";
 import { genGrypeReport } from "./src/utils.mjs";
+import { generateImageVulnerabilityReport } from "./src/generate_sbom.mjs";
 import path from "node:path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -58,6 +59,7 @@ async function main() {
     -classifyCwe            CWE Id, e.g. CWE-354
     -getHistory             CPE e.g. cpe:2.3:a:busybox:busybox:1.33.2
     -generateCCPPReport     Absolute path to project and a project name
+    -generateDockerSbom     Image name and a project name, e.g. nginx:latest nginx
     `);
   }
 
@@ -439,6 +441,15 @@ async function main() {
         } else {
           console.error(
             "Please provide an absolute path to the c/c++ repository and a project name as the second argument."
+          );
+        }
+        break;
+      case "-generateDockerSbom":
+        if (args[2]) {
+          await generateImageVulnerabilityReport(args[1], args[2]);
+        } else {
+          console.log(
+            "Please ensure the Docker image exists and provide project name e.g: -generateDockerSbom <image_name> <project_name>"
           );
         }
         break;
