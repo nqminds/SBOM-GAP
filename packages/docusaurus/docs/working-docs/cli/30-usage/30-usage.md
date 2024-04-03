@@ -965,5 +965,7 @@ util-linux-extra    2.38.1-5+b1                                deb   CVE-2022-05
 util-linux-extra    2.38.1-5+b1              2.38.1-5+deb12u1  deb   CVE-2024-28085    Unknown     
 zlib1g              1:1.2.13.dfsg-1          (won't fix)       deb   CVE-2023-45853    Critical
 
-Vulnerability report saved to: /vulnerability-reports/reports/vulnerability_report_nginx```
+Vulnerability report saved to: /vulnerability-reports/reports/vulnerability_report_nginx
+
+```
 
