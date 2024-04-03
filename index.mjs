@@ -20,6 +20,7 @@ import { classifyCwe } from "./src/classify_cwe.mjs";
 import { mapCpeCveCwe } from "./src/show-cpe-history.mjs";
 import { genGrypeReport } from "./src/utils.mjs";
 import { generateImageVulnerabilityReport } from "./src/generate_sbom.mjs";
+import { addCpeToSbom } from "./src/utils.mjs";
 import path from "node:path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -60,6 +61,7 @@ async function main() {
     -getHistory             CPE e.g. cpe:2.3:a:busybox:busybox:1.33.2
     -generateCCPPReport     Absolute path to project and a project name
     -generateDockerSbom     Image name and a project name, e.g. nginx:latest nginx
+    -addCpe                 Path to SBOM.json file and CPE 2.3 format, e.g. path/to/sbom.json "cpe:2.3:a:postgresql:postgresql:9.6.2:*:*:*:*:*:*:*"
     `);
   }
 
@@ -450,6 +452,15 @@ async function main() {
         } else {
           console.log(
             "Please ensure the Docker image exists and provide project name e.g: -generateDockerSbom <image_name> <project_name>"
+          );
+        }
+        break;
+      case "-addCpe":
+        if (args[2]) {
+          await addCpeToSbom(args[1], args[2]);
+        } else {
+          console.log(
+            "Please ensure the sbom file exists and is a valid CycloneDX json format"
           );
         }
         break;
