@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const configContent = await fs.readFile(
-  path.join(__dirname, "../config/config.json")
+  path.join(__dirname, "../config/config.json"),
 );
 const config = JSON.parse(configContent);
 const apiKey = getApiKey("nist");

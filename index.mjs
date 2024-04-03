@@ -106,13 +106,13 @@ async function main() {
       case "-writeCves":
         if (args[2]) {
           console.log(
-            "Writing CVE data to /vulnerability-reports/cveData.json"
+            "Writing CVE data to /vulnerability-reports/cveData.json",
           );
           await writeCvesToFile(args[1], args[2]);
           console.log("Writing file completed");
         } else {
           console.error(
-            "Please provide a valid path to SBOM and output directory."
+            "Please provide a valid path to SBOM and output directory.",
           );
         }
         break;
@@ -123,7 +123,7 @@ async function main() {
           console.log(histCPEs);
         } else {
           console.error(
-            "Please provide a valid CPE in format 2.3 e.g. 'cpe:2.3:a:busybox:busybox:1.33.2'"
+            "Please provide a valid CPE in format 2.3 e.g. 'cpe:2.3:a:busybox:busybox:1.33.2'",
           );
         }
         break;
@@ -143,7 +143,7 @@ async function main() {
           console.log(cweInfo);
         } else {
           console.error(
-            "Please provide a valid list of CWEs separated by commas, without white space. e.g. 'CWE-476,CWE-681'"
+            "Please provide a valid list of CWEs separated by commas, without white space. e.g. 'CWE-476,CWE-681'",
           );
         }
         break;
@@ -154,7 +154,7 @@ async function main() {
           console.log(report);
         } else {
           console.error(
-            "Please provide a valid absolute path to grype vulnerability report file."
+            "Please provide a valid absolute path to grype vulnerability report file.",
           );
         }
         break;
@@ -163,7 +163,7 @@ async function main() {
           await generateVulnerabilityReport(args[1], args[2]);
         } else {
           console.log(
-            "Please ensure the path is correct and provide project name e.g: -generateSbom <project_path> <project_name>"
+            "Please ensure the path is correct and provide project name e.g: -generateSbom <project_path> <project_name>",
           );
         }
         break;
@@ -171,13 +171,13 @@ async function main() {
         if (args[1]) {
           try {
             console.log(
-              `Writing conan file for ../vulnerability-reports/ccsDependencies/${args[1]}_dependencies to ../vulnerability-reports/conan-files/${args[1]}`
+              `Writing conan file for ../vulnerability-reports/ccsDependencies/${args[1]}_dependencies to ../vulnerability-reports/conan-files/${args[1]}`,
             );
             await generateConanFile(args[1]);
             console.log("Writing completed");
           } catch (error) {
             console.error(
-              `Please ensure the dependencies exist for ./vulnerability-reports/ccsDependencies/${args[1]}_dependencies \n ${error}`
+              `Please ensure the dependencies exist for ./vulnerability-reports/ccsDependencies/${args[1]}_dependencies \n ${error}`,
             );
           }
         }
@@ -189,12 +189,12 @@ async function main() {
             generateDependencyList(args[1], args[2]);
           } catch (error) {
             console.error(
-              `Please ensure that all the paths are correct ${error}`
+              `Please ensure that all the paths are correct ${error}`,
             );
           }
         } else {
           console.log(
-            "Please ensure that you added all the necessary paths and project_name"
+            "Please ensure that you added all the necessary paths and project_name",
           );
         }
         break;
@@ -207,7 +207,7 @@ async function main() {
             let spinnerIndex = 0;
             spinner = setInterval(() => {
               process.stdout.write(
-                `\r${spinnerChars[spinnerIndex]}  Mapping...`
+                `\r${spinnerChars[spinnerIndex]}  Mapping...`,
               );
               spinnerIndex = (spinnerIndex + 1) % spinnerChars.length;
             }, 250);
@@ -217,7 +217,7 @@ async function main() {
             clearInterval(spinner);
             process.stdout.write("\r");
             console.log(
-              "Mapping completed. Please see the generated file in vulnerability-reports/cpes/cpeMapping.json"
+              "Mapping completed. Please see the generated file in vulnerability-reports/cpes/cpeMapping.json",
             );
           } catch (error) {
             clearInterval(spinner);
@@ -226,7 +226,7 @@ async function main() {
           }
         } else {
           console.error(
-            `Please ensure that vulnerability-reports/cpe_data.csv is available and vulnerability-reports/conan-files/${args[1]}/conanfile.txt exists`
+            `Please ensure that vulnerability-reports/cpe_data.csv is available and vulnerability-reports/conan-files/${args[1]}/conanfile.txt exists`,
           );
         }
         break;
@@ -235,13 +235,13 @@ async function main() {
           let spinner;
           try {
             console.log(
-              `Trying to create SBOM for ${args[1]}, this may take a while...`
+              `Trying to create SBOM for ${args[1]}, this may take a while...`,
             );
             const spinnerChars = ["|", "/", "-", "\\"];
             let spinnerIndex = 0;
             spinner = setInterval(() => {
               process.stdout.write(
-                `\r${spinnerChars[spinnerIndex]}  Generating SBOM...`
+                `\r${spinnerChars[spinnerIndex]}  Generating SBOM...`,
               );
               spinnerIndex = (spinnerIndex + 1) % spinnerChars.length;
             }, 250);
@@ -251,7 +251,7 @@ async function main() {
             clearInterval(spinner);
             process.stdout.write("\r");
             console.log(
-              `SBOM completed. Please see the generated file in vulnerability-reports/sboms/${args[1]}_sbom.${args[2]}`
+              `SBOM completed. Please see the generated file in vulnerability-reports/sboms/${args[1]}_sbom.${args[2]}`,
             );
           } catch (error) {
             console.error(`
@@ -275,7 +275,7 @@ async function main() {
           }
         } else {
           console.error(
-            "Please enter a valid GHSA code. e.g GHSA-j8xg-fqg3-53r7"
+            "Please enter a valid GHSA code. e.g GHSA-j8xg-fqg3-53r7",
           );
         }
         break;
@@ -289,7 +289,7 @@ async function main() {
           }
         } else {
           console.log(
-            "Please provide a valid absolute path to grype vulnerability report file."
+            "Please provide a valid absolute path to grype vulnerability report file.",
           );
         }
         break;
@@ -308,7 +308,7 @@ async function main() {
             });
         } else {
           console.log(
-            "Please provide a valid CWE id, e.g. -classifyCwe <CWE-112>"
+            "Please provide a valid CWE id, e.g. -classifyCwe <CWE-112>",
           );
         }
         break;
@@ -320,19 +320,19 @@ async function main() {
 
           try {
             console.log(
-              `Trying to find related cpes for ${args[1]}, this may take a while...`
+              `Trying to find related cpes for ${args[1]}, this may take a while...`,
             );
             const spinnerChars = ["|", "/", "-", "\\"];
             let spinnerIndex = 0;
             spinner = setInterval(() => {
               process.stdout.write(
-                `\r${spinnerChars[spinnerIndex]} Processing...`
+                `\r${spinnerChars[spinnerIndex]} Processing...`,
               );
               spinnerIndex = (spinnerIndex + 1) % spinnerChars.length;
             }, 250);
 
             cpeCveCweMap = await mapCpeCveCwe(args[1]);
-          
+
             clearInterval(spinner);
             process.stdout.write("\r");
 
@@ -362,7 +362,7 @@ async function main() {
               const alignedCve = entry.cve.padEnd(maxCveLength);
               const cweList = entry.cwe.map((cwe) => cwe.padEnd(maxCweLength));
               const alignedCwe = cweList.join(
-                `\n${" ".repeat(maxCpeLength + maxCveLength + 6)}`
+                `\n${" ".repeat(maxCpeLength + maxCveLength + 6)}`,
               );
               const outputLine = `${alignedCpe} - ${alignedCve} - ${alignedCwe} - ${entry.weakType}`;
               console.log(outputLine);
@@ -380,12 +380,12 @@ async function main() {
             }
           } catch (error) {
             console.error(
-              `Error encountered processing the command: ${error.stack}`
+              `Error encountered processing the command: ${error.stack}`,
             );
           }
         } else {
           console.log(
-            "Please provide a valid cpe e.g. cpe:/a:doxygen:doxygen:1.7.2"
+            "Please provide a valid cpe e.g. cpe:/a:doxygen:doxygen:1.7.2",
           );
         }
         break;
@@ -393,7 +393,7 @@ async function main() {
         if (args[2]) {
           try {
             console.log(
-              `Starting full report generation for project ${args[1]}...`
+              `Starting full report generation for project ${args[1]}...`,
             );
 
             console.log(`Trying to generate dependency list for ${args[2]}`);
@@ -402,7 +402,7 @@ async function main() {
 
             // 1. Generate Conan File
             console.log(
-              `Writing conan file for ../vulnerability-reports/ccsDependencies/${args[2]}_dependencies...`
+              `Writing conan file for ../vulnerability-reports/ccsDependencies/${args[2]}_dependencies...`,
             );
             await generateConanFile(args[2]);
             console.log("Conan file generation completed.");
@@ -411,38 +411,38 @@ async function main() {
             console.log("Mapping CPEs, please wait...");
             await mapCPEs(args[2]);
             console.log(
-              "CPE mapping completed. Check vulnerability-reports/cpes/cpeMapping.json for the mapping."
+              "CPE mapping completed. Check vulnerability-reports/cpes/cpeMapping.json for the mapping.",
             );
 
             // 3. Generate SBOM
             console.log(`Generating SBOM in ${args[2]} format...`);
             await generateDummySBOM(args[2], "json");
             console.log(
-              `SBOM generation completed. Check vulnerability-reports/sboms/${args[2]}_sbom.json for the SBOM.`
+              `SBOM generation completed. Check vulnerability-reports/sboms/${args[2]}_sbom.json for the SBOM.`,
             );
 
             console.log(
-              `Full report generation for project ${args[2]} completed successfully.`
+              `Full report generation for project ${args[2]} completed successfully.`,
             );
 
             const sbomPath = path.join(
               __dirname,
-              `vulnerability-reports/sboms/${args[2]}_sbom.json`
+              `vulnerability-reports/sboms/${args[2]}_sbom.json`,
             );
             console.log(sbomPath);
 
             console.log(
-              `Generating Vulnerability report for ${args[2]}_sbom.json`
+              `Generating Vulnerability report for ${args[2]}_sbom.json`,
             );
             await genGrypeReport(sbomPath, args[2]);
           } catch (error) {
             console.error(
-              `Error encountered during full report generation for project ${args[2]}: ${error}`
+              `Error encountered during full report generation for project ${args[2]}: ${error}`,
             );
           }
         } else {
           console.error(
-            "Please provide an absolute path to the c/c++ repository and a project name as the second argument."
+            "Please provide an absolute path to the c/c++ repository and a project name as the second argument.",
           );
         }
         break;
@@ -451,7 +451,7 @@ async function main() {
           await generateImageVulnerabilityReport(args[1], args[2]);
         } else {
           console.log(
-            "Please ensure the Docker image exists and provide project name e.g: -generateDockerSbom <image_name> <project_name>"
+            "Please ensure the Docker image exists and provide project name e.g: -generateDockerSbom <image_name> <project_name>",
           );
         }
         break;
@@ -460,7 +460,7 @@ async function main() {
           await addCpeToSbom(args[1], args[2]);
         } else {
           console.log(
-            "Please ensure the sbom file exists and is a valid CycloneDX json format"
+            "Please ensure the sbom file exists and is a valid CycloneDX json format",
           );
         }
         break;

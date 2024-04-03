@@ -119,16 +119,16 @@ export async function generateDummySBOM(projectName, bomFormat) {
   const dirPath = path.resolve(__dirname, "../vulnerability-reports/sboms");
   let sbomFilePath = path.resolve(
     __dirname,
-    `../vulnerability-reports/sboms/${projectName}_sbom.${bomFormat}`
+    `../vulnerability-reports/sboms/${projectName}_sbom.${bomFormat}`,
   );
   try {
     const conanFilePath = path.resolve(
       __dirname,
-      `../vulnerability-reports/conan-files/${projectName}/conanfile.txt`
+      `../vulnerability-reports/conan-files/${projectName}/conanfile.txt`,
     );
     const csvFilePath = path.resolve(
       __dirname,
-      "../vulnerability-reports/cpe_data.csv"
+      "../vulnerability-reports/cpe_data.csv",
     );
     const dependencies = await processDependencies(conanFilePath);
     const cpeMapping = await createCPEMapping(csvFilePath, dependencies);
@@ -141,7 +141,7 @@ export async function generateDummySBOM(projectName, bomFormat) {
       cycloneDxSBOM = createCycloneDxSBOMJson(cpeMapping);
       sbomFilePath = path.resolve(
         __dirname,
-        `../vulnerability-reports/sboms/${projectName}_sbom.json`
+        `../vulnerability-reports/sboms/${projectName}_sbom.json`,
       );
     }
 
@@ -149,7 +149,7 @@ export async function generateDummySBOM(projectName, bomFormat) {
     fs.writeFileSync(sbomFilePath, cycloneDxSBOM);
   } catch (error) {
     throw new Error(
-      `Error trying writing CycloneDX SBOM file: ${error.message}`
+      `Error trying writing CycloneDX SBOM file: ${error.message}`,
     );
   }
 }

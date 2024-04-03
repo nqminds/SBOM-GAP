@@ -43,12 +43,12 @@ export async function generateConanFile(projectName) {
     const ccsFilePath = path.resolve(
       __dirname,
       "../vulnerability-reports/ccsDependencies/",
-      `${projectName}_dependencies`
+      `${projectName}_dependencies`,
     );
     const conanFileDir = path.resolve(
       __dirname,
       "../vulnerability-reports/conan-files/",
-      projectName
+      projectName,
     );
     await fs.mkdir(conanFileDir, { recursive: true }); // create the directory if it does not exist
     const conanFilePath = path.join(conanFileDir, "conanfile.txt");
@@ -102,7 +102,7 @@ export async function generateConanFile(projectName) {
     await fs.writeFile(conanFilePath, fileData, "utf-8");
   } catch (error) {
     throw new Error(
-      `Error trying to generate conanfile for the project ${projectName}: ${error}`
+      `Error trying to generate conanfile for the project ${projectName}: ${error}`,
     );
   }
 }

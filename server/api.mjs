@@ -1,9 +1,9 @@
-import express from 'express';
-import multer from 'multer';
+import express from "express";
+import multer from "multer";
 import config from "./config.json" assert { type: "json" };
-import fs from 'fs';
-import { fetchCVEsWithRateLimit } from '../src/list-vulnerabilities.mjs';
-import { calculateAverageBaseScore } from '../src/utils.mjs';
+import fs from "fs";
+import { fetchCVEsWithRateLimit } from "../src/list-vulnerabilities.mjs";
+import { calculateAverageBaseScore } from "../src/utils.mjs";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 
@@ -14,20 +14,20 @@ const app = express();
 const { port } = config;
 
 const storage = multer.diskStorage({
-  destination: function(req, file, callback) {
-    callback(null, __dirname + '/uploads');
+  destination: function (req, file, callback) {
+    callback(null, __dirname + "/uploads");
   },
-  filename: function(req, file, callback) {
+  filename: function (req, file, callback) {
     callback(null, file.originalname);
-  }
-})
+  },
+});
 
-const upload = multer({storage: storage});
+const upload = multer({ storage: storage });
 
-app.post('/sbomRiskAverage', upload.single('file'), async (req, res) => {
+app.post("/sbomRiskAverage", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
-      throw new Error('No file uploaded.');
+      throw new Error("No file uploaded.");
     }
 
     const filePath = req.file.path;

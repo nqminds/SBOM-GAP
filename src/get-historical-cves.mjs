@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const configContent = await fs.readFile(
-  path.join(__dirname, "../config/config.json")
+  path.join(__dirname, "../config/config.json"),
 );
 const config = JSON.parse(configContent);
 const apiKey = getApiKey("nist");
@@ -38,14 +38,15 @@ export async function fetchHistoricalCVEs(cveId) {
         const mewCWEId = change.change.details
           ? change.change?.details
               .filter(
-                (detail) => detail.type === "CWE" && detail.action === "Added"
+                (detail) => detail.type === "CWE" && detail.action === "Added",
               )
               .map((detail) => detail.newValue)
           : [];
         const oldCWEId = change.change.details
           ? change.change?.details
               .filter(
-                (detail) => detail.type === "CWE" && detail.action === "Removed"
+                (detail) =>
+                  detail.type === "CWE" && detail.action === "Removed",
               )
               .map((detail) => detail.oldValue)
           : [];

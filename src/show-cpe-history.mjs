@@ -21,7 +21,7 @@ const __dirname = dirname(__filename);
 export async function mapHistoricalCpes(cpe) {
   const cpeDataPath = path.resolve(
     __dirname,
-    "../vulnerability-reports/cpe_data.csv"
+    "../vulnerability-reports/cpe_data.csv",
   );
   const cpeParts = cpe.split(":");
 
@@ -53,7 +53,6 @@ export async function mapHistoricalCpes(cpe) {
   });
 }
 
-
 /**
  * Function to find historycal CPEs and their weaknesses
  *
@@ -79,8 +78,8 @@ export async function mapCpeCveCwe(cpe) {
             const cweWeakness = Array.isArray(vulnerability.weakness)
               ? vulnerability.weakness
               : vulnerability.weakness
-              ? [vulnerability.weakness]
-              : ["N/A"];
+                ? [vulnerability.weakness]
+                : ["N/A"];
 
             const innerPromise = classifyCwe(cweWeakness[0]).then(
               (weakType) => {
@@ -90,7 +89,7 @@ export async function mapCpeCveCwe(cpe) {
                   cwe: cweWeakness,
                   weakType: weakType || "No Info",
                 });
-              }
+              },
             );
 
             innerPromises.push(innerPromise);

@@ -50,7 +50,7 @@ export async function getVulnerabilities(vulReport) {
 
       // all known package managers that work with syft
       const type = line.match(
-        /(alpm|apk|bin|pod|conan|dart|csproj|vbproj|fsproj|dpkg|mix|rebar|go|gobin|native-image|cabal|jar|war|ear|gradle|pom\.xml|npm|yarn|kernel|nix|composer|portage|pypi|pip|rpm|rpmfile|gem|cargo|sbom|swift)/
+        /(alpm|apk|bin|pod|conan|dart|csproj|vbproj|fsproj|dpkg|mix|rebar|go|gobin|native-image|cabal|jar|war|ear|gradle|pom\.xml|npm|yarn|kernel|nix|composer|portage|pypi|pip|rpm|rpmfile|gem|cargo|sbom|swift)/,
       );
       const vulnerability = line.match(/(CVE-\d+-\d+|GHSA-[a-z0-9-]+)/); // CVE and GHSA formats, add more as discovered
       const severity = line.match(/(Low|Medium|High|Critical)\s*$/);

@@ -295,7 +295,7 @@ async function convertXmlToCsv(xmlFilePath, csvFilePath) {
       ) {
         const referencesString = JSON.stringify(currentItem.references).replace(
           /"/g,
-          '""'
+          '""',
         );
         const csvLine = `"${currentItem.cpe_name}","${currentItem.title}","${referencesString}","${currentItem.cpe23_name}"`;
         csvStream.write(csvLine + EOL);
@@ -333,27 +333,27 @@ async function main() {
     // Downloading latest CPE data
     const cpeFilePath = await downloadData(
       cpeUrl,
-      path.resolve(__dirname, "../data/cpeData.gz")
+      path.resolve(__dirname, "../data/cpeData.gz"),
     );
     const cpeXmlPath = await unzipGzip(cpeFilePath);
 
     // Converting XML to CSV
     await convertXmlToCsv(
       cpeXmlPath,
-      path.resolve(__dirname, "../vulnerability-reports/cpe_data.csv")
+      path.resolve(__dirname, "../vulnerability-reports/cpe_data.csv"),
     );
 
     // Downloading latest CWE data
     const cweFilePath = await downloadData(
       cweUrl,
-      path.resolve(__dirname, "../data/cweData.zip")
+      path.resolve(__dirname, "../data/cweData.zip"),
     );
     const outputDir = path.resolve(__dirname, "../data");
 
     const cweXmlPath = await unzipZip(cweFilePath, outputDir);
     const cweJsonPath = path.resolve(
       __dirname,
-      "../vulnerability-reports/cweData.json"
+      "../vulnerability-reports/cweData.json",
     );
 
     // Converting CWE data from XML to json
