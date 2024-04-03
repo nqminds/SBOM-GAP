@@ -1,6 +1,6 @@
 import { fileURLToPath } from "url";
 import PQueue from "p-queue";
-import fs from 'fs'; 
+import fs from "fs";
 import { promises as fsPromise } from "fs";
 import { cleanCpe } from "./get-syft-cpes.mjs";
 import axios from "axios";
@@ -27,7 +27,7 @@ if (!fs.existsSync(databaseDir)) {
 }
 
 const configContent = await fsPromise.readFile(
-  path.join(__dirname, "../config/config.json")
+  path.join(__dirname, "../config/config.json"),
 );
 const config = JSON.parse(configContent);
 const apiKey = getApiKey("nist");
@@ -78,7 +78,7 @@ export async function fetchCVEsForCPE(cpeName, nistApiKey = "") {
   const formattedUrl = `${baseUrl}?cpeName=${cpeName}`;
   try {
     const response = await limiter.schedule(() =>
-      axios.get(formattedUrl, { headers })
+      axios.get(formattedUrl, { headers }),
     );
     // more data can be added here as needed
     const cves = response.data.vulnerabilities
@@ -126,7 +126,7 @@ export async function fetchCVEsForCPE(cpeName, nistApiKey = "") {
  * @returns {string[]} Array of  CVEs.
  */
 export async function fetchCVEsWithRateLimit(sbomPath) {
-  cveData = {}
+  cveData = {};
   const sbomJson = await readOrParseSbom(sbomPath, __dirname);
   await initialiseDatabase(databasePath);
   try {
@@ -153,7 +153,7 @@ export async function fetchCVEsWithRateLimit(sbomPath) {
             version,
             licenses,
             JSON.stringify(fetchedCves),
-            databasePath
+            databasePath,
           );
           cveData[cpeName] = fetchedCves;
         }
@@ -183,7 +183,7 @@ export async function writeCvesToFile(sbomPath, outputPath) {
   try {
     await fs.writeFile(
       path.resolve(__dirname, `${outputPath}/cveData.json`),
-      jsonContent
+      jsonContent,
     );
   } catch (err) {
     throw new Error(`Error saving cveData to file: ${err.message}`);

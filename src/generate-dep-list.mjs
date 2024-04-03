@@ -22,7 +22,7 @@ const __dirname = dirname(__filename);
 export function generateDependencyList(cppDirectory, projectName) {
   const dependenciesFilePath = path.resolve(
     __dirname,
-    "../vulnerability-reports/ccsDependencies"
+    "../vulnerability-reports/ccsDependencies",
   );
 
   const dockerArgs = [
@@ -61,7 +61,7 @@ export function generateDependencyList(cppDirectory, projectName) {
 
     console.log("dependency scanning completed.");
     console.log(
-      `dependency list saved to ${dependenciesFilePath}/${projectName}_dependencies`
+      `dependency list saved to ${dependenciesFilePath}/${projectName}_dependencies`,
     );
   } catch (error) {
     throw new Error(`Error error scanning directory ${cppDirectory}: ${error}`);

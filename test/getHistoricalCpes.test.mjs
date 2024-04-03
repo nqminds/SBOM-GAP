@@ -4,7 +4,7 @@ import { describe, test, expect } from "@jest/globals";
 describe("fetchHistoricalCpes", () => {
   test("should return an array of json objects", async () => {
     const result = await fetchHistoricalCPEs(
-      "cpe:2.3:a:busybox:busybox:1.33.2"
+      "cpe:2.3:a:busybox:busybox:1.33.2",
     );
 
     const isValid = result.every((item) => {

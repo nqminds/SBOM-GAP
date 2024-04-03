@@ -15,7 +15,7 @@ export async function classifyCwe(cweId) {
 
   const cweClassifications = path.resolve(
     __dirname,
-    "../vulnerability-reports/cwe_classifications.csv"
+    "../vulnerability-reports/cwe_classifications.csv",
   );
   const cweParts = cweId.split("-");
   const cwe = cweParts[1];

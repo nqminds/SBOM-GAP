@@ -27,13 +27,13 @@ export function initialiseCveDatabase(databasePath) {
         db.close((closeErr) => {
           if (closeErr) {
             reject(
-              new Error(`Error closing the database: ${closeErr.message}`)
+              new Error(`Error closing the database: ${closeErr.message}`),
             );
             return;
           }
           resolve();
         });
-      }
+      },
     );
   });
 }
@@ -51,7 +51,7 @@ export async function insertOrUpdateCVEData(
   cve,
   description,
   classification,
-  databasePath
+  databasePath,
 ) {
   const db = connectToDatabase(databasePath);
   try {
@@ -62,7 +62,7 @@ export async function insertOrUpdateCVEData(
         (err) => {
           if (err) reject(err);
           resolve();
-        }
+        },
       );
     });
   } finally {
@@ -89,7 +89,7 @@ export function getCVEData(cve, databasePath) {
         (err, row) => {
           if (err) reject(err);
           resolve(row);
-        }
+        },
       );
     });
   } finally {

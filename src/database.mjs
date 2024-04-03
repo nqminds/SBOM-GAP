@@ -14,7 +14,7 @@ export function connectToDatabase(databasePath) {
       if (err) {
         throw new Error("Error connecting to the database:", err);
       }
-    }
+    },
   );
 }
 
@@ -63,13 +63,13 @@ export function initialiseDatabase(databasePath) {
         db.close((closeErr) => {
           if (closeErr) {
             reject(
-              new Error(`Error closing the database: ${closeErr.message}`)
+              new Error(`Error closing the database: ${closeErr.message}`),
             );
             return;
           }
           resolve();
         });
-      }
+      },
     );
   });
 }
@@ -91,7 +91,7 @@ export async function insertOrUpdateCPEData(
   version,
   licensesJSON,
   cvesJSON,
-  databasePath
+  databasePath,
 ) {
   const db = connectToDatabase(databasePath);
   try {
@@ -102,7 +102,7 @@ export async function insertOrUpdateCPEData(
         (err) => {
           if (err) reject(err);
           resolve();
-        }
+        },
       );
     });
   } finally {
@@ -131,7 +131,7 @@ export function getCPEData(cpe, databasePath) {
         (err, row) => {
           if (err) reject(err);
           resolve(row);
-        }
+        },
       );
     });
   } finally {

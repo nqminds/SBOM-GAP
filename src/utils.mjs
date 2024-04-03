@@ -178,8 +178,14 @@ export function getApiKey(name) {
 export async function genGrypeReport(sbomFilePath, projectName) {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
-  const reportDirectory = path.resolve(__dirname, '../vulnerability-reports/reports');
-  const vulnerabilityReportFile = path.join(reportDirectory, `vulnerability_report_${projectName}`);
+  const reportDirectory = path.resolve(
+    __dirname,
+    "../vulnerability-reports/reports",
+  );
+  const vulnerabilityReportFile = path.join(
+    reportDirectory,
+    `vulnerability_report_${projectName}`,
+  );
 
   // Ensure the report directory exists
   if (!fs.existsSync(reportDirectory)) {
@@ -210,14 +216,13 @@ export async function genGrypeReport(sbomFilePath, projectName) {
     console.log(`Vulnerability report saved to: ${vulnerabilityReportFile}`);
   } catch (error) {
     throw new Error(
-      `Error generating vulnerability report for: ${vulnerabilityReportFile}, ${error}`
+      `Error generating vulnerability report for: ${vulnerabilityReportFile}, ${error}`,
     );
   }
 }
 
-
 /**
- * 
+ *
  * @param {json} cvesData - JSON object
  * @returns {json} - A JSON object containing the average vulnerability score
  */
@@ -227,11 +232,11 @@ export async function calculateAverageBaseScore(cvesData) {
 
   for (const key in cvesData) {
     const cveArray = cvesData[key];
-    cveArray.forEach(cve => {
+    cveArray.forEach((cve) => {
       if (cve.baseScore) {
         let score = parseFloat(cve.baseScore);
         if (score !== 0) {
-          console.log(cve.baseScore)
+          console.log(cve.baseScore);
           totalScore += cve.baseScore;
           count++;
         }
@@ -245,14 +250,14 @@ export async function calculateAverageBaseScore(cvesData) {
 
 /**
  * Reads an SBOM file or accepts an SBOM object and returns the SBOM data as JSON.
- * 
+ *
  * @param {string|object} sbomPath - Path to the SBOM file or the SBOM data itself.
  * @param {string} __dirname - The directory name of the current module, to resolve relative paths.
  * @returns {object} SBOM data as JSON.
  */
 export async function readOrParseSbom(sbomPath, __dirname) {
   let sbomJson;
-  
+
   if (typeof sbomPath === "string") {
     let resolvedPath = sbomPath;
     if (!fs.existsSync(resolvedPath)) {
@@ -263,12 +268,14 @@ export async function readOrParseSbom(sbomPath, __dirname) {
       throw new Error(`File not found at ${resolvedPath}`);
     }
 
-    const sbomData = fs.readFileSync(resolvedPath, 'utf8');
+    const sbomData = fs.readFileSync(resolvedPath, "utf8");
     sbomJson = JSON.parse(sbomData);
   } else if (typeof sbomPath === "object" && sbomPath !== null) {
     sbomJson = sbomPath;
   } else {
-    throw new Error("Invalid input. Please provide either a path to an SBOM file or the SBOM data itself.");
+    throw new Error(
+      "Invalid input. Please provide either a path to an SBOM file or the SBOM data itself.",
+    );
   }
 
   return sbomJson;
@@ -293,46 +300,50 @@ function extractCpeName(cpeString) {
  * @param {string} cpe - The CPE to add.
  */
 export async function addCpeToSbom(sbomFilePath, cpe) {
-  
-  if (path.extname(sbomFilePath) !== '.json') {
-    throw new Error(`The file ${sbomFilePath} does not have a .json extension.`);
+  if (path.extname(sbomFilePath) !== ".json") {
+    throw new Error(
+      `The file ${sbomFilePath} does not have a .json extension.`,
+    );
   }
 
-  let fileName = path.basename(sbomFilePath, '.json');
+  let fileName = path.basename(sbomFilePath, ".json");
 
-  if (fileName.endsWith('_sbom')) {
+  if (fileName.endsWith("_sbom")) {
     fileName = fileName.slice(0, -5);
   }
-  
+
   try {
-    const data = await fs.promises.readFile(sbomFilePath, 'utf8');
+    const data = await fs.promises.readFile(sbomFilePath, "utf8");
     const sbom = JSON.parse(data);
-    const version = getVersion(cpe)
-    const name = extractCpeName(cpe)
+    const version = getVersion(cpe);
+    const name = extractCpeName(cpe);
     const properties = [
       {
-        "name": name,
-        "value": ""
-      }
+        name: name,
+        value: "",
+      },
     ];
 
     const newComponent = {
       "bom-ref": `pkg:${name}:${version}`,
-      "type": "library",
-      "name": name,
-      "version": version,
-      "cpe": cpe,
-      "properties": properties 
+      type: "library",
+      name: name,
+      version: version,
+      cpe: cpe,
+      properties: properties,
     };
 
     sbom.components = sbom.components || [];
     sbom.components.push(newComponent);
 
-    await fs.promises.writeFile(sbomFilePath, JSON.stringify(sbom, null, 2), 'utf8');
-    console.log('Successfully added CPE to SBOM and updated the file.');
-    
+    await fs.promises.writeFile(
+      sbomFilePath,
+      JSON.stringify(sbom, null, 2),
+      "utf8",
+    );
+    console.log("Successfully added CPE to SBOM and updated the file.");
   } catch (error) {
     throw new Error(`Error processing the SBOM file: ${error.message}`);
   }
-  await genGrypeReport(sbomFilePath, fileName)
+  await genGrypeReport(sbomFilePath, fileName);
 }

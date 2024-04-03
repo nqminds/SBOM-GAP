@@ -39,7 +39,7 @@ export async function getCpes(sbomInput) {
     sbomJson = sbomInput;
   } else {
     throw new Error(
-      "Invalid input. Please provide either a path to an SBOM file or the SBOM data itself."
+      "Invalid input. Please provide either a path to an SBOM file or the SBOM data itself.",
     );
   }
 

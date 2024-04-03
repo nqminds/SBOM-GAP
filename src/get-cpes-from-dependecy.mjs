@@ -16,17 +16,17 @@ export async function mapCPEs(projectName) {
   try {
     const conanFilePath = path.resolve(
       __dirname,
-      `../vulnerability-reports/conan-files/${projectName}/conanfile.txt`
+      `../vulnerability-reports/conan-files/${projectName}/conanfile.txt`,
     );
     const dependencies = await processDependencies(conanFilePath);
     const csvFilePath = path.resolve(
       __dirname,
-      "../vulnerability-reports/cpe_data.csv"
+      "../vulnerability-reports/cpe_data.csv",
     );
     const cpeMapping = await createCPEMapping(csvFilePath, dependencies);
     const dirPath = path.resolve(
       __dirname,
-      `../vulnerability-reports/cpes/${projectName}`
+      `../vulnerability-reports/cpes/${projectName}`,
     );
     const cpeFilePath = path.join(dirPath, "cpeMapping.json");
 

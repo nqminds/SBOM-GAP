@@ -13,7 +13,7 @@ async function openaiRequest(
   openaiApiKey = "",
   maxRetries = 3,
   backoffTime = 1,
-  retries = 0
+  retries = 0,
 ) {
   let openai;
   if (openaiApiKey !== "") {
@@ -62,7 +62,7 @@ async function openaiRequest(
       };
     } else if (retries < maxRetries) {
       console.log(
-        `Retrying in ${backoffTime} seconds...: error: ${error.message}`
+        `Retrying in ${backoffTime} seconds...: error: ${error.message}`,
       );
       await sleep(backoffTime * 100);
       return await openaiRequest(
@@ -71,7 +71,7 @@ async function openaiRequest(
         openaiApiKey,
         maxRetries,
         backoffTime * 2,
-        retries + 1
+        retries + 1,
       );
     } else {
       console.log("Max retries reached.");
@@ -121,14 +121,14 @@ export async function makeClassificationRequest(
   description,
   openaiApiKey,
   maxRetries = 3,
-  currentRetry = 0
+  currentRetry = 0,
 ) {
   if (currentRetry > maxRetries) {
     console.log(
       `Max retries reached for CWE description: ${description.substring(
         0,
-        20
-      )}... Skipping...`
+        20,
+      )}... Skipping...`,
     );
     return { classification: "Unknown" };
   }
@@ -172,19 +172,19 @@ export async function makeClassificationRequest(
       console.log(
         `Failed to parse response or extract fields for CWE description: ${description.substring(
           0,
-          50
-        )}... Retrying...${error.message}`
+          50,
+        )}... Retrying...${error.message}`,
       );
       return makeClassificationRequest(
         description,
         maxRetries,
-        currentRetry + 1
+        currentRetry + 1,
       );
     } else {
       console.log(
         `Unexpected error occurred: ${
           error.message
-        } for CWE description: ${description.substring(0, 50)}... Skipping...`
+        } for CWE description: ${description.substring(0, 50)}... Skipping...`,
       );
       return { classification: "Unknown" };
     }

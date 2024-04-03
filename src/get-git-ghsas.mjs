@@ -16,7 +16,7 @@ export async function getGHSAInfo(ghsa) {
   const __dirname = dirname(__filename);
 
   const configContent = await fs.readFile(
-    path.join(__dirname, "../config/config.json")
+    path.join(__dirname, "../config/config.json"),
   );
   const config = JSON.parse(configContent);
   // replace this path in ./config/config.json with your local advisory-database/advisories
@@ -27,7 +27,7 @@ export async function getGHSAInfo(ghsa) {
   // If not found in the direct path, then search recursively
   const ghsaFilePath = await findFileInSubdirectories(
     ghsaDatabase,
-    `${ghsa}.json`
+    `${ghsa}.json`,
   );
   if (ghsaFilePath) {
     const ghsaContent = await fs.readFile(ghsaFilePath, "utf-8");
@@ -47,7 +47,7 @@ export async function processVulnerabilities(vulReport) {
   const vulnerabilities = await getVulnerabilities(vulReport);
   const ghsaVulnerabilities = vulnerabilities
     .filter(
-      (vuln) => vuln.vulnerability && vuln.vulnerability.startsWith("GHSA")
+      (vuln) => vuln.vulnerability && vuln.vulnerability.startsWith("GHSA"),
     )
     .map((vul) => vul.vulnerability);
 

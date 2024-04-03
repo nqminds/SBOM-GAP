@@ -74,30 +74,30 @@ describe("previousCpeVersion", () => {
 
   test("Should identify previous versions", async () => {
     expect(
-      previousCpeVersion(cpes["opensslV3.1.2"], cpes["opensslV3.1.1"])
+      previousCpeVersion(cpes["opensslV3.1.2"], cpes["opensslV3.1.1"]),
     ).toBe(true);
     expect(
-      previousCpeVersion(cpes["opensslV3.1.2"], cpes["opensslV3.0.2"])
+      previousCpeVersion(cpes["opensslV3.1.2"], cpes["opensslV3.0.2"]),
     ).toBe(true);
     expect(
-      previousCpeVersion(cpes["opensslV3.1.2"], cpes["opensslV2.1.2"])
+      previousCpeVersion(cpes["opensslV3.1.2"], cpes["opensslV2.1.2"]),
     ).toBe(true);
     expect(
-      previousCpeVersion(cpes["opensslV3.1.2"], cpes.opensslNoVersion)
+      previousCpeVersion(cpes["opensslV3.1.2"], cpes.opensslNoVersion),
     ).toBe(true);
   });
   test("Should identify future versions", async () => {
     expect(
-      previousCpeVersion(cpes["opensslV3.1.1"], cpes["opensslV3.1.2"])
+      previousCpeVersion(cpes["opensslV3.1.1"], cpes["opensslV3.1.2"]),
     ).toBe(false);
     expect(
-      previousCpeVersion(cpes["opensslV3.0.2"], cpes["opensslV3.1.2"])
+      previousCpeVersion(cpes["opensslV3.0.2"], cpes["opensslV3.1.2"]),
     ).toBe(false);
     expect(
-      previousCpeVersion(cpes["opensslV2.1.2"], cpes["opensslV3.1.2"])
+      previousCpeVersion(cpes["opensslV2.1.2"], cpes["opensslV3.1.2"]),
     ).toBe(false);
     expect(
-      previousCpeVersion(cpes.opensslNoVersion, cpes["opensslV3.1.2"])
+      previousCpeVersion(cpes.opensslNoVersion, cpes["opensslV3.1.2"]),
     ).toBe(false);
   });
 });
