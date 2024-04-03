@@ -133,5 +133,5 @@ export async function generateImageVulnerabilityReport(imageName, fileName) {
   }
 
   // Generate vulnerability report using Grype
-  await genGrypeReport(sbomFile,fileName)
+  await genGrypeReport(sbomFile,fileName);
 }
