@@ -75,7 +75,7 @@ jobs:
       - name: Build in /packages/docusaurus
         run: |
           cd packages/docusaurus
-          npm run build 2>/dev/null
+          npm run build # 2>/dev/null # silence output
 
       - name: Deploy to Remote Server
         run: |
