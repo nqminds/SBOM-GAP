@@ -273,3 +273,66 @@ export async function readOrParseSbom(sbomPath, __dirname) {
 
   return sbomJson;
 }
+
+function extractCpeName(cpeString) {
+  // This regex handles both formats by capturing the text after "cpe:2.3:a:" or "cpe:/a:"
+  const regex = /cpe:2\.3:a:([^:]+):|cpe:\/a:([^:]+):/;
+  const matches = cpeString.match(regex);
+
+  if (matches && (matches[1] || matches[2])) {
+    return matches[1] || matches[2]; // Return the matched CPE name
+  }
+
+  return null;
+}
+
+/**
+ * Adds a specified CPE to the SBOM file.
+ *
+ * @param {string} sbomFilePath - The path to the SBOM file.
+ * @param {string} cpe - The CPE to add.
+ */
+export async function addCpeToSbom(sbomFilePath, cpe) {
+  
+  if (path.extname(sbomFilePath) !== '.json') {
+    throw new Error(`The file ${sbomFilePath} does not have a .json extension.`);
+  }
+
+  let fileName = path.basename(sbomFilePath, '.json');
+
+  if (fileName.endsWith('_sbom')) {
+    fileName = fileName.slice(0, -5);
+  }
+  
+  try {
+    const data = await fs.promises.readFile(sbomFilePath, 'utf8');
+    const sbom = JSON.parse(data);
+    const version = getVersion(cpe)
+    const name = extractCpeName(cpe)
+    const properties = [
+      {
+        "name": name,
+        "value": ""
+      }
+    ];
+
+    const newComponent = {
+      "bom-ref": `pkg:${name}:${version}`,
+      "type": "library",
+      "name": name,
+      "version": version,
+      "cpe": cpe,
+      "properties": properties 
+    };
+
+    sbom.components = sbom.components || [];
+    sbom.components.push(newComponent);
+
+    await fs.promises.writeFile(sbomFilePath, JSON.stringify(sbom, null, 2), 'utf8');
+    console.log('Successfully added CPE to SBOM and updated the file.');
+    
+  } catch (error) {
+    throw new Error(`Error processing the SBOM file: ${error.message}`);
+  }
+  await genGrypeReport(sbomFilePath, fileName)
+}
