@@ -470,7 +470,8 @@ The`-getCweInfo` flag will return information such as description for each CWE. 
   {
     'CWE-ID': '681',
     Name: 'Incorrect Conversion between Numeric Types',
-    Description: 'When converting from one data type to another, such as long to integer, data can be omitted or translated in a way that produces unexpected values. If the resulting values are used in a sensitive context, then dangerous behaviors may occur.Avoid making conversion between numeric types. Always check for the allowed ranges.Chain: integer coercion error (CWE-192) prevents a return value from indicating an error, leading to out-of-bounds write (CWE-787)Chain: in a web browser, an unsigned 64-bit integer is foribly cast to a 32-bit integer (CWE-681) and potentially leading to an integer overflow (CWE-190). If an integer overflow occurs, this can cause heap memory corruption (CWE-122)Chain: integer signedness error (CWE-195) passes signed comparison, leading to heap overflow (CWE-122)Chain: signed short width value in image processor is sign extended during conversion to unsigned int, which leads to integer overflow and heap-based buffer overflow.Integer truncation of length value leads to heap-based buffer overflow.Size of a particular type changes for 64-bit platforms, leading to an integer truncation in document processor causes incorrect index to be generated.',
+    Description: 'When converting from one data type to another, such as long to integer, data can be omitted or translated in a way that produces unexpected values. If the resulting values are used in a sensitive context, then dangerous behaviors may occur.Avoid making conversion between numeric types. Always check for the allowed ranges.Chain: integer coercion error (CWE-192) prevents a return value from indicating an error, leading to out-of-bounds write (CWE-787)Chain: in a web browser, an unsigned 64-bit integer is foribly cast to a 32-bit integer (CWE-681) and potentially leading to an integer overflow (CWE-190). If an integer overflow occurs, this can cause heap memory corruption (CWE-122)Chain: integer signedness error (CWE-195) passes signed comparison, leading to heap overflow (CWE-122)Chain: signed short width value in 
+    processor is sign extended during conversion to unsigned int, which leads to integer overflow and heap-based buffer overflow.Integer truncation of length value leads to heap-based buffer overflow.Size of a particular type changes for 64-bit platforms, leading to an integer truncation in document processor causes incorrect index to be generated.',
     Extended_Description: '',
     Alternate_Terms: [],
     Likelihood_Of_Exploit: 'High',
@@ -796,7 +797,7 @@ cpe:/a:openssl:openssl:0.9.3                   - CVE-2005-2946  - CWE-327       
                                                
 ```
 
-The nqmvul `-generateDockerSbom` command employs [Syft](https://github.com/anchore/syft) to first generate an SBOM (Software Bill of Materials) for the specified Docker image (<image_name>). Following the SBOM creation, it uses [Grype](https://github.com/anchore/grype) to analyse the identified components for vulnerabilities, producing a comprehensive vulnerability report. e.g.`-generateDockerSbom nginx:latest nginx`
+The nqmvul `-generateDockerSbom` command employs [Syft](https://github.com/anchore/syft) to first generate an SBOM (Software Bill of Materials) for the specified Docker image (`<image_name>`). Following the SBOM creation, it uses [Grype](https://github.com/anchore/grype) to analyse the identified components for vulnerabilities, producing a comprehensive vulnerability report. e.g.`-generateDockerSbom nginx:latest nginx`
 
 ```sh
 nqmvul -generateDockerSbom nginx:latest nginx
