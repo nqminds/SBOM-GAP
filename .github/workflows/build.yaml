@@ -9,7 +9,14 @@ on:
       - "src/**"
       - "scripts/**"
       - "server/**"
-
+  pull_request:
+    branches:
+      - main
+      - feat/add-eslint
+    paths:
+      - "src/**"
+      - "scripts/**"
+      - "server/**"
 jobs:
   lint-and-check:
     runs-on: ubuntu-latest
