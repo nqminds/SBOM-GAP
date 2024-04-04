@@ -1,7 +1,7 @@
-import { fileURLToPath } from "url";
-import fs from "fs";
-import path from "node:path";
-import { dirname } from "path";
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+import path from 'node:path';
+import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -14,7 +14,7 @@ const __dirname = dirname(__filename);
  */
 export function cleanCpe(cpe) {
   // Remove trailing special characters and backslashes
-  const cpeCleaned = cpe.replace(/:~~~.*?~~/g, "").replace(/\\/g, "");
+  const cpeCleaned = cpe.replace(/:~~~.*?~~/g, '').replace(/\\/g, '');
 
   // Pattern for CPE 2.3 format (cpe:2.3:[any_letter]:...)
   const cpe23Pattern = /^cpe:2\.3:[a-z]:/i;
@@ -27,8 +27,8 @@ export function cleanCpe(cpe) {
     return cpeCleaned;
   }
   // Convert from legacy CPE format to CPE 2.3 format
-  else if (legacyCpePattern.test(cpeCleaned)) {
-    return cpeCleaned.replace("cpe:/", "cpe:2.3:");
+  if (legacyCpePattern.test(cpeCleaned)) {
+    return cpeCleaned.replace('cpe:/', 'cpe:2.3:');
   }
 
   // Return the original for any other format
@@ -49,7 +49,7 @@ export async function getCpes(sbomInput) {
   let resolvedPath;
 
   // check if the input is a string (path) or an object (data)
-  if (typeof sbomInput === "string") {
+  if (typeof sbomInput === 'string') {
     // path from cli tool
     resolvedPath = path.resolve(process.cwd(), sbomInput);
 
@@ -65,11 +65,11 @@ export async function getCpes(sbomInput) {
 
     const sbomData = fs.readFileSync(resolvedPath);
     sbomJson = JSON.parse(sbomData);
-  } else if (typeof sbomInput === "object" && sbomInput !== null) {
+  } else if (typeof sbomInput === 'object' && sbomInput !== null) {
     sbomJson = sbomInput;
   } else {
     throw new Error(
-      "Invalid input. Please provide either a path to an SBOM file or the SBOM data itself.",
+      'Invalid input. Please provide either a path to an SBOM file or the SBOM data itself.',
     );
   }
 

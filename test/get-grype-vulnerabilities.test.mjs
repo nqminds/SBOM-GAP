@@ -1,8 +1,8 @@
-import { getVulnerabilities } from "../src/get-grype-vulnerabilities.mjs";
-import { describe, test, expect } from "@jest/globals";
+import { describe, test, expect } from '@jest/globals';
+import { getVulnerabilities } from '../src/get-grype-vulnerabilities.mjs';
 
-describe("getVulnerabilities", () => {
-  test("should return an array of json objects", async () => {
+describe('getVulnerabilities', () => {
+  test('should return an array of json objects', async () => {
     const vulData = `
 NAME     INSTALLED  FIXED-IN  TYPE   VULNERABILITY  SEVERITY 
 openssl  3                    conan  CVE-2023-0401  High      
@@ -35,58 +35,57 @@ file-type      14.7.1     16.5.4    npm    GHSA-mhxj-85r3-2x55
     const result2 = await getVulnerabilities(missingFields);
 
     // test for undefined values and correct data type
-    const isValid = result.every((item) => {
-      return (
-        typeof item.name === "string" &&
-        typeof item.installed === "string" &&
-        typeof item.fixedIn === "string" &&
-        typeof item.type === "string" &&
-        typeof item.vulnerability === "string" &&
-        typeof item.severity === "string"
-      );
-    });
+    const isValid = result.every(
+      (item) =>
+        typeof item.name === 'string' &&
+        typeof item.installed === 'string' &&
+        typeof item.fixedIn === 'string' &&
+        typeof item.type === 'string' &&
+        typeof item.vulnerability === 'string' &&
+        typeof item.severity === 'string',
+    );
 
     // test various missing fields in the text data
     const isValid2 = [
       {
-        name: "ansi-regex",
-        installed: "3.0.0",
-        fixedIn: "3.0.1",
-        type: "npm",
-        vulnerability: "", // missing
-        severity: "High",
+        name: 'ansi-regex',
+        installed: '3.0.0',
+        fixedIn: '3.0.1',
+        type: 'npm',
+        vulnerability: '', // missing
+        severity: 'High',
       },
       {
-        name: "ansi-regex",
-        installed: "5.0.0",
-        fixedIn: "", // missing
-        type: "npm",
-        vulnerability: "GHSA-93q8-gq69-wqmw",
-        severity: "High",
+        name: 'ansi-regex',
+        installed: '5.0.0',
+        fixedIn: '', // missing
+        type: 'npm',
+        vulnerability: 'GHSA-93q8-gq69-wqmw',
+        severity: 'High',
       },
       {
-        name: "file",
-        installed: "0.0.0.0",
-        fixedIn: "0.0.1.0",
-        type: "conan",
-        vulnerability: "CVE-2007-1536",
-        severity: "High",
+        name: 'file',
+        installed: '0.0.0.0',
+        fixedIn: '0.0.1.0',
+        type: 'conan',
+        vulnerability: 'CVE-2007-1536',
+        severity: 'High',
       },
       {
-        name: "file-type",
-        installed: "14.7.1",
-        fixedIn: "16.5.4",
-        type: "", // missing
-        vulnerability: "GHSA-mhxj-85r3-2x55",
-        severity: "High",
+        name: 'file-type',
+        installed: '14.7.1',
+        fixedIn: '16.5.4',
+        type: '', // missing
+        vulnerability: 'GHSA-mhxj-85r3-2x55',
+        severity: 'High',
       },
       {
-        name: "file-type",
-        installed: "14.7.1",
-        fixedIn: "16.5.4",
-        type: "npm",
-        vulnerability: "GHSA-mhxj-85r3-2x55",
-        severity: "", // missing
+        name: 'file-type',
+        installed: '14.7.1',
+        fixedIn: '16.5.4',
+        type: 'npm',
+        vulnerability: 'GHSA-mhxj-85r3-2x55',
+        severity: '', // missing
       },
     ];
 

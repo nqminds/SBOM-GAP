@@ -1,4 +1,4 @@
-import { connectToDatabase, closeDatabase } from "./database.mjs";
+import { connectToDatabase, closeDatabase } from './database.mjs';
 
 /**
  * Initialise the database if it doesn't exist
@@ -57,7 +57,7 @@ export async function insertOrUpdateCVEData(
   try {
     await new Promise((resolve, reject) => {
       db.run(
-        `INSERT OR REPLACE INTO cve_cache (cve, description, classification, last_updated) VALUES (?, ?, ?, ?)`,
+        'INSERT OR REPLACE INTO cve_cache (cve, description, classification, last_updated) VALUES (?, ?, ?, ?)',
         [cve, description, classification, Date.now()],
         (err) => {
           if (err) reject(err);
@@ -84,7 +84,7 @@ export function getCVEData(cve, databasePath) {
   try {
     return new Promise((resolve, reject) => {
       db.get(
-        "SELECT * FROM cve_cache WHERE cve = ? AND last_updated > ?",
+        'SELECT * FROM cve_cache WHERE cve = ? AND last_updated > ?',
         [cve, threeMonthsAgo],
         (err, row) => {
           if (err) reject(err);
