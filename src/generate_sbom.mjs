@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
-import { fileURLToPath } from "url";
-import path from "node:path";
-import { dirname } from "path";
-import { execFileSync } from "child_process";
-import fs from "fs";
-import { genGrypeReport } from "./utils.mjs";
+import { fileURLToPath } from 'url';
+import path from 'node:path';
+import { dirname } from 'path';
+import { execFileSync } from 'child_process';
+import fs from 'fs';
+import { genGrypeReport } from './utils.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,11 +21,11 @@ const __dirname = dirname(__filename);
 export function generateVulnerabilityReport(directoryPath, fileName) {
   const sbomDirectory = path.resolve(
     __dirname,
-    "../vulnerability-reports/sboms",
+    '../vulnerability-reports/sboms',
   );
   const reportDirectory = path.resolve(
     __dirname,
-    "../vulnerability-reports/reports",
+    '../vulnerability-reports/reports',
   );
   const sbomFile = path.join(sbomDirectory, `${fileName}.json`);
   const vulnerabilityReportFile = path.join(
@@ -42,22 +42,22 @@ export function generateVulnerabilityReport(directoryPath, fileName) {
   }
 
   // Execute syft command
-  console.log("Running syft to generate SBOM...");
+  console.log('Running syft to generate SBOM...');
   const dockSyftArgs = [
-    "run",
-    "--rm",
-    "-v",
+    'run',
+    '--rm',
+    '-v',
     `${directoryPath}:/project`, // Mount the directory containing the repository
-    "anchore/syft",
-    "/project",
-    "-o",
-    "cyclonedx-json",
+    'anchore/syft',
+    '/project',
+    '-o',
+    'cyclonedx-json',
   ];
 
   try {
     // Increse the buffer size
-    const sbomOutput = execFileSync("docker", dockSyftArgs, {
-      encoding: "utf-8",
+    const sbomOutput = execFileSync('docker', dockSyftArgs, {
+      encoding: 'utf-8',
       maxBuffer: 1024 * 5000,
     });
     fs.writeFileSync(sbomFile, sbomOutput);
@@ -68,20 +68,20 @@ export function generateVulnerabilityReport(directoryPath, fileName) {
   }
   // Execute grype command
   try {
-    console.log("Running grype to generate vulnerability report...");
+    console.log('Running grype to generate vulnerability report...');
     const grypeArgs = [
-      "run",
-      "--rm",
-      "-v",
+      'run',
+      '--rm',
+      '-v',
       `${path.dirname(sbomFile)}:/vulnerability-reports`, // Mount the directory containing the SBOM file
-      "anchore/grype",
+      'anchore/grype',
       `/vulnerability-reports/${path.basename(sbomFile)}`, // Reference the SBOM file by its name inside the container
-      "-o",
-      "table",
+      '-o',
+      'table',
     ];
 
-    const tableOutput = execFileSync("docker", grypeArgs, {
-      encoding: "utf-8",
+    const tableOutput = execFileSync('docker', grypeArgs, {
+      encoding: 'utf-8',
       maxBuffer: 1024 * 5000,
     });
 
@@ -106,11 +106,11 @@ export function generateVulnerabilityReport(directoryPath, fileName) {
 export async function generateImageVulnerabilityReport(imageName, fileName) {
   const sbomDirectory = path.resolve(
     __dirname,
-    "../vulnerability-reports/sboms",
+    '../vulnerability-reports/sboms',
   );
   const reportDirectory = path.resolve(
     __dirname,
-    "../vulnerability-reports/reports",
+    '../vulnerability-reports/reports',
   );
   const sbomFile = path.join(sbomDirectory, `${fileName}.json`);
 
@@ -127,17 +127,17 @@ export async function generateImageVulnerabilityReport(imageName, fileName) {
     `Running syft to generate SBOM for Docker image: ${imageName}...`,
   );
   const syftArgs = [
-    "run",
-    "--rm",
-    "anchore/syft",
+    'run',
+    '--rm',
+    'anchore/syft',
     imageName,
-    "-o",
-    "cyclonedx-json",
+    '-o',
+    'cyclonedx-json',
   ];
 
   try {
-    const sbomOutput = execFileSync("docker", syftArgs, {
-      encoding: "utf-8",
+    const sbomOutput = execFileSync('docker', syftArgs, {
+      encoding: 'utf-8',
       maxBuffer: 1024 * 5000,
     });
     fs.writeFileSync(sbomFile, sbomOutput);

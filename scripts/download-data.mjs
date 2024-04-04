@@ -1,14 +1,13 @@
 /* eslint-disable no-console */
-import axios from "axios";
-import { createReadStream, createWriteStream, mkdirSync } from "fs";
-import { writeFile } from "fs/promises";
-import zlib from "zlib";
-import yauzl from "yauzl";
-import path from "path";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import sax from "sax";
-import { EOL } from "os";
+import axios from 'axios';
+import { createReadStream, createWriteStream, mkdirSync } from 'fs';
+import { writeFile } from 'fs/promises';
+import zlib from 'zlib';
+import yauzl from 'yauzl';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import sax from 'sax';
+import { EOL } from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -22,18 +21,18 @@ const __dirname = dirname(__filename);
 async function downloadData(url, filePath) {
   try {
     const response = await axios({
-      method: "get",
-      url: url,
-      responseType: "stream",
+      method: 'get',
+      url,
+      responseType: 'stream',
     });
     const writer = createWriteStream(filePath);
     response.data.pipe(writer);
     return new Promise((resolve, reject) => {
-      writer.on("finish", () => resolve(filePath));
-      writer.on("error", reject);
+      writer.on('finish', () => resolve(filePath));
+      writer.on('error', reject);
     });
   } catch (error) {
-    console.error("Error downloading data:", error);
+    console.error('Error downloading data:', error);
     throw error;
   }
 }
@@ -45,12 +44,12 @@ async function downloadData(url, filePath) {
  */
 async function unzipGzip(filePath) {
   return new Promise((resolve, reject) => {
-    const decompressedStream = createWriteStream(filePath.replace(".gz", ""));
+    const decompressedStream = createWriteStream(filePath.replace('.gz', ''));
     createReadStream(filePath)
       .pipe(zlib.createGunzip())
       .pipe(decompressedStream)
-      .on("finish", () => resolve(filePath.replace(".gz", "")))
-      .on("error", reject);
+      .on('finish', () => resolve(filePath.replace('.gz', '')))
+      .on('error', reject);
   });
 }
 
@@ -70,7 +69,7 @@ async function unzipZip(filePath, outputDir) {
 
       zipfile.readEntry();
 
-      zipfile.on("entry", (entry) => {
+      zipfile.on('entry', (entry) => {
         if (/\/$/.test(entry.fileName)) {
           // Directory file names end with '/'
           zipfile.readEntry();
@@ -93,14 +92,14 @@ async function unzipZip(filePath, outputDir) {
             const writeStream = createWriteStream(outputPath);
             readStream.pipe(writeStream);
 
-            writeStream.on("finish", () => {
+            writeStream.on('finish', () => {
               resolve(outputPath); // Resolve with the path of the unzipped file
             });
           });
         }
       });
 
-      zipfile.once("end", () => {
+      zipfile.once('end', () => {
         zipfile.close();
       });
     });
@@ -119,27 +118,27 @@ async function convertCweXmlToJson(xmlFilePath, jsonFilePath) {
     const parser = sax.createStream(true, { trim: true, normalize: true });
     const output = [];
     let currentWeakness = null;
-    let currentElement = "";
-    let currentSubElement = "";
+    let currentElement = '';
+    let currentSubElement = '';
     let currentConsequence = null;
 
-    parser.on("opentag", (node) => {
-      if (node.name === "Weakness") {
+    parser.on('opentag', (node) => {
+      if (node.name === 'Weakness') {
         currentWeakness = {
-          "CWE-ID": node.attributes.ID,
+          'CWE-ID': node.attributes.ID,
           Name: node.attributes.Name,
-          Description: "",
-          Extended_Description: "",
+          Description: '',
+          Extended_Description: '',
           Alternate_Terms: [],
-          Likelihood_Of_Exploit: "",
+          Likelihood_Of_Exploit: '',
           Common_Consequences: [],
           Related_Weaknesses: [],
         };
       } else if (currentWeakness) {
         currentElement = node.name;
-        if (currentElement === "Consequence") {
-          currentConsequence = { Scope: "", Impacts: [] };
-        } else if (currentElement === "Related_Weakness") {
+        if (currentElement === 'Consequence') {
+          currentConsequence = { Scope: '', Impacts: [] };
+        } else if (currentElement === 'Related_Weakness') {
           currentSubElement = {
             Nature: node.attributes.Nature,
             CWE_ID: node.attributes.CWE_ID,
@@ -149,42 +148,45 @@ async function convertCweXmlToJson(xmlFilePath, jsonFilePath) {
       }
     });
 
-    parser.on("text", (text) => {
+    parser.on('text', (text) => {
       if (currentWeakness) {
         switch (currentElement) {
-          case "Description":
+          case 'Description':
             currentWeakness.Description += text;
             break;
-          case "Extended_Description":
+          case 'Extended_Description':
             currentWeakness.Extended_Description += text;
             break;
-          case "Term":
+          case 'Term':
             currentWeakness.Alternate_Terms.push(text);
             break;
-          case "Likelihood_Of_Exploit":
+          case 'Likelihood_Of_Exploit':
             currentWeakness.Likelihood_Of_Exploit += text;
             break;
-          case "Related_Weakness":
+          case 'Related_Weakness':
             break;
-          case "Impact":
+          case 'Impact':
             if (currentConsequence) {
               currentConsequence.Impacts.push(text);
             }
             break;
-          case "Scope":
+          case 'Scope':
             if (currentConsequence) {
               currentConsequence.Scope += text;
             }
+            break;
+          default:
+            // Do nothing - satisfies ESLint
             break;
         }
       }
     });
 
-    parser.on("closetag", (nodeName) => {
-      if (nodeName === "Weakness") {
+    parser.on('closetag', (nodeName) => {
+      if (nodeName === 'Weakness') {
         output.push(currentWeakness);
         currentWeakness = null;
-      } else if (nodeName === "Consequence") {
+      } else if (nodeName === 'Consequence') {
         if (currentWeakness && currentConsequence) {
           currentWeakness.Common_Consequences.push(currentConsequence);
           currentConsequence = null;
@@ -192,10 +194,12 @@ async function convertCweXmlToJson(xmlFilePath, jsonFilePath) {
       }
     });
 
-    parser.on("end", async () => {
+    parser.on('end', async () => {
       try {
         // Sort output by CWE-ID in ascending order
-        output.sort((a, b) => parseInt(a["CWE-ID"]) - parseInt(b["CWE-ID"]));
+        output.sort(
+          (a, b) => parseInt(a['CWE-ID'], 10) - parseInt(b['CWE-ID'], 10),
+        );
         await writeFile(jsonFilePath, JSON.stringify(output, null, 4));
         resolve(jsonFilePath);
       } catch (err) {
@@ -203,7 +207,7 @@ async function convertCweXmlToJson(xmlFilePath, jsonFilePath) {
       }
     });
 
-    parser.on("error", (error) => {
+    parser.on('error', (error) => {
       reject(error);
     });
 
@@ -223,63 +227,63 @@ async function convertXmlToCsv(xmlFilePath, csvFilePath) {
     const parser = sax.createStream(true);
     const csvStream = createWriteStream(csvFilePath);
     let currentItem = null;
-    let currentElement = "";
+    let currentElement = '';
 
     // Write CSV header
     csvStream.write(`cpe_name,title,references,cpe23_name${EOL}`);
 
-    parser.on("opentag", (node) => {
+    parser.on('opentag', (node) => {
       currentElement = node.name; // Keep track of the current element
 
-      if (node.name === "cpe-item" || node.local === "cpe-item") {
+      if (node.name === 'cpe-item' || node.local === 'cpe-item') {
         currentItem = {
           cpe_name: node.attributes.name,
-          title: "",
+          title: '',
           references: [],
-          cpe23_name: "",
+          cpe23_name: '',
         };
       } else if (
         currentItem &&
-        (node.name === "reference" || node.local === "reference")
+        (node.name === 'reference' || node.local === 'reference')
       ) {
         currentItem.references.push({
-          href: node.attributes.href || "",
-          text: "",
+          href: node.attributes.href || '',
+          text: '',
         });
       } else if (
         currentItem &&
-        (node.name === "cpe-23:cpe23-item" || node.local === "cpe23-item")
+        (node.name === 'cpe-23:cpe23-item' || node.local === 'cpe23-item')
       ) {
-        currentItem.cpe23_name = node.attributes.name || "";
+        currentItem.cpe23_name = node.attributes.name || '';
       }
     });
 
-    parser.on("attribute", (attr) => {
+    parser.on('attribute', (attr) => {
       if (
         currentItem &&
-        currentElement === "cpe-item" &&
-        attr.name === "name"
+        currentElement === 'cpe-item' &&
+        attr.name === 'name'
       ) {
         currentItem.cpe_name = attr.value;
       } else if (
         currentItem &&
-        currentElement.startsWith("cpe-23:") &&
-        attr.name === "name"
+        currentElement.startsWith('cpe-23:') &&
+        attr.name === 'name'
       ) {
         currentItem.cpe23_name = attr.value;
       }
     });
 
-    parser.on("text", (text) => {
+    parser.on('text', (text) => {
       if (currentItem) {
         if (
-          currentElement === "title" ||
-          currentElement === "{http://cpe.mitre.org/dictionary/2.0}title"
+          currentElement === 'title' ||
+          currentElement === '{http://cpe.mitre.org/dictionary/2.0}title'
         ) {
           currentItem.title += text;
         } else if (
-          currentElement === "reference" ||
-          currentElement === "{http://cpe.mitre.org/dictionary/2.0}reference"
+          currentElement === 'reference' ||
+          currentElement === '{http://cpe.mitre.org/dictionary/2.0}reference'
         ) {
           const lastRef =
             currentItem.references[currentItem.references.length - 1];
@@ -288,10 +292,10 @@ async function convertXmlToCsv(xmlFilePath, csvFilePath) {
       }
     });
 
-    parser.on("closetag", (nodeName) => {
+    parser.on('closetag', (nodeName) => {
       if (
-        nodeName === "cpe-item" ||
-        nodeName === "{http://cpe.mitre.org/dictionary/2.0}cpe-item"
+        nodeName === 'cpe-item' ||
+        nodeName === '{http://cpe.mitre.org/dictionary/2.0}cpe-item'
       ) {
         const referencesString = JSON.stringify(currentItem.references).replace(
           /"/g,
@@ -301,16 +305,16 @@ async function convertXmlToCsv(xmlFilePath, csvFilePath) {
         csvStream.write(csvLine + EOL);
         currentItem = null;
       }
-      currentElement = ""; // Reset current element
+      currentElement = ''; // Reset current element
     });
 
-    parser.on("end", () => {
+    parser.on('end', () => {
       csvStream.end();
       console.log(`CPE data written to CSV file: ${csvFilePath}`);
       resolve(csvFilePath);
     });
 
-    parser.on("error", (error) => {
+    parser.on('error', (error) => {
       reject(error);
     });
 
@@ -321,45 +325,45 @@ async function convertXmlToCsv(xmlFilePath, csvFilePath) {
 async function main() {
   try {
     // Create necessary directories if not existing
-    const dataDir = path.resolve(__dirname, "../data");
-    const reportsDir = path.resolve(__dirname, "../vulnerability-reports");
+    const dataDir = path.resolve(__dirname, '../data');
+    const reportsDir = path.resolve(__dirname, '../vulnerability-reports');
     mkdirSync(dataDir, { recursive: true });
     mkdirSync(reportsDir, { recursive: true });
 
     const cpeUrl =
-      "https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.gz";
-    const cweUrl = "https://cwe.mitre.org/data/xml/cwec_v4.13.xml.zip";
+      'https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.gz';
+    const cweUrl = 'https://cwe.mitre.org/data/xml/cwec_v4.13.xml.zip';
 
     // Downloading latest CPE data
     const cpeFilePath = await downloadData(
       cpeUrl,
-      path.resolve(__dirname, "../data/cpeData.gz"),
+      path.resolve(__dirname, '../data/cpeData.gz'),
     );
     const cpeXmlPath = await unzipGzip(cpeFilePath);
 
     // Converting XML to CSV
     await convertXmlToCsv(
       cpeXmlPath,
-      path.resolve(__dirname, "../vulnerability-reports/cpe_data.csv"),
+      path.resolve(__dirname, '../vulnerability-reports/cpe_data.csv'),
     );
 
     // Downloading latest CWE data
     const cweFilePath = await downloadData(
       cweUrl,
-      path.resolve(__dirname, "../data/cweData.zip"),
+      path.resolve(__dirname, '../data/cweData.zip'),
     );
-    const outputDir = path.resolve(__dirname, "../data");
+    const outputDir = path.resolve(__dirname, '../data');
 
     const cweXmlPath = await unzipZip(cweFilePath, outputDir);
     const cweJsonPath = path.resolve(
       __dirname,
-      "../vulnerability-reports/cweData.json",
+      '../vulnerability-reports/cweData.json',
     );
 
     // Converting CWE data from XML to json
     await convertCweXmlToJson(cweXmlPath, cweJsonPath);
   } catch (error) {
-    console.error("Error in main function", error);
+    console.error('Error in main function', error);
   }
 }
 

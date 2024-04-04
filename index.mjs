@@ -1,30 +1,31 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
-
-import { getCpes } from "./src/get-syft-cpes.mjs";
-import { fetchCVEsWithRateLimit } from "./src/list-vulnerabilities.mjs";
-import { fetchCVEsForCPE } from "./src/list-vulnerabilities.mjs";
-import { writeCvesToFile } from "./src/list-vulnerabilities.mjs";
-import { fetchHistoricalCPEs } from "./src/get-historical-cpes.mjs";
-import { fetchHistoricalCVEs } from "./src/get-historical-cves.mjs";
-import { getCweInfo } from "./src/get-CWEs-info.mjs";
-import { getVulnerabilities } from "./src/get-grype-vulnerabilities.mjs";
-import { generateVulnerabilityReport } from "./src/generate_sbom.mjs";
-import { generateConanFile } from "./src/generate-conan-text-from-json.mjs";
-import { generateDependencyList } from "./src/generate-dep-list.mjs";
-import { mapCPEs } from "./src/get-cpes-from-dependecy.mjs";
-import { generateDummySBOM } from "./src/gen-bom-from-cpes.mjs";
-import { getGHSAInfo } from "./src/get-git-ghsas.mjs";
-import { processVulnerabilities } from "./src/get-git-ghsas.mjs";
-import { classifyCwe } from "./src/classify_cwe.mjs";
-import { mapCpeCveCwe } from "./src/show-cpe-history.mjs";
-import { genGrypeReport } from "./src/utils.mjs";
-import { generateImageVulnerabilityReport } from "./src/generate_sbom.mjs";
-import { addCpeToSbom } from "./src/utils.mjs";
-import path from "node:path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-import fs from "fs";
+import path from 'node:path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import fs from 'fs';
+import { getCpes } from './src/get-syft-cpes.mjs';
+import {
+  fetchCVEsWithRateLimit,
+  fetchCVEsForCPE,
+  writeCvesToFile,
+} from './src/list-vulnerabilities.mjs';
+import { fetchHistoricalCPEs } from './src/get-historical-cpes.mjs';
+import { fetchHistoricalCVEs } from './src/get-historical-cves.mjs';
+import { getCweInfo } from './src/get-CWEs-info.mjs';
+import { getVulnerabilities } from './src/get-grype-vulnerabilities.mjs';
+import {
+  generateVulnerabilityReport,
+  generateImageVulnerabilityReport,
+} from './src/generate_sbom.mjs';
+import { generateConanFile } from './src/generate-conan-text-from-json.mjs';
+import { generateDependencyList } from './src/generate-dep-list.mjs';
+import { mapCPEs } from './src/get-cpes-from-dependecy.mjs';
+import { generateDummySBOM } from './src/gen-bom-from-cpes.mjs';
+import { getGHSAInfo, processVulnerabilities } from './src/get-git-ghsas.mjs';
+import { classifyCwe } from './src/classify_cwe.mjs';
+import { mapCpeCveCwe } from './src/show-cpe-history.mjs';
+import { genGrypeReport, addCpeToSbom } from './src/utils.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -68,57 +69,57 @@ async function main() {
   const args = process.argv.slice(2);
 
   if (args.length === 0) {
-    console.error("Please provide a valid flag.");
+    console.error('Please provide a valid flag.');
     process.exit(1);
   }
 
   try {
     switch (args[0]) {
-      case "-help":
+      case '-help':
         displayHelp();
         break;
-      case "-getCpes":
+      case '-getCpes':
         if (args[1]) {
           const cpes = await getCpes(args[1]);
           console.log(cpes);
         } else {
-          console.error("Please provide a valid path to SBOM.");
+          console.error('Please provide a valid path to SBOM.');
         }
         break;
-      case "-listCpeDetails":
+      case '-listCpeDetails':
         if (args[1]) {
-          console.log("Fetching cpe info from API ... ");
+          console.log('Fetching cpe info from API ... ');
           const detailedCpes = await fetchCVEsWithRateLimit(args[1]);
           console.log(detailedCpes);
         } else {
-          console.error("Please provide a valid path to SBOM.");
+          console.error('Please provide a valid path to SBOM.');
         }
         break;
-      case "-getCves":
+      case '-getCves':
         if (args[1]) {
-          console.log("Fetching CVEs from API for: ", args[1]);
+          console.log('Fetching CVEs from API for: ', args[1]);
           const cves = await fetchCVEsForCPE(args[1]);
           console.log(cves);
         } else {
-          console.error("Please provide a valid CPE.");
+          console.error('Please provide a valid CPE.');
         }
         break;
-      case "-writeCves":
+      case '-writeCves':
         if (args[2]) {
           console.log(
-            "Writing CVE data to /vulnerability-reports/cveData.json",
+            'Writing CVE data to /vulnerability-reports/cveData.json',
           );
           await writeCvesToFile(args[1], args[2]);
-          console.log("Writing file completed");
+          console.log('Writing file completed');
         } else {
           console.error(
-            "Please provide a valid path to SBOM and output directory.",
+            'Please provide a valid path to SBOM and output directory.',
           );
         }
         break;
-      case "-getHistoricalCpes":
+      case '-getHistoricalCpes':
         if (args[1]) {
-          console.log("Fetching historical CPEs from API");
+          console.log('Fetching historical CPEs from API');
           const histCPEs = await fetchHistoricalCPEs(args[1]);
           console.log(histCPEs);
         } else {
@@ -127,18 +128,18 @@ async function main() {
           );
         }
         break;
-      case "-getHistoricalCves":
+      case '-getHistoricalCves':
         if (args[1]) {
-          console.log("Fetching historical CVEs from API");
+          console.log('Fetching historical CVEs from API');
           const histCVEs = await fetchHistoricalCVEs(args[1]);
           console.log(histCVEs);
         } else {
-          console.error("Please provide a valid CVE type. e.g. CVE-2022-48174");
+          console.error('Please provide a valid CVE type. e.g. CVE-2022-48174');
         }
         break;
-      case "-getCweInfo":
+      case '-getCweInfo':
         if (args[1]) {
-          const cwesArray = args[1].split(",");
+          const cwesArray = args[1].split(',');
           const cweInfo = getCweInfo(cwesArray);
           console.log(cweInfo);
         } else {
@@ -147,34 +148,34 @@ async function main() {
           );
         }
         break;
-      case "-listVulnerabilities":
+      case '-listVulnerabilities':
         if (args[1]) {
-          console.log("Creating vulnerability report");
+          console.log('Creating vulnerability report');
           const report = await getVulnerabilities(args[1]);
           console.log(report);
         } else {
           console.error(
-            "Please provide a valid absolute path to grype vulnerability report file.",
+            'Please provide a valid absolute path to grype vulnerability report file.',
           );
         }
         break;
-      case "-generateSbom":
+      case '-generateSbom':
         if (args[2]) {
           await generateVulnerabilityReport(args[1], args[2]);
         } else {
           console.log(
-            "Please ensure the path is correct and provide project name e.g: -generateSbom <project_path> <project_name>",
+            'Please ensure the path is correct and provide project name e.g: -generateSbom <project_path> <project_name>',
           );
         }
         break;
-      case "-generateConan":
+      case '-generateConan':
         if (args[1]) {
           try {
             console.log(
               `Writing conan file for ../vulnerability-reports/ccsDependencies/${args[1]}_dependencies to ../vulnerability-reports/conan-files/${args[1]}`,
             );
             await generateConanFile(args[1]);
-            console.log("Writing completed");
+            console.log('Writing completed');
           } catch (error) {
             console.error(
               `Please ensure the dependencies exist for ./vulnerability-reports/ccsDependencies/${args[1]}_dependencies \n ${error}`,
@@ -182,7 +183,7 @@ async function main() {
           }
         }
         break;
-      case "-genDependencies":
+      case '-genDependencies':
         if (args[2]) {
           try {
             console.log(`Trying to generate dependency list for ${args[2]}`);
@@ -194,16 +195,16 @@ async function main() {
           }
         } else {
           console.log(
-            "Please ensure that you added all the necessary paths and project_name",
+            'Please ensure that you added all the necessary paths and project_name',
           );
         }
         break;
-      case "-mapCpes":
+      case '-mapCpes':
         if (args[1]) {
           let spinner;
           try {
-            console.log("Trying to map CPEs, this may take a while...");
-            const spinnerChars = ["|", "/", "-", "\\"];
+            console.log('Trying to map CPEs, this may take a while...');
+            const spinnerChars = ['|', '/', '-', '\\'];
             let spinnerIndex = 0;
             spinner = setInterval(() => {
               process.stdout.write(
@@ -215,13 +216,13 @@ async function main() {
             await mapCPEs(args[1]);
 
             clearInterval(spinner);
-            process.stdout.write("\r");
+            process.stdout.write('\r');
             console.log(
-              "Mapping completed. Please see the generated file in vulnerability-reports/cpes/cpeMapping.json",
+              'Mapping completed. Please see the generated file in vulnerability-reports/cpes/cpeMapping.json',
             );
           } catch (error) {
             clearInterval(spinner);
-            process.stdout.write("\r");
+            process.stdout.write('\r');
             console.error(`Error encountered processing the command: ${error}`);
           }
         } else {
@@ -230,14 +231,14 @@ async function main() {
           );
         }
         break;
-      case "-generateCSbom":
-        if (args[2] === "json" || args[2] === "xml") {
+      case '-generateCSbom':
+        if (args[2] === 'json' || args[2] === 'xml') {
           let spinner;
           try {
             console.log(
               `Trying to create SBOM for ${args[1]}, this may take a while...`,
             );
-            const spinnerChars = ["|", "/", "-", "\\"];
+            const spinnerChars = ['|', '/', '-', '\\'];
             let spinnerIndex = 0;
             spinner = setInterval(() => {
               process.stdout.write(
@@ -249,7 +250,7 @@ async function main() {
             await generateDummySBOM(args[1], args[2]);
 
             clearInterval(spinner);
-            process.stdout.write("\r");
+            process.stdout.write('\r');
             console.log(
               `SBOM completed. Please see the generated file in vulnerability-reports/sboms/${args[1]}_sbom.${args[2]}`,
             );
@@ -265,8 +266,8 @@ async function main() {
                 `);
         }
         break;
-      case "-getGhsa":
-        if (args[1] && args[1].startsWith("GHSA-")) {
+      case '-getGhsa':
+        if (args[1] && args[1].startsWith('GHSA-')) {
           try {
             const data = await getGHSAInfo(args[1]);
             console.log(data);
@@ -275,11 +276,11 @@ async function main() {
           }
         } else {
           console.error(
-            "Please enter a valid GHSA code. e.g GHSA-j8xg-fqg3-53r7",
+            'Please enter a valid GHSA code. e.g GHSA-j8xg-fqg3-53r7',
           );
         }
         break;
-      case "-extractGhsas":
+      case '-extractGhsas':
         if (args[1]) {
           try {
             const ghsas = await processVulnerabilities(args[1]);
@@ -289,11 +290,11 @@ async function main() {
           }
         } else {
           console.log(
-            "Please provide a valid absolute path to grype vulnerability report file.",
+            'Please provide a valid absolute path to grype vulnerability report file.',
           );
         }
         break;
-      case "-classifyCwe":
+      case '-classifyCwe':
         if (args[1]) {
           await classifyCwe(args[1])
             .then((type) => {
@@ -304,26 +305,26 @@ async function main() {
               }
             })
             .catch((error) => {
-              console.error("Error reading the CSV:", error);
+              console.error('Error reading the CSV:', error);
             });
         } else {
           console.log(
-            "Please provide a valid CWE id, e.g. -classifyCwe <CWE-112>",
+            'Please provide a valid CWE id, e.g. -classifyCwe <CWE-112>',
           );
         }
         break;
-      case "-getHistory":
+      case '-getHistory':
         if (args[1]) {
           console.log(args[1]);
           let spinner;
-          let cpeCveCweMap;
 
           try {
             console.log(
               `Trying to find related cpes for ${args[1]}, this may take a while...`,
             );
-            const spinnerChars = ["|", "/", "-", "\\"];
+            const spinnerChars = ['|', '/', '-', '\\'];
             let spinnerIndex = 0;
+            let previousCPE = '';
             spinner = setInterval(() => {
               process.stdout.write(
                 `\r${spinnerChars[spinnerIndex]} Processing...`,
@@ -331,50 +332,53 @@ async function main() {
               spinnerIndex = (spinnerIndex + 1) % spinnerChars.length;
             }, 250);
 
-            cpeCveCweMap = await mapCpeCveCwe(args[1]);
-
+            const cpeCveCweMap = await mapCpeCveCwe(args[1]);
             clearInterval(spinner);
-            process.stdout.write("\r");
+            process.stdout.write('\r');
 
-            let maxCpeLength = 0;
-            let maxCveLength = 0;
-            let maxCweLength = 0;
-            let previousCPE = "";
-            let data = "";
-
-            for (const entry of cpeCveCweMap) {
-              maxCpeLength = Math.max(maxCpeLength, entry.cpe.length);
-              maxCveLength = Math.max(maxCveLength, entry.cve.length);
-
-              for (const cwe of entry.cwe) {
-                maxCweLength = Math.max(maxCweLength, cwe.length);
-              }
-            }
-
-            for (const entry of cpeCveCweMap) {
-              const alignedCpe =
-                entry.cpe !== previousCPE
-                  ? entry.cpe.padEnd(maxCpeLength)
-                  : " ".repeat(maxCpeLength);
-
-              previousCPE = entry.cpe;
-
-              const alignedCve = entry.cve.padEnd(maxCveLength);
-              const cweList = entry.cwe.map((cwe) => cwe.padEnd(maxCweLength));
-              const alignedCwe = cweList.join(
-                `\n${" ".repeat(maxCpeLength + maxCveLength + 6)}`,
+            const maxCpeLength = cpeCveCweMap.reduce(
+              (max, entry) => Math.max(max, entry.cpe.length),
+              0,
+            );
+            const maxCveLength = cpeCveCweMap.reduce(
+              (max, entry) => Math.max(max, entry.cve.length),
+              0,
+            );
+            const maxCweLength = cpeCveCweMap.reduce((max, entry) => {
+              const longestCwe = entry.cwe.reduce(
+                (cweMax, cwe) => Math.max(cweMax, cwe.length),
+                0,
               );
-              const outputLine = `${alignedCpe} - ${alignedCve} - ${alignedCwe} - ${entry.weakType}`;
-              console.log(outputLine);
-              data += `${outputLine}\n`;
-            }
+              return Math.max(max, longestCwe);
+            }, 0);
+
+            const data = cpeCveCweMap
+              .map((entry) => {
+                const alignedCpe =
+                  entry.cpe !== previousCPE
+                    ? entry.cpe.padEnd(maxCpeLength)
+                    : ' '.repeat(maxCpeLength);
+                previousCPE = entry.cpe;
+                const alignedCve = entry.cve.padEnd(maxCveLength);
+                const cweList = entry.cwe.map((cwe) =>
+                  cwe.padEnd(maxCweLength),
+                );
+                const alignedCwe = cweList.join(
+                  `\n${' '.repeat(maxCpeLength + maxCveLength + 6)}`,
+                );
+                return `${alignedCpe} - ${alignedCve} - ${alignedCwe} - ${entry.weakType}`;
+              })
+              .join('\n');
+
+            console.log(data);
+
             try {
-              const outputDir = path.join(__dirname, "output");
-              const outputFile = path.join(outputDir, "output.txt");
+              const outputDir = path.join(__dirname, 'output');
+              const outputFile = path.join(outputDir, 'output.txt');
 
               await fs.promises.mkdir(outputDir, { recursive: true });
               await fs.promises.writeFile(outputFile, data);
-              console.log("Data saved to output/output.txt");
+              console.log('Data saved to output/output.txt');
             } catch (error) {
               console.log(error);
             }
@@ -385,11 +389,11 @@ async function main() {
           }
         } else {
           console.log(
-            "Please provide a valid cpe e.g. cpe:/a:doxygen:doxygen:1.7.2",
+            'Please provide a valid cpe e.g. cpe:/a:doxygen:doxygen:1.7.2',
           );
         }
         break;
-      case "-generateCCPPReport":
+      case '-generateCCPPReport':
         if (args[2]) {
           try {
             console.log(
@@ -398,25 +402,25 @@ async function main() {
 
             console.log(`Trying to generate dependency list for ${args[2]}`);
             generateDependencyList(args[1], args[2]);
-            console.log("Dependency list completed completed.");
+            console.log('Dependency list completed completed.');
 
             // 1. Generate Conan File
             console.log(
               `Writing conan file for ../vulnerability-reports/ccsDependencies/${args[2]}_dependencies...`,
             );
             await generateConanFile(args[2]);
-            console.log("Conan file generation completed.");
+            console.log('Conan file generation completed.');
 
             // 2. Map CPEs
-            console.log("Mapping CPEs, please wait...");
+            console.log('Mapping CPEs, please wait...');
             await mapCPEs(args[2]);
             console.log(
-              "CPE mapping completed. Check vulnerability-reports/cpes/cpeMapping.json for the mapping.",
+              'CPE mapping completed. Check vulnerability-reports/cpes/cpeMapping.json for the mapping.',
             );
 
             // 3. Generate SBOM
             console.log(`Generating SBOM in ${args[2]} format...`);
-            await generateDummySBOM(args[2], "json");
+            await generateDummySBOM(args[2], 'json');
             console.log(
               `SBOM generation completed. Check vulnerability-reports/sboms/${args[2]}_sbom.json for the SBOM.`,
             );
@@ -442,25 +446,25 @@ async function main() {
           }
         } else {
           console.error(
-            "Please provide an absolute path to the c/c++ repository and a project name as the second argument.",
+            'Please provide an absolute path to the c/c++ repository and a project name as the second argument.',
           );
         }
         break;
-      case "-generateDockerSbom":
+      case '-generateDockerSbom':
         if (args[2]) {
           await generateImageVulnerabilityReport(args[1], args[2]);
         } else {
           console.log(
-            "Please ensure the Docker image exists and provide project name e.g: -generateDockerSbom <image_name> <project_name>",
+            'Please ensure the Docker image exists and provide project name e.g: -generateDockerSbom <image_name> <project_name>',
           );
         }
         break;
-      case "-addCpe":
+      case '-addCpe':
         if (args[2]) {
           await addCpeToSbom(args[1], args[2]);
         } else {
           console.log(
-            "Please ensure the sbom file exists and is a valid CycloneDX json format",
+            'Please ensure the sbom file exists and is a valid CycloneDX json format',
           );
         }
         break;

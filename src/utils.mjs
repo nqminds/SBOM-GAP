@@ -1,13 +1,15 @@
+/* eslint-disable no-return-assign */
+/* eslint-disable no-loop-func */
+/* eslint-disable guard-for-in */
 /* eslint-disable no-console */
-import dotenv from "dotenv";
-import fs from "fs";
-import csvParser from "csv-parser";
-import readline from "readline";
-import path from "path";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { execFileSync } from "child_process";
-import semver from "semver";
+import dotenv from 'dotenv';
+import fs from 'fs';
+import csvParser from 'csv-parser';
+import readline from 'readline';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { execFileSync } from 'child_process';
+import semver from 'semver';
 
 /**
  * Mapps dependencies to cpes
@@ -23,15 +25,15 @@ export async function createCPEMapping(filePath, dependencies) {
     // use read stream to reduce memory usage.
     fs.createReadStream(filePath)
       .pipe(csvParser())
-      .on("data", (row) => {
+      .on('data', (row) => {
         const cpeName = row.cpe_name;
         dependencies.forEach((dep) => {
           let searchDep = dep;
-          let version = "";
+          let version = '';
 
-          if (dep.includes(":")) {
-            [, version] = dep.split(":");
-            searchDep = searchDep.replace(/:.*/, "");
+          if (dep.includes(':')) {
+            [, version] = dep.split(':');
+            searchDep = searchDep.replace(/:.*/, '');
           }
 
           if (
@@ -39,26 +41,16 @@ export async function createCPEMapping(filePath, dependencies) {
             cpeName.includes(`:${searchDep}:`) &&
             cpeName.includes(`:${version}`) &&
             (cpeMapping[dep].length === 0 ||
+              // eslint-disable-next-line no-use-before-define
               !previousCpeVersion(cpeMapping[dep][0], cpeName))
           ) {
             cpeMapping[dep] = [cpeName];
           }
         });
       })
-      .on("end", () => resolve(cpeMapping))
-      .on("error", (error) => reject(error));
+      .on('end', () => resolve(cpeMapping))
+      .on('error', (error) => reject(error));
   });
-}
-
-/**
- * Determines whether a CPE is a previous version
- *
- * @param {string} currentCpe - The current CPE
- * @param {string} cpeToCheck - CPE to check if it is a previous version
- * @returns {boolean} cpeToCheck is a previous version
- */
-export function previousCpeVersion(currentCpe, cpeToCheck) {
-  return semver.lte(getVersion(cpeToCheck), getVersion(currentCpe));
 }
 
 /**
@@ -70,7 +62,7 @@ export function previousCpeVersion(currentCpe, cpeToCheck) {
  */
 export function getVersion(cpe) {
   // Remove CPE version:
-  const withoutCpeVersion = cpe.replace(/^cpe:[0-9]+(\.[0-9]+)+:/, "");
+  const withoutCpeVersion = cpe.replace(/^cpe:[0-9]+(\.[0-9]+)+:/, '');
 
   // Define the regular expression pattern
   // Should match any version number (including 1.2.3-alpha, 1.2.3+build 1.2.3a)
@@ -80,10 +72,21 @@ export function getVersion(cpe) {
     // Remove ":" at the begining
     const version = stringVersion[0].substring(1);
     const returnValue = semver.valid(semver.coerce(version));
-    return returnValue || "0.0.0";
+    return returnValue || '0.0.0';
   } catch {
-    return "0.0.0";
+    return '0.0.0';
   }
+}
+
+/**
+ * Determines whether a CPE is a previous version
+ *
+ * @param {string} currentCpe - The current CPE
+ * @param {string} cpeToCheck - CPE to check if it is a previous version
+ * @returns {boolean} cpeToCheck is a previous version
+ */
+export function previousCpeVersion(currentCpe, cpeToCheck) {
+  return semver.lte(getVersion(cpeToCheck), getVersion(currentCpe));
 }
 
 /**
@@ -103,13 +106,13 @@ export async function processDependencies(conanfilePath) {
   let isRequiresSection = false;
 
   for await (const line of rl) {
-    if (line.startsWith("[requires]")) {
+    if (line.startsWith('[requires]')) {
       isRequiresSection = true;
-    } else if (line.startsWith("[")) {
+    } else if (line.startsWith('[')) {
       isRequiresSection = false;
     } else if (isRequiresSection) {
-      let dependency = line.replace("/", ":");
-      dependency = dependency.replace(/'/g, "");
+      let dependency = line.replace('/', ':');
+      dependency = dependency.replace(/'/g, '');
       if (dependency) {
         // check that the string is not empty after trimming
         dependencies.push(dependency);
@@ -134,7 +137,8 @@ export async function findFileInSubdirectories(startDirectory, targetFile) {
     const promises = filesAndDirectories.map(async (stat) => {
       if (stat.isDirectory()) {
         return recurseDir(path.join(dir, stat.name));
-      } else if (stat.name === targetFile) {
+      }
+      if (stat.name === targetFile) {
         return path.join(dir, stat.name);
       }
       return null;
@@ -157,12 +161,12 @@ export async function findFileInSubdirectories(startDirectory, targetFile) {
 export function getApiKey(name) {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
-  dotenv.config({ path: path.resolve(__dirname, "../.env") });
+  dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
   switch (name) {
-    case "nist":
+    case 'nist':
       return process.env.NIST_API_KEY;
-    case "openai":
+    case 'openai':
       return process.env.OPENAI_API_KEY;
     default:
       throw new Error(`API key for '${name}' is not found.`);
@@ -180,7 +184,7 @@ export async function genGrypeReport(sbomFilePath, projectName) {
   const __dirname = dirname(__filename);
   const reportDirectory = path.resolve(
     __dirname,
-    "../vulnerability-reports/reports",
+    '../vulnerability-reports/reports',
   );
   const vulnerabilityReportFile = path.join(
     reportDirectory,
@@ -193,20 +197,20 @@ export async function genGrypeReport(sbomFilePath, projectName) {
   }
 
   try {
-    console.log("Running grype to generate vulnerability report...");
+    console.log('Running grype to generate vulnerability report...');
     const grypeArgs = [
-      "run",
-      "--rm",
-      "-v",
+      'run',
+      '--rm',
+      '-v',
       `${path.dirname(sbomFilePath)}:/vulnerability-reports`, // Mount the directory containing the SBOM file
-      "anchore/grype",
+      'anchore/grype',
       `/vulnerability-reports/${path.basename(sbomFilePath)}`, // Reference the SBOM file by its name inside the container
-      "-o",
-      "table",
+      '-o',
+      'table',
     ];
 
-    const tableOutput = execFileSync("docker", grypeArgs, {
-      encoding: "utf-8",
+    const tableOutput = execFileSync('docker', grypeArgs, {
+      encoding: 'utf-8',
       maxBuffer: 1024 * 5000,
     });
 
@@ -234,11 +238,11 @@ export async function calculateAverageBaseScore(cvesData) {
     const cveArray = cvesData[key];
     cveArray.forEach((cve) => {
       if (cve.baseScore) {
-        let score = parseFloat(cve.baseScore);
+        const score = parseFloat(cve.baseScore);
         if (score !== 0) {
           console.log(cve.baseScore);
           totalScore += cve.baseScore;
-          count++;
+          count += 1;
         }
       }
     });
@@ -258,7 +262,7 @@ export async function calculateAverageBaseScore(cvesData) {
 export async function readOrParseSbom(sbomPath, __dirname) {
   let sbomJson;
 
-  if (typeof sbomPath === "string") {
+  if (typeof sbomPath === 'string') {
     let resolvedPath = sbomPath;
     if (!fs.existsSync(resolvedPath)) {
       resolvedPath = path.resolve(__dirname, sbomPath);
@@ -268,13 +272,13 @@ export async function readOrParseSbom(sbomPath, __dirname) {
       throw new Error(`File not found at ${resolvedPath}`);
     }
 
-    const sbomData = fs.readFileSync(resolvedPath, "utf8");
+    const sbomData = fs.readFileSync(resolvedPath, 'utf8');
     sbomJson = JSON.parse(sbomData);
-  } else if (typeof sbomPath === "object" && sbomPath !== null) {
+  } else if (typeof sbomPath === 'object' && sbomPath !== null) {
     sbomJson = sbomPath;
   } else {
     throw new Error(
-      "Invalid input. Please provide either a path to an SBOM file or the SBOM data itself.",
+      'Invalid input. Please provide either a path to an SBOM file or the SBOM data itself.',
     );
   }
 
@@ -300,37 +304,37 @@ function extractCpeName(cpeString) {
  * @param {string} cpe - The CPE to add.
  */
 export async function addCpeToSbom(sbomFilePath, cpe) {
-  if (path.extname(sbomFilePath) !== ".json") {
+  if (path.extname(sbomFilePath) !== '.json') {
     throw new Error(
       `The file ${sbomFilePath} does not have a .json extension.`,
     );
   }
 
-  let fileName = path.basename(sbomFilePath, ".json");
+  let fileName = path.basename(sbomFilePath, '.json');
 
-  if (fileName.endsWith("_sbom")) {
+  if (fileName.endsWith('_sbom')) {
     fileName = fileName.slice(0, -5);
   }
 
   try {
-    const data = await fs.promises.readFile(sbomFilePath, "utf8");
+    const data = await fs.promises.readFile(sbomFilePath, 'utf8');
     const sbom = JSON.parse(data);
     const version = getVersion(cpe);
     const name = extractCpeName(cpe);
     const properties = [
       {
-        name: name,
-        value: "",
+        name,
+        value: '',
       },
     ];
 
     const newComponent = {
-      "bom-ref": `pkg:${name}:${version}`,
-      type: "library",
-      name: name,
-      version: version,
-      cpe: cpe,
-      properties: properties,
+      'bom-ref': `pkg:${name}:${version}`,
+      type: 'library',
+      name,
+      version,
+      cpe,
+      properties,
     };
 
     sbom.components = sbom.components || [];
@@ -339,9 +343,9 @@ export async function addCpeToSbom(sbomFilePath, cpe) {
     await fs.promises.writeFile(
       sbomFilePath,
       JSON.stringify(sbom, null, 2),
-      "utf8",
+      'utf8',
     );
-    console.log("Successfully added CPE to SBOM and updated the file.");
+    console.log('Successfully added CPE to SBOM and updated the file.');
   } catch (error) {
     throw new Error(`Error processing the SBOM file: ${error.message}`);
   }
