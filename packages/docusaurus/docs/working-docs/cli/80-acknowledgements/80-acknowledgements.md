@@ -26,4 +26,7 @@ This project leverages several open-source tools and APIs, contributing signific
 ### Nist Products API: 
 * Allows querying of product information to assist in understanding the impact of vulnerabilities. [API Documentation](https://nvd.nist.gov/developers/products)
 
+### OpenAI's ChatGPT 3.5 Turbo:
+* [ChatGPT 3.5 Turbo](https://platform.openai.com/docs/models/gpt-3-5-turbo)'s natural language processing capabilities allows it to interpret complex vulnerability descriptions, mapping them to the most relevant CWE categories.
+
 The use of these tools and APIs has been instrumental in the development of our project. We are grateful for the support and contributions of the open-source community.
