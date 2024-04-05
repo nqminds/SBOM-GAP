@@ -2,9 +2,6 @@ name: Lint and Check
 
 on:
   push:
-    branches:
-      - main
-      - feat/add-eslint
     paths:
       - "src/**"
       - "scripts/**"
@@ -12,7 +9,6 @@ on:
   pull_request:
     branches:
       - main
-      - feat/add-eslint
     paths:
       - "src/**"
       - "scripts/**"
