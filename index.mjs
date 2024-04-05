@@ -106,9 +106,7 @@ async function main() {
         break;
       case '-writeCves':
         if (args[2]) {
-          console.log(
-            'Writing CVE data to /vulnerability-reports/cveData.json',
-          );
+          console.log('Writing CVE data to cveData.json');
           await writeCvesToFile(args[1], args[2]);
           console.log('Writing file completed');
         } else {
