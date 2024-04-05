@@ -327,3 +327,23 @@ The `nqmvul -addCpe` command allows a manual insertion off a CPE 2.3 to an Cyclo
 ```sh
 nqmvul -addCpe <path_to_sbom.json> <CPE>
 ```
+
+# Testing
+
+### Run all tests
+
+```sh
+npm run test
+```
+
+### Run individual tests
+
+```sh
+npm run test -- nqmvul-help.test.mjs
+```
+
+### Run eslint
+
+```sh
+npm run lint
+```
