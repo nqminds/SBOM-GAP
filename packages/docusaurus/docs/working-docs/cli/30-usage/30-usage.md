@@ -39,7 +39,7 @@ nqmvul -help
     -generateCCPPReport     Absolute path to project and a project name
 ```
 
-
+### generateSbom
 To generate a Software Bill Of Materials (SBOM) for the ecosystems bellow use the command `nqmvul -generateSbom <project_path> <project_name>` (Uses [syft](https://github.com/anchore/syft) and [grype](https://github.com/anchore/grype)):
 
 Alpine (apk)
@@ -117,7 +117,7 @@ word-wrap         1.2.3      1.2.4     npm    GHSA-j8xg-fqg3-53r7  Medium
 
 Vulnerability report saved to: /vulnerability-reports/reports/vulnerability_report_cyber_sbom
 ```
-
+### generateCCPPReport
 Use the  `-generateCCPPReport` to generate a Software Bill Of Materials (SBOM) for other C/C++ ecosystems (Uses [ccscanner](https://github.com/lkpsg/ccscanner) and [grype](https://github.com/anchore/grype)).
 Package Managers:
 Deb
@@ -255,6 +255,7 @@ Vulnerability report saved to: /sbom-cli/vulnerability-reports/reports/vulnerabi
 
 
 
+### getCpes
 
 The `-getCpes` flag will parse an SBOM and return a list of CPEs in the `2.3` format.
 
@@ -274,6 +275,8 @@ nqmvul -getCpes /sbom-cli/vulnerability-reports/sboms/cyber_sbom.json
   'cpe:2.3:a:@babel/core:@babel/core:7.23.3:*:*:*:*:*:*:*',
 ]
 ```
+### listCpeDetails
+
 The `-listCpeDetails` flag will parse an SBOM and return detailed information about each CPE, such as CVEs and CWEs
 
 ```sh
@@ -301,6 +304,7 @@ Fetching cpe info from API ...
 }
 
 ```
+### getCves
 
 If the `-getCves` flag is set, all CVEs that are available for a CPE will be retrieved along with any related CWEs.
 
@@ -333,6 +337,7 @@ Fetching CVEs from API for:  cpe:2.3:a:busybox:busybox:1.33.2
 ]
 
 ```
+### writeCVEs
 
 The `-writeCVEs` flag will write all the CVE data of an sbom into a json format to `output_directory/cveData.json`
 
@@ -375,6 +380,7 @@ cat Desktop/cveData.json
     }, ...
 }
 ```
+### getHistoricalCpes
 
 The `-getHistoricalCpes` flag will return all known versions of the input CPE. The CPE must be in `CPE2.3` format e.g. `cpe:2.3:\a:\busybox:busybox:1.33.2`
 
@@ -419,6 +425,7 @@ Fetching historical CPEs from API
     deprecated: false
   }, ... 63 more items
 ```
+### getHistoricalCves
 
 The `-getHistoricalCves` flag will return all known versions of the input CVE. Supported CVE format: `CVE-2021-42376`
 
@@ -451,6 +458,7 @@ Fetching historical CVEs from API
 ]
 
 ```
+### getCweInfo
 
 The`-getCweInfo` flag will return information such as description for each CWE. Can take one or more CWEs. If multiple CWEs are passed, they must be writen without any space e.g. `CWE-476,CWE-681`
 
@@ -481,6 +489,7 @@ The`-getCweInfo` flag will return information such as description for each CWE. 
 ]
 
 ```
+### listVunlerabilities
 
 The `-listVunlerabilities` flag will list all vulnerabilities previously detected by grype
 
@@ -515,7 +524,7 @@ Creating vulnerability report
     ...
 ]
 ```
-
+### genDependencies
 To extract all dependencies from a file system, use the `-genDependencies <cpp_project> <project_name>` flag. ***Used exclusively with C/C++ file systems***.
 
 The first argument should represent the path to any C/C++ project you wish to scan.
@@ -533,6 +542,7 @@ dependency list saved to /sbom-cli/vulnerability-reports/ccsDependencies/vim_dep
 ```json=
 {"target": "/usr/src/project", "extractors": [{"deps": [], "type": "autoconf"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [{"depname": "attr", "version": null, "version_op": null, "unified_name": "attr", "extractor_type": "autoconf", "context": "/usr/src/project/src/configure.ac", "confidence": "High"}, {"depname": "selinux", "version": null, "version_op": null, "unified_name": "selinux", "extractor_type": "autoconf", "context": "/usr/src/project/src/configure.ac", "confidence": "High"}, {"depname": "ffi", "version": null, "version_op": null, "unified_name": "ffi", "extractor_type": "autoconf", "context": "/usr/src/project/src/configure.ac", "confidence": "High"}, {"depname": "network", "version": null, "version_op": null, "unified_name": "network", "extractor_type": "autoconf", "context": "/usr/src/project/src/configure.ac", "confidence": "High"}, {"deps": [], "type": "autoconf"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "make"}, {"deps": [], "type": "autoconf"}, {"deps": [], "type": "make"}]}%        
 ```
+### generateConan
 
 For the selected project, a conanfile.txt will be created using the `-generateConan` flag. This command cannot be executed until `ccsDependencies/project_name_dependencies` are created. The `-genDependencies` flag should be used first to create the dependency file.
 
@@ -569,6 +579,7 @@ xpg4
 autoconf
 
 ```
+### mapCpes
 
 A list of known CPEs for each dependency in /`vulnerability-reports/ccsDependencies/project_name_dependencies` will be generated by the `-mapCpes` option, and it will be saved in `vulnerability-reports/cpes/cpeMapping.json`.
 
@@ -616,6 +627,8 @@ Mapping completed. Please see the generated file in vulnerability-reports/cpes/c
   "xpg4": []
 }                                                       
 ```
+
+### generateCSbom
 
 To be used only for C/C++ projects that are not supported by syft, such as those that do not make use of the CONAN package manager, may generate an SBOM using the `-generateCSbom` flag. The project name and format (only json or xml) are the two arguments it accepts. Before executing the command, please make sure that `/vulnerability-reports/cpe_data.csv` and `/vulnerability-reports/conan-files/<project_name>/conanfile.txt` exist. However, `-generateCCPPReport`, which handles `conanfile.txt` generation, has now replaced `-generateCSbom.`
 
@@ -665,6 +678,7 @@ cat /sbom-cli/vulnerability-reports/sboms/vim_sbom.json
 }
 
 ```
+### getGhsa
 
 The `-getGhsa` flag will return detailed information about a known GHSA vulnerability. Please ensure the GHSA vul is valid and matches the following format e.g `GHSA-j8xg-fqg3-53r7`.
 
@@ -735,6 +749,8 @@ nqmvul -getGhsa GHSA-j8xg-fqg3-53r7
 }
 
 ```
+### extractGhsas
+
 The `-extractGhsas `will return an array of GHSA codes. Before running this command please replace the gitAdvisoryDbPath path from config.json with your local advisory-database/advisories path.
 
 ```sh
@@ -755,6 +771,7 @@ nqmvul  -extractGhsas /sbom-cli/vulnerability-reports/reports/vulnerability_repo
 ]
 
 ```
+### classifyCwe
 
 The `-classifyCwe` flag will try and classify the CWE_ID as one of the following types: `not-memory-related, other-memory-related, spatial-memory-related, temporal-memory-related`. Please ensure the CWE_ID is valid and of the following form: e.g. 354. If the CWE_ID doesn't exist in the current database it will return "not found".
 
@@ -763,12 +780,18 @@ nqmvul -classifyCwe CWE-354
 CWE_ID CWE-354 has type: not-memory-related
 ```
 
+### getHistory
 All previous iterations of a CPE will be returned by the `-getHistory` flag, which will also attempt to identify any known CVEs and CWEs (vulnerabilities) for each version. Each CWE is also categorised as memory-related or not. Can take as an argument various types of CPEs such as: `cpe:2.3:\a:\busybox:busybox:1.33.2`, `cpe:/a:doxygen:doxygen:1.7.2`. For cpes that contain trailing ':' please place them inside quotes. e.g. : `nqmvul -getHistory "cpe:2.3:a:openssl:openssl:1.1.1:::::::"` . Output is saved to output/output.txt
 
 
 
 
 ```sh
+nqmvul -getHistory "cpe:2.3:a:openssl:openssl:1.1.1:::::::"
+cpe:2.3:a:openssl:openssl:1.1.1:::::::
+Trying to find related cpes for cpe:2.3:a:openssl:openssl:1.1.1:::::::, this may take a while...
+- Processing.../
+
 cpe:/a:openssl:fips_object_module:-            - CVE No Info    - CWE No Info    - Type No Info
 cpe:/a:openssl:openssl:-                       - CVE-2003-0078  - CWE-203        - not-memory-related
                                                - CVE-2005-2946  - CWE-327        - not-memory-related
@@ -796,6 +819,7 @@ cpe:/a:openssl:openssl:0.9.3                   - CVE-2005-2946  - CWE-327       
                                                
                                                
 ```
+### generateDockerSbom
 
 The nqmvul `-generateDockerSbom` command employs [Syft](https://github.com/anchore/syft) to first generate an SBOM (Software Bill of Materials) for the specified Docker image (`<image_name>`). Following the SBOM creation, it uses [Grype](https://github.com/anchore/grype) to analyse the identified components for vulnerabilities, producing a comprehensive vulnerability report. e.g.`-generateDockerSbom nginx:latest nginx`
 
