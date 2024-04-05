@@ -9,7 +9,8 @@
     "start-services": "docker-compose up -d",
     "postinstall": "node scripts/download-data.mjs",
     "prettier-check": "prettier --check .",
-    "lint": "eslint 'src/**/*.{js,mjs}' 'scripts/**/*.{js,mjs}' 'test/**/*.{js,mjs}' 'index.mjs' --fix"
+    "lint": "eslint 'src/**/*.{js,mjs}' 'scripts/**/*.{js,mjs}' 'test/**/*.{js,mjs}' 'index.mjs' --fix",
+    "prepare": "husky install"
   },
   "bin": {
     "nqmvul": "index.mjs"
