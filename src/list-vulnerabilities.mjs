@@ -176,7 +176,7 @@ export async function writeCvesToFile(sbomPath, outputPath) {
   const jsonContent = JSON.stringify(cveJsonData, null, 2);
 
   try {
-    await fs.writeFile(
+    await fsPromise.writeFile(
       path.resolve(__dirname, `${outputPath}/cveData.json`),
       jsonContent,
     );
