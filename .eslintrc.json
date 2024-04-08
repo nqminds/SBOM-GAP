@@ -1,0 +1,51 @@
+{
+    "env": {
+        "node": true,
+        "es2021": true,
+        "jest": true
+    },
+    "extends": [
+        "airbnb-base",
+        "plugin:prettier/recommended"
+    ],
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+        "requireConfigFile": false,
+        "ecmaVersion": 2022,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "prettier"
+    ],
+    "rules": {
+        "properties": "off",
+        "camelcase": "off",
+        "no-restricted-syntax": "off",
+        "quotes": ["error", "single", { "avoidEscape": true }],
+        "no-underscore-dangle": ["error", { "allow": ["__dirname", "__filename"] }],
+        "import/extensions": [
+            "error",
+            "ignorePackages",
+            {
+                ".js": "never",
+                ".mjs": "never",
+                ".json": "never"
+            }
+        ],
+        "import/prefer-default-export": "off",
+        "import/no-extraneous-dependencies": ["error", {
+            "devDependencies": [
+              "test/**/*.test.mjs"
+            ],
+            "optionalDependencies": false
+          }]
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".mjs", ".json"]
+            }
+        },
+        "import/extensions": [".js", ".mjs", ".json"]
+    }
+}

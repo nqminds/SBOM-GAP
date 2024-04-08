@@ -1,13 +1,13 @@
-/* eslint-disable promise/prefer-await-to-then */
-import fs from "fs";
-import csvParser from "csv-parser";
-import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-import { cleanCpe } from "./get-syft-cpes.mjs";
-import { fetchCVEsForCPE } from "./list-vulnerabilities.mjs";
-import { classifyCwe } from "./classify_cwe.mjs";
-import { previousCpeVersion } from "./utils.mjs";
+/* eslint-disable no-nested-ternary */
+/* eslint-disable guard-for-in */
+import fs from 'fs';
+import csvParser from 'csv-parser';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { cleanCpe } from './get-syft-cpes.mjs';
+import { fetchCVEsForCPE } from './list-vulnerabilities.mjs';
+import { classifyCwe } from './classify_cwe.mjs';
+import { previousCpeVersion } from './utils.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,9 +21,9 @@ const __dirname = dirname(__filename);
 export async function mapHistoricalCpes(cpe) {
   const cpeDataPath = path.resolve(
     __dirname,
-    "../vulnerability-reports/cpe_data.csv"
+    '../vulnerability-reports/cpe_data.csv',
   );
-  const cpeParts = cpe.split(":");
+  const cpeParts = cpe.split(':');
 
   const cpeVersions = {};
   cpeVersions[cpe] = [];
@@ -34,7 +34,7 @@ export async function mapHistoricalCpes(cpe) {
 
     fs.createReadStream(cpeDataPath)
       .pipe(csvParser())
-      .on("data", (row) => {
+      .on('data', (row) => {
         const cpeName = row.cpe_name;
 
         if (
@@ -48,11 +48,10 @@ export async function mapHistoricalCpes(cpe) {
           }
         }
       })
-      .on("end", () => resolve(cpeVersions))
-      .on("error", (error) => reject(error));
+      .on('end', () => resolve(cpeVersions))
+      .on('error', (error) => reject(error));
   });
 }
-
 
 /**
  * Function to find historycal CPEs and their weaknesses
@@ -75,12 +74,12 @@ export async function mapCpeCveCwe(cpe) {
         const innerPromises = [];
         if (cves.length > 0) {
           for (const vulnerability of cves) {
-            const cveId = vulnerability.id || "N/A";
+            const cveId = vulnerability.id || 'N/A';
             const cweWeakness = Array.isArray(vulnerability.weakness)
               ? vulnerability.weakness
               : vulnerability.weakness
-              ? [vulnerability.weakness]
-              : ["N/A"];
+                ? [vulnerability.weakness]
+                : ['N/A'];
 
             const innerPromise = classifyCwe(cweWeakness[0]).then(
               (weakType) => {
@@ -88,9 +87,9 @@ export async function mapCpeCveCwe(cpe) {
                   cpe: element,
                   cve: cveId,
                   cwe: cweWeakness,
-                  weakType: weakType || "No Info",
+                  weakType: weakType || 'No Info',
                 });
-              }
+              },
             );
 
             innerPromises.push(innerPromise);
@@ -98,9 +97,9 @@ export async function mapCpeCveCwe(cpe) {
         } else {
           cpeCveMap.push({
             cpe: element,
-            cve: "CVE No Info",
-            cwe: ["CWE No Info"],
-            weakType: "Type No Info",
+            cve: 'CVE No Info',
+            cwe: ['CWE No Info'],
+            weakType: 'Type No Info',
           });
         }
         return Promise.all(innerPromises); // resolve all inner promises

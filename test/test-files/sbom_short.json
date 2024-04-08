@@ -1,0 +1,25 @@
+{
+  "bomFormat": "CycloneDX",
+  "components": [
+    {
+      "cpe": "cpe:/a:thekelleys:dnsmasq:2.85",
+      "group": "",
+      "licenses": [
+        {
+          "license": {
+            "name": "GPL-2.0"
+          }
+        }
+      ],
+      "name": "dnsmasq",
+      "supplier": {
+        "name": "Organization: OpenWrt ()"
+      },
+      "type": "application",
+      "version": "2.85"
+    }
+  ],
+  "serialNumber": "urn:uuid:00000000-0000-0000-0000-000000000000",
+  "specVersion": "1.4",
+  "version": 1
+}

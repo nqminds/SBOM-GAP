@@ -1,8 +1,8 @@
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-import path from "node:path";
-import fs from "fs";
-import csv from "csv-parser";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'node:path';
+import fs from 'fs';
+import csv from 'csv-parser';
 
 /**
  * Returns the type of vulnerability
@@ -15,22 +15,22 @@ export async function classifyCwe(cweId) {
 
   const cweClassifications = path.resolve(
     __dirname,
-    "../vulnerability-reports/cwe_classifications.csv"
+    '../vulnerability-reports/cwe_classifications.csv',
   );
-  const cweParts = cweId.split("-");
+  const cweParts = cweId.split('-');
   const cwe = cweParts[1];
 
   return new Promise((resolve, reject) => {
     fs.createReadStream(cweClassifications)
       .pipe(csv())
-      .on("data", (row) => {
+      .on('data', (row) => {
         if (row.CWE_ID === cwe) {
           resolve(row.Type);
         }
       })
-      .on("end", () => {
+      .on('end', () => {
         resolve(null); // Return null if the CWE_ID was not found in the CSV
       })
-      .on("error", reject);
+      .on('error', reject);
   });
 }

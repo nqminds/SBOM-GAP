@@ -1,44 +1,44 @@
-import { fetchCVEsWithRateLimit } from "../src/list-vulnerabilities.mjs";
-import { describe, test, expect } from "@jest/globals";
+import { describe, test, expect } from '@jest/globals';
+import { fetchCVEsWithRateLimit } from '../src/list-vulnerabilities.mjs';
 
-describe("fetchCVEsWithRateLimit", () => {
-  test("should return an object with array values", async () => {
+describe('fetchCVEsWithRateLimit', () => {
+  test('should return an object with array values', async () => {
     const sbomData = {
-      bomFormat: "CycloneDX",
+      bomFormat: 'CycloneDX',
       components: [
         {
-          cpe: "cpe:/a:busybox:busybox:1.33.2",
-          group: "",
+          cpe: 'cpe:/a:busybox:busybox:1.33.2',
+          group: '',
           licenses: [
             {
               license: {
-                name: "GPL-2.0-or-later",
+                name: 'GPL-2.0-or-later',
               },
             },
           ],
-          name: "busybox",
+          name: 'busybox',
           supplier: {
-            name: "Organization: OpenWrt ()",
+            name: 'Organization: OpenWrt ()',
           },
-          type: "application",
-          version: "1.33.2",
+          type: 'application',
+          version: '1.33.2',
         },
         {
-          cpe: "cpe:/a:thekelleys:dnsmasq:2.85",
-          group: "",
+          cpe: 'cpe:/a:thekelleys:dnsmasq:2.85',
+          group: '',
           licenses: [
             {
               license: {
-                name: "GPL-2.0",
+                name: 'GPL-2.0',
               },
             },
           ],
-          name: "dnsmasq",
+          name: 'dnsmasq',
           supplier: {
-            name: "Organization: OpenWrt ()",
+            name: 'Organization: OpenWrt ()',
           },
-          type: "application",
-          version: "2.85",
+          type: 'application',
+          version: '2.85',
         },
       ],
     };
@@ -46,7 +46,7 @@ describe("fetchCVEsWithRateLimit", () => {
     const data = await fetchCVEsWithRateLimit(sbomData);
 
     // Check if data is an object
-    expect(typeof data).toBe("object");
+    expect(typeof data).toBe('object');
     expect(Array.isArray(data)).toBe(false);
 
     // eslint-disable-next-line no-unused-vars

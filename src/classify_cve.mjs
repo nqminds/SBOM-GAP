@@ -1,22 +1,27 @@
 /* eslint-disable no-console */
-import OpenAI from "openai";
-import { getApiKey } from "./utils.mjs";
+import OpenAI from 'openai';
+import { getApiKey } from './utils.mjs';
 
-const apiKey = getApiKey("openai");
+const apiKey = getApiKey('openai');
 
 // eslint-disable-next-line no-promise-executor-return
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// Placeholder for token counting function
+function countTokens(text) {
+  return text.length;
+}
+
 async function openaiRequest(
   prompt,
   responseTokens,
-  openaiApiKey = "",
+  openaiApiKey = '',
   maxRetries = 3,
   backoffTime = 1,
-  retries = 0
+  retries = 0,
 ) {
   let openai;
-  if (openaiApiKey !== "") {
+  if (openaiApiKey !== '') {
     openai = new OpenAI(openaiApiKey);
   } else if (apiKey) {
     openai = new OpenAI(apiKey);
@@ -31,10 +36,10 @@ async function openaiRequest(
   const promptTokens = countTokens(prompt);
 
   try {
-    const messages = [{ role: "user", content: prompt }];
+    const messages = [{ role: 'user', content: prompt }];
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: messages,
+      model: 'gpt-3.5-turbo',
+      messages,
       temperature: 0.0,
       max_tokens: responseTokens,
       top_p: 1.0,
@@ -46,48 +51,43 @@ async function openaiRequest(
       promptTokens + countTokens(response.choices[0].message.content);
 
     return {
-      result: "success",
+      result: 'success',
       response: response.choices[0].message.content.trim(),
       promptTokensProcessed,
       responseTokensProcessed: tokensProcessed - promptTokens,
     };
   } catch (error) {
-    if (error.message.includes("maximum context length")) {
-      console.log("Prompt was too long...");
+    if (error.message.includes('maximum context length')) {
+      console.log('Prompt was too long...');
       return {
-        result: "context_too_long",
-        response: "",
+        result: 'context_too_long',
+        response: '',
         promptTokensProcessed,
         responseTokensProcessed,
       };
-    } else if (retries < maxRetries) {
+    }
+    if (retries < maxRetries) {
       console.log(
-        `Retrying in ${backoffTime} seconds...: error: ${error.message}`
+        `Retrying in ${backoffTime} seconds...: error: ${error.message}`,
       );
       await sleep(backoffTime * 100);
-      return await openaiRequest(
+      return openaiRequest(
         prompt,
         responseTokens,
         openaiApiKey,
         maxRetries,
         backoffTime * 2,
-        retries + 1
+        retries + 1,
       );
-    } else {
-      console.log("Max retries reached.");
-      return {
-        result: "api_error",
-        response: "",
-        promptTokensProcessed,
-        responseTokensProcessed,
-      };
     }
+    console.log('Max retries reached.');
+    return {
+      result: 'api_error',
+      response: '',
+      promptTokensProcessed,
+      responseTokensProcessed,
+    };
   }
-}
-
-// Placeholder for token counting function
-function countTokens(text) {
-  return text.length;
 }
 
 function formatResponseString(responseString) {
@@ -95,13 +95,13 @@ function formatResponseString(responseString) {
   let trimmed = responseString.trim();
 
   // Check if the string is already in JSON object format
-  if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+  if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
     return trimmed;
   }
 
   // Remove any trailing '}' characters that are not part of a proper JSON object
-  if (trimmed.endsWith("}")) {
-    trimmed = trimmed.substring(0, trimmed.lastIndexOf("}"));
+  if (trimmed.endsWith('}')) {
+    trimmed = trimmed.substring(0, trimmed.lastIndexOf('}'));
   }
 
   // Wrap the string in curly braces to form a JSON object
@@ -121,16 +121,16 @@ export async function makeClassificationRequest(
   description,
   openaiApiKey,
   maxRetries = 3,
-  currentRetry = 0
+  currentRetry = 0,
 ) {
   if (currentRetry > maxRetries) {
     console.log(
       `Max retries reached for CWE description: ${description.substring(
         0,
-        20
-      )}... Skipping...`
+        20,
+      )}... Skipping...`,
     );
-    return { classification: "Unknown" };
+    return { classification: 'Unknown' };
   }
 
   try {
@@ -164,29 +164,28 @@ export async function makeClassificationRequest(
 
       classification = responseData.classification;
     } catch (error) {
-      console.error("Failed to parse response:", error);
+      console.error('Failed to parse response:', error);
     }
     return classification;
   } catch (error) {
-    if (error instanceof SyntaxError || error.name === "KeyError") {
+    if (error instanceof SyntaxError || error.name === 'KeyError') {
       console.log(
         `Failed to parse response or extract fields for CWE description: ${description.substring(
           0,
-          50
-        )}... Retrying...${error.message}`
+          50,
+        )}... Retrying...${error.message}`,
       );
       return makeClassificationRequest(
         description,
         maxRetries,
-        currentRetry + 1
+        currentRetry + 1,
       );
-    } else {
-      console.log(
-        `Unexpected error occurred: ${
-          error.message
-        } for CWE description: ${description.substring(0, 50)}... Skipping...`
-      );
-      return { classification: "Unknown" };
     }
+    console.log(
+      `Unexpected error occurred: ${
+        error.message
+      } for CWE description: ${description.substring(0, 50)}... Skipping...`,
+    );
+    return { classification: 'Unknown' };
   }
 }
