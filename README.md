@@ -1,6 +1,6 @@
 # SBOM-GAP(Generation and Analysis Platform) tool
 
-* For documentation and how to contribute, please follow this [link](https://sbom-gap.nqminds.com/cli/overview/).
+* For documentation and how to contribute, please follow this [link](https://sbom-gap.nqminds.com/cli/).
 
 ### Please download the vulnerability-reports folder and place it in SBOM-GAP module:
 
