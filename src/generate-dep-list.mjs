@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
-import { fileURLToPath } from "url";
-import path from "node:path";
-import { dirname } from "path";
-import { spawnSync } from "child_process";
+import { fileURLToPath } from 'url';
+import path from 'node:path';
+import { dirname } from 'path';
+import { spawnSync } from 'child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -22,33 +22,33 @@ const __dirname = dirname(__filename);
 export function generateDependencyList(cppDirectory, projectName) {
   const dependenciesFilePath = path.resolve(
     __dirname,
-    "../vulnerability-reports/ccsDependencies"
+    '../vulnerability-reports/ccsDependencies',
   );
 
   const dockerArgs = [
-    "run",
-    "--rm",
-    `-u`,
+    'run',
+    '--rm',
+    '-u',
     `${process.getuid()}:${process.getgid()}`,
-    `-v`,
+    '-v',
     `${cppDirectory}:/usr/src/project`,
-    `-v`,
+    '-v',
     `${dependenciesFilePath}:/usr/src/results`,
-    `--workdir`,
-    `/usr/src/app/ccscanner`,
-    `--entrypoint`,
-    `python`,
-    `ionutnqm/depscanner:latest`,
-    `ccscanner/scanner.py`,
-    `-d`,
-    `/usr/src/project`,
-    `-t`,
+    '--workdir',
+    '/usr/src/app/ccscanner',
+    '--entrypoint',
+    'python',
+    'ionutnqm/depscanner:latest',
+    'ccscanner/scanner.py',
+    '-d',
+    '/usr/src/project',
+    '-t',
     `/usr/src/results/${projectName}_dependencies`,
   ];
 
   try {
-    const dockerProcess = spawnSync("docker", dockerArgs, {
-      encoding: "utf-8",
+    const dockerProcess = spawnSync('docker', dockerArgs, {
+      encoding: 'utf-8',
     });
 
     if (dockerProcess.error) {
@@ -59,9 +59,9 @@ export function generateDependencyList(cppDirectory, projectName) {
       throw new Error(`Error: ${dockerProcess.stderr}`);
     }
 
-    console.log("dependency scanning completed.");
+    console.log('dependency scanning completed.');
     console.log(
-      `dependency list saved to ${dependenciesFilePath}/${projectName}_dependencies`
+      `dependency list saved to ${dependenciesFilePath}/${projectName}_dependencies`,
     );
   } catch (error) {
     throw new Error(`Error error scanning directory ${cppDirectory}: ${error}`);

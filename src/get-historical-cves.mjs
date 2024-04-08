@@ -1,18 +1,18 @@
-import { fileURLToPath } from "url";
-import { promises as fs } from "fs";
-import axios from "axios";
-import path from "node:path";
-import { dirname } from "path";
-import { getApiKey } from "./utils.mjs";
+import { fileURLToPath } from 'url';
+import { promises as fs } from 'fs';
+import axios from 'axios';
+import path from 'node:path';
+import { dirname } from 'path';
+import { getApiKey } from './utils.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const configContent = await fs.readFile(
-  path.join(__dirname, "../config/config.json")
+  path.join(__dirname, '../config/config.json'),
 );
 const config = JSON.parse(configContent);
-const apiKey = getApiKey("nist");
+const apiKey = getApiKey('nist');
 const baseUrl = config.cveHistUrl;
 const headers = {};
 
@@ -38,14 +38,15 @@ export async function fetchHistoricalCVEs(cveId) {
         const mewCWEId = change.change.details
           ? change.change?.details
               .filter(
-                (detail) => detail.type === "CWE" && detail.action === "Added"
+                (detail) => detail.type === 'CWE' && detail.action === 'Added',
               )
               .map((detail) => detail.newValue)
           : [];
         const oldCWEId = change.change.details
           ? change.change?.details
               .filter(
-                (detail) => detail.type === "CWE" && detail.action === "Removed"
+                (detail) =>
+                  detail.type === 'CWE' && detail.action === 'Removed',
               )
               .map((detail) => detail.oldValue)
           : [];
@@ -54,8 +55,8 @@ export async function fetchHistoricalCVEs(cveId) {
           cveId: change.change.cveId,
           cveChangeId: change.change.cveChangeId,
           created: change.change.created,
-          mewCWEId: mewCWEId,
-          oldCWEId: oldCWEId,
+          mewCWEId,
+          oldCWEId,
         };
       });
     }

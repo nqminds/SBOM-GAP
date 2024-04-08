@@ -1,4 +1,4 @@
-import sqlite3 from "sqlite3";
+import sqlite3 from 'sqlite3';
 
 /**
  * Connects to sqlite3 database
@@ -9,12 +9,13 @@ import sqlite3 from "sqlite3";
 export function connectToDatabase(databasePath) {
   return new sqlite3.Database(
     databasePath,
+    // eslint-disable-next-line no-bitwise
     sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
     (err) => {
       if (err) {
-        throw new Error("Error connecting to the database:", err);
+        throw new Error('Error connecting to the database:', err);
       }
-    }
+    },
   );
 }
 
@@ -27,7 +28,7 @@ export function closeDatabase(db) {
   // Close the database connection
   db.close((closeErr) => {
     if (closeErr) {
-      throw new Error("Error closing the database:", closeErr.message);
+      throw new Error('Error closing the database:', closeErr.message);
     }
   });
 }
@@ -63,13 +64,13 @@ export function initialiseDatabase(databasePath) {
         db.close((closeErr) => {
           if (closeErr) {
             reject(
-              new Error(`Error closing the database: ${closeErr.message}`)
+              new Error(`Error closing the database: ${closeErr.message}`),
             );
             return;
           }
           resolve();
         });
-      }
+      },
     );
   });
 }
@@ -91,18 +92,18 @@ export async function insertOrUpdateCPEData(
   version,
   licensesJSON,
   cvesJSON,
-  databasePath
+  databasePath,
 ) {
   const db = connectToDatabase(databasePath);
   try {
     await new Promise((resolve, reject) => {
       db.run(
-        `INSERT OR REPLACE INTO cpe_cache (cpe, name, version, licenses, cves, last_updated) VALUES (?, ?, ?, ?, ?, ?)`,
+        'INSERT OR REPLACE INTO cpe_cache (cpe, name, version, licenses, cves, last_updated) VALUES (?, ?, ?, ?, ?, ?)',
         [cpe, name, version, licensesJSON, cvesJSON, Date.now()],
         (err) => {
           if (err) reject(err);
           resolve();
-        }
+        },
       );
     });
   } finally {
@@ -126,12 +127,12 @@ export function getCPEData(cpe, databasePath) {
   try {
     return new Promise((resolve, reject) => {
       db.get(
-        "SELECT * FROM cpe_cache WHERE cpe = ? AND last_updated > ?",
+        'SELECT * FROM cpe_cache WHERE cpe = ? AND last_updated > ?',
         [cpe, threeMonthsAgo],
         (err, row) => {
           if (err) reject(err);
           resolve(row);
-        }
+        },
       );
     });
   } finally {

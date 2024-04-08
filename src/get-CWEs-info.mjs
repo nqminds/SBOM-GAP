@@ -1,7 +1,7 @@
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-import path from "node:path";
-import fs from "fs";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'node:path';
+import fs from 'fs';
 
 /**
  * Scanns the local cweData.json for vulnerability information
@@ -16,14 +16,14 @@ export function getCweInfo(cwes) {
 
   const cweDataFile = path.resolve(
     __dirname,
-    "../vulnerability-reports/cweData.json"
+    '../vulnerability-reports/cweData.json',
   );
-  const cweDataContent = fs.readFileSync(cweDataFile, "utf-8");
+  const cweDataContent = fs.readFileSync(cweDataFile, 'utf-8');
   const cweData = JSON.parse(cweDataContent);
 
   // Filter the CWE data to only include the CWEs specified in the cwes parameter
   const cweInfo = cweData.filter((cwe) =>
-    cwes.includes(`CWE-${cwe["CWE-ID"]}`)
+    cwes.includes(`CWE-${cwe['CWE-ID']}`),
   );
 
   return cweInfo;

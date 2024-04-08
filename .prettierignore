@@ -1,0 +1,6 @@
+/packages/*
+/node_modules/*
+/reports/*
+/vulnerability-reports/*
+/output/*
+/data/*

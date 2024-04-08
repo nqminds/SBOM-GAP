@@ -1,25 +1,22 @@
-import { fileURLToPath } from "url";
-import PQueue from "p-queue";
-import fs from 'fs'; 
-import { promises as fsPromise } from "fs";
-import { cleanCpe } from "./get-syft-cpes.mjs";
-import axios from "axios";
-import path from "node:path";
-import { dirname } from "path";
-import Bottleneck from "bottleneck";
-import { getApiKey } from "./utils.mjs";
+import { fileURLToPath } from 'url';
+import fs, { promises as fsPromise } from 'fs';
+import axios from 'axios';
+import path from 'node:path';
+import { dirname } from 'path';
+import Bottleneck from 'bottleneck';
+import { cleanCpe } from './get-syft-cpes.mjs';
+import { getApiKey, readOrParseSbom } from './utils.mjs';
 import {
   initialiseDatabase,
   insertOrUpdateCPEData,
   getCPEData,
-} from "./database.mjs";
-import { readOrParseSbom } from "./utils.mjs";
+} from './database.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const databaseDir = path.join(__dirname, "../data");
-const databasePath = path.join(databaseDir, "cached_cpes.db");
+const databaseDir = path.join(__dirname, '../data');
+const databasePath = path.join(databaseDir, 'cached_cpes.db');
 
 // Check if the directory exists, if not, create it
 if (!fs.existsSync(databaseDir)) {
@@ -27,15 +24,14 @@ if (!fs.existsSync(databaseDir)) {
 }
 
 const configContent = await fsPromise.readFile(
-  path.join(__dirname, "../config/config.json")
+  path.join(__dirname, '../config/config.json'),
 );
 const config = JSON.parse(configContent);
-const apiKey = getApiKey("nist");
+const apiKey = getApiKey('nist');
 const baseUrl = config.cveBaseUrl;
 let cveData = {};
 const previousResponses = [];
 const headers = {};
-const queue = new PQueue({ concurrency: 1 });
 
 if (apiKey) {
   headers.apiKey = apiKey;
@@ -54,7 +50,7 @@ function findPropertyRecursively(obj, propertyName) {
   }
 
   for (const key in obj) {
-    if (typeof obj[key] === "object" && obj[key] !== null) {
+    if (typeof obj[key] === 'object' && obj[key] !== null) {
       const found = findPropertyRecursively(obj[key], propertyName);
       if (found !== undefined) {
         return found;
@@ -71,39 +67,38 @@ function findPropertyRecursively(obj, propertyName) {
  * @param {string} nistApiKey - Nist API Key
  * @returns {object[]} - For each CPE returns an array of CVEs. {"cpe": [{CVE}, {CVE} ... ]}
  */
-export async function fetchCVEsForCPE(cpeName, nistApiKey = "") {
-  if (nistApiKey !== "") {
+export async function fetchCVEsForCPE(cpeName, nistApiKey = '') {
+  if (nistApiKey !== '') {
     headers.apiKey = nistApiKey;
   }
   const formattedUrl = `${baseUrl}?cpeName=${cpeName}`;
   try {
     const response = await limiter.schedule(() =>
-      axios.get(formattedUrl, { headers })
+      axios.get(formattedUrl, { headers }),
     );
     // more data can be added here as needed
     const cves = response.data.vulnerabilities
       .map((vulnerability) => {
-        const weaknesses = vulnerability.cve.weaknesses?.map((weakness) => {
-          return (
-            weakness.description?.find((desc) => desc.lang === "en")?.value ||
-            "Not Found"
-          );
-        });
+        const weaknesses = vulnerability.cve.weaknesses?.map(
+          (weakness) =>
+            weakness.description?.find((desc) => desc.lang === 'en')?.value ||
+            'Not Found',
+        );
         const baseScore =
-          findPropertyRecursively(vulnerability.cve.metrics, "baseScore") ||
-          "0";
+          findPropertyRecursively(vulnerability.cve.metrics, 'baseScore') ||
+          '0';
         const baseSeverity =
-          findPropertyRecursively(vulnerability.cve.metrics, "baseSeverity") ||
-          "0";
+          findPropertyRecursively(vulnerability.cve.metrics, 'baseSeverity') ||
+          '0';
 
         return {
           id: vulnerability.cve.id,
           description:
-            vulnerability.cve.descriptions?.find((desc) => desc.lang === "en")
-              ?.value || "Not Found",
+            vulnerability.cve.descriptions?.find((desc) => desc.lang === 'en')
+              ?.value || 'Not Found',
           weakness: weaknesses,
-          baseScore: baseScore,
-          baseSeverity: baseSeverity,
+          baseScore,
+          baseSeverity,
         };
       })
       .filter((cve) => cve && cve.id && cve.description);
@@ -126,13 +121,13 @@ export async function fetchCVEsForCPE(cpeName, nistApiKey = "") {
  * @returns {string[]} Array of  CVEs.
  */
 export async function fetchCVEsWithRateLimit(sbomPath) {
-  cveData = {}
+  cveData = {};
   const sbomJson = await readOrParseSbom(sbomPath, __dirname);
   await initialiseDatabase(databasePath);
   try {
     const cvePromises = sbomJson.components.map(async (component) => {
-      const name = component.name;
-      const version = component.version;
+      const { name } = component;
+      const { version } = component;
       const licenses = component.licenses
         ? component.licenses.map((lic) => lic.license.name)
         : [];
@@ -153,7 +148,7 @@ export async function fetchCVEsWithRateLimit(sbomPath) {
             version,
             licenses,
             JSON.stringify(fetchedCves),
-            databasePath
+            databasePath,
           );
           cveData[cpeName] = fetchedCves;
         }
@@ -181,9 +176,9 @@ export async function writeCvesToFile(sbomPath, outputPath) {
   const jsonContent = JSON.stringify(cveJsonData, null, 2);
 
   try {
-    await fs.writeFile(
+    await fsPromise.writeFile(
       path.resolve(__dirname, `${outputPath}/cveData.json`),
-      jsonContent
+      jsonContent,
     );
   } catch (err) {
     throw new Error(`Error saving cveData to file: ${err.message}`);
