@@ -5,7 +5,7 @@ import path from 'node:path';
 import { dirname } from 'path';
 import Bottleneck from 'bottleneck';
 import { cleanCpe } from './get-syft-cpes.mjs';
-import { getApiKey, readOrParseSbom } from './utils.mjs';
+import { getApiKey, readOrParseSbom, validateCPE } from './utils.mjs';
 import {
   initialiseDatabase,
   insertOrUpdateCPEData,
@@ -71,6 +71,15 @@ export async function fetchCVEsForCPE(cpeName, nistApiKey = '') {
   if (nistApiKey !== '') {
     headers.apiKey = nistApiKey;
   }
+
+  const isValid = await validateCPE(cpeName);
+
+  if (!isValid) {
+    // eslint-disable-next-line no-console
+    console.error(`CPE ${cpeName} not found in local database.`);
+    return null;
+  }
+
   const formattedUrl = `${baseUrl}?cpeName=${cpeName}`;
   try {
     const response = await limiter.schedule(() =>
@@ -125,11 +134,18 @@ export async function fetchCVEsWithRateLimit(sbomPath) {
   const sbomJson = await readOrParseSbom(sbomPath, __dirname);
   await initialiseDatabase(databasePath);
   try {
+    // eslint-disable-next-line consistent-return
     const cvePromises = sbomJson.components.map(async (component) => {
-      const { name } = component;
-      const { version } = component;
+      if (!component.cpe || component.cpe.trim() === '') {
+        return null; // Skip this component if CPE is not defined or is empty
+      }
+
+      const name = component.name || '';
+      const version = component.version || '';
       const licenses = component.licenses
-        ? component.licenses.map((lic) => lic.license.name)
+        ? component.licenses
+            .filter((lic) => lic && lic.license && lic.license.name) // Filter out null or undefined licenses and license names
+            .map((lic) => lic.license.name)
         : [];
       const cpeName = await cleanCpe(component.cpe);
       // Check local database for existing, up-to-date CPE data
