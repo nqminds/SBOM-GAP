@@ -59,11 +59,17 @@ export async function mapHistoricalCpes(cpe) {
  * @param {string} cpe - CPE
  * @returns {string[]} - Returns CPE-CVE-CWE-Type
  */
-export async function mapCpeCveCwe(cpe) {
+export async function mapCpeCveCwe(cpe, includeHistoricalCpes = true) {
   const cpeCveMap = [];
   const allPromises = [];
   const cpe_23 = cleanCpe(cpe);
-  const cpeVersions = await mapHistoricalCpes(cpe_23);
+  let cpeVersions = {};
+
+  if (includeHistoricalCpes) {
+    cpeVersions = await mapHistoricalCpes(cpe_23);
+  } else {
+    cpeVersions[cpe_23] = [cpe_23];
+  }
 
   for (const key in cpeVersions) {
     for (const element of cpeVersions[key]) {
@@ -72,7 +78,7 @@ export async function mapCpeCveCwe(cpe) {
       // create a promise for each element
       const promise = fetchCVEsForCPE(cpe23).then((cves) => {
         const innerPromises = [];
-        if (cves.length > 0) {
+        if (cves && cves.length > 0) {
           for (const vulnerability of cves) {
             const cveId = vulnerability.id || 'N/A';
             const cweWeakness = Array.isArray(vulnerability.weakness)
