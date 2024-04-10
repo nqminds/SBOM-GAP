@@ -2,10 +2,6 @@
 
 * For documentation and how to contribute, please follow this [link](https://sbom-gap.nqminds.com/cli/).
 
-### Please download the vulnerability-reports folder and place it in SBOM-GAP module:
-
-- vulnerability-reports directory can be downloaded from [here](https://drive.google.com/file/d/1ZV302sOZXYu7JUiM5fVgrMi3lYxGw1VH/view?usp=drive_link). This also contains all the (National Vulnerability Database)[NVD](https://nvd.nist.gov/) CPE/CWE data. (recommended)
-
 ---
 
 ### Clone the repository
@@ -13,6 +9,18 @@
 ```sh
 git clone https://github.com/nqminds/SBOM-GAP.git
 ```
+
+---
+
+### Download the vulnerability-reports folder and place it in SBOM-GAP module:
+
+- vulnerability-reports directory can be downloaded from [here](https://drive.google.com/file/d/1ZV302sOZXYu7JUiM5fVgrMi3lYxGw1VH/view?usp=drive_link). This also contains all the (National Vulnerability Database)[NVD](https://nvd.nist.gov/) CPE/CWE data. (recommended)
+
+### Download the cpe2.3 database
+
+- Cpe2.3 database [link](https://drive.google.com/file/d/12xd1ze7x7QB7GCNTpzyDGp9BOK52OlG7/view?usp=sharing)
+- Unzip this and add it to data/
+
 
 ---
 

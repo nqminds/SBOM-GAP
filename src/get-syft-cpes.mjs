@@ -13,8 +13,12 @@ const __dirname = dirname(__filename);
  * @returns {string} - A cpe in 2.3 format
  */
 export function cleanCpe(cpe) {
-  // Remove trailing special characters and backslashes
-  const cpeCleaned = cpe.replace(/:~~~.*?~~/g, '').replace(/\\/g, '');
+  const cpeCleaned = cpe
+    .replace(/:~~~.*?~~/g, '')
+    .replace(/\\/g, '')
+    .replace(/~/g, '')
+    .replace(/\+/g, '')
+    .replace(/@/g, '');
 
   // Pattern for CPE 2.3 format (cpe:2.3:[any_letter]:...)
   const cpe23Pattern = /^cpe:2\.3:[a-z]:/i;
