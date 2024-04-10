@@ -317,6 +317,11 @@ The `-getHistory` flag will return all `previous` versions of a CPE and for each
 ```sh
 nqmvul -getHistory <CPE>
 ```
+To check the info of only once cpe use the `false` flag
+
+```sh
+nqmvul -getHistory <CPE> false
+```
 
 <br>
 
