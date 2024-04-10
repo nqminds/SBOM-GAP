@@ -315,7 +315,12 @@ async function main() {
         if (args[1]) {
           console.log(args[1]);
           let spinner;
-
+          let includeHistoricalCpes;
+          if (args[2] === 'false') {
+            includeHistoricalCpes = false;
+          } else {
+            includeHistoricalCpes = true;
+          }
           try {
             console.log(
               `Trying to find related cpes for ${args[1]}, this may take a while...`,
@@ -330,7 +335,10 @@ async function main() {
               spinnerIndex = (spinnerIndex + 1) % spinnerChars.length;
             }, 250);
 
-            const cpeCveCweMap = await mapCpeCveCwe(args[1]);
+            const cpeCveCweMap = await mapCpeCveCwe(
+              args[1],
+              includeHistoricalCpes,
+            );
             clearInterval(spinner);
             process.stdout.write('\r');
 
