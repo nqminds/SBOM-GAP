@@ -5,7 +5,7 @@ output/
 data/
 vulnerability-reports/*
 node_modules/
-
+binwalk-reports
 
 # Schemas DIR
 /packages/schemas/output
