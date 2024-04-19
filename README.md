@@ -106,7 +106,7 @@ The above is necessary only for getting information about GHSA vulnerability cod
 
 ---
 
-9. ### For speeding NIST API requests an API key cen be obtained from [here](https://nvd.nist.gov/developers/request-an-api-key). Please create a .env file in the root directory and add the key as:
+### For speeding NIST API requests an API key cen be obtained from [here](https://nvd.nist.gov/developers/request-an-api-key). Please create a .env file in the root directory and add the key as:
 
 ```yaml
 NIST_API_KEY=your_NIST_api_key
@@ -414,11 +414,13 @@ nqmvul -addCpe <path_to_sbom.json> <CPE>
 <br>
 
 ## -binwalk
-* The nqmvul -binwalk command requires specific arguments to function correctly. Here is the general syntax to follow:
+
+* The `nqmvul -binwalk` command requires specific arguments to function correctly. Here is the general syntax to follow:
 
 ```sh
 nqmvul -binwalk <directory_path> "[-binwalk_flags]" <file_name>
 ```
+* For more detailed documentation and advanced usage examples, please visit the [Binwalk GitHub repository](https://github.com/ReFirmLabs/binwalk).
 
 `<directory_path>`: This is the path to the directory containing the firmware file you wish to analyze.
 
@@ -433,14 +435,14 @@ Here’s how you can use the command on a `Linux` system where you want to apply
 nqmvul -binwalk "$(pwd)" "[-Me]" openwrt-23.05.3-mediatek-filogic-acer_predator-w6-initramfs-kernel.bin
 
 ```
-This command tells `nqmvul` to run Binwalk in the current directory ($(pwd)), use the `-Me` flag for recursive extraction, and process the specified .bin file.
+This command tells `nqmvul` to run Binwalk in the current directory `"$(pwd)"`, use the `-Me` flag for recursive extraction, and process the specified .bin file.
 
 ## Example with multiple flags
 
 If you want to use multiple flags with Binwalk, such as `-M` for matryoshka (recursive) scanning and `-e` for extraction, you would format your command as follows:
 
 ```sh
-nqmvul -binwalk "/path/to/current/directory" "[-M -e]" your_firmware_file.bin
+nqmvul -binwalk /path/to/current/directory "[-M -e]" your_firmware_file.bin
 ```
 
 This setup directs `nqmvul` to execute Binwalk with both the `-M` and `-e` flags on `your_firmware_file.bin` located at the specified path.
@@ -450,7 +452,6 @@ This setup directs `nqmvul` to execute Binwalk with both the `-M` and `-e` flags
 * Ensure the path to the directory and the file name are correctly specified.
 * Always enclose Binwalk flags within square brackets and quotes "[]" to ensure they are parsed correctly as a single argument by the script.
 * Verify that your Docker container has access to the directory where the file resides, as Docker might have restrictions based on your system’s Docker configuration.
-* By following these guidelines, you can efficiently utilize the `nqmvul -binwalk` command for your firmware analysis needs.
 
 # Testing
 
