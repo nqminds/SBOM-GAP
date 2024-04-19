@@ -31,7 +31,7 @@ services:
   binwalk:
     image: ionutnqm/binwalk_v4:latest
     networks:
-      -tooling-net
+      - tooling-net
 
 networks:
   tooling-net:
