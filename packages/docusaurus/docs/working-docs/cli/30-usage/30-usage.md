@@ -993,4 +993,86 @@ zlib1g              1:1.2.13.dfsg-1          (won't fix)       deb   CVE-2023-45
 Vulnerability report saved to: /vulnerability-reports/reports/vulnerability_report_nginx
 
 ```
+### binwalk
 
+* The `nqmvul -binwalk` command requires specific arguments to function correctly. Here is the general syntax to follow:
+
+```sh
+nqmvul -binwalk <directory_path> "[-binwalk_flags]" <file_name>
+```
+* For more detailed documentation and advanced usage examples, please visit the [Binwalk GitHub repository](https://github.com/ReFirmLabs/binwalk).
+
+`<directory_path>`: This is the path to the directory containing the firmware file you wish to analyze.
+
+`"[-binwalk_flags]"`: These are the flags you want to pass to Binwalk, enclosed in square brackets and quoted. This allows for passing multiple flags as a single argument.
+
+`<file_name>`: The name of the firmware file to be analyzed.
+
+## Examples
+
+Here’s how you can use the command on a `Linux` system where you want to apply the `-Me` flag (for recursive extraction) to a specific firmware file:
+```sh
+nqmvul -binwalk "$(pwd)" "[-Me]" openwrt-23.05.3-mediatek-filogic-acer_predator-w6-initramfs-kernel.bin
+
+```
+This command tells `nqmvul` to run Binwalk in the current directory `"$(pwd)"`, use the `-Me` flag for recursive extraction, and process the specified .bin file.
+
+Logs will be saved to /binwalk-reports/openwrt-23.05.3-mediatek-filogic-acer_predator-w6-initramfs-kernel.bin_extraction_report
+
+```sh
+Scan Time:     2024-04-18 14:20:20
+Target File:   /home/linuxbrew/data/openwrt-23.05.3-mediatek-filogic-acer_predator-w6-initramfs-kernel.bin
+MD5 Checksum:  6bfdc104e9abe6467cdd6ddb8f36b038
+Signatures:    411
+
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             Flattened device tree, size: 7281760 bytes, version: 17
+236           0xEC            LZMA compressed data, properties: 0x6D, dictionary size: 8388608 bytes, uncompressed size: 11610120 bytes
+3774808       0x399958        xz compressed data
+7257488       0x6EBD90        Flattened device tree, size: 22920 bytes, version: 17
+
+
+Scan Time:     2024-04-18 14:20:21
+Target File:   /home/linuxbrew/data/_openwrt-23.05.3-mediatek-filogic-acer_predator-w6-initramfs-kernel.bin.extracted/EC
+MD5 Checksum:  5a989a41c3370c43626db5938fb33375
+Signatures:    411
+
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             Linux kernel ARM64 image, load offset: 0x0, image size: 11927552 bytes, little endian, 4k page size,
+198592        0x307C0         SHA256 hash constants, little endian
+8671232       0x845000        ELF, 64-bit LSB shared object, version 1 (SYSV)
+8677456       0x846850        SHA256 hash constants, little endian
+8837368       0x86D8F8        SHA256 hash constants, little endian
+8838208       0x86DC40        CRC32 polynomial table, little endian
+9164755       0x8BD7D3        Neighborly text, "neighbor get requestrequest"
+
+.
+.
+.
+
+Scan Time:     2024-04-18 14:20:27
+Target File:   /home/linuxbrew/data/_openwrt-23.05.3-mediatek-filogic-acer_predator-w6-initramfs-kernel.bin.extracted/_EC.extracted/console
+MD5 Checksum:  d41d8cd98f00b204e9800998ecf8427e
+Signatures:    411
+
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+```
+
+## Example with multiple flags
+
+If you want to use multiple flags with Binwalk, such as `-M` for matryoshka (recursive) scanning and `-e` for extraction, you would format your command as follows:
+
+```sh
+nqmvul -binwalk /path/to/current/directory "[-M -e]" your_firmware_file.bin
+```
+
+This setup directs `nqmvul` to execute Binwalk with both the `-M` and `-e` flags on `your_firmware_file.bin` located at the specified path.
+
+## Important Notes
+
+* Ensure the path to the directory and the file name are correctly specified.
+* Always enclose Binwalk flags within square brackets and quotes "[]" to ensure they are parsed correctly as a single argument by the script.
+* Verify that your Docker container has access to the directory where the file resides, as Docker might have restrictions based on your system’s Docker configuration.
