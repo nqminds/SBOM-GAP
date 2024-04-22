@@ -9,6 +9,7 @@ services:
       - syft
       - grype
       - ccscanner
+      - binwalk
     networks:
       - tooling-net
 
@@ -24,6 +25,11 @@ services:
 
   ccscanner:
     image: ionutnqm/depscanner:latest
+    networks:
+      - tooling-net
+  
+  binwalk:
+    image: ionutnqm/binwalk_v4:latest
     networks:
       - tooling-net
 
