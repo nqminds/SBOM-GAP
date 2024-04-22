@@ -1006,7 +1006,7 @@ nqmvul -binwalk <directory_path> "[-binwalk_flags]" <file_name>
 
 `"[-binwalk_flags]"`: These are the flags you want to pass to Binwalk, enclosed in square brackets and quoted. This allows for passing multiple flags as a single argument.
 
-`<file_name>`: The name of the firmware file to be analyzed.
+`<file_name>`: The name of the firmware file to be analysed.
 
 ## Examples
 
