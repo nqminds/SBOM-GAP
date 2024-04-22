@@ -19,6 +19,15 @@ Clone the official repository to get started with SBOM-GAP.
 git clone https://github.com/nqminds/SBOM-GAP.git
 ```
 
+### Download the vulnerability-reports folder and place it in SBOM-GAP module:
+
+- vulnerability-reports directory can be downloaded from [here](https://drive.google.com/file/d/1ZV302sOZXYu7JUiM5fVgrMi3lYxGw1VH/view?usp=drive_link). This also contains all the (National Vulnerability Database)[NVD](https://nvd.nist.gov/) CPE/CWE data. (recommended)
+
+### Download the cpe2.3 database
+
+- Cpe2.3 database [link](https://drive.google.com/file/d/12xd1ze7x7QB7GCNTpzyDGp9BOK52OlG7/view?usp=sharing)
+- Unzip this and add it to data/
+
 ### Ensure Node.js and npm are Installed: 
 Verify the installation and versions of Node.js and npm.
 
@@ -55,6 +64,37 @@ Navigate to the SBOM-GAP directory and install all required dependencies.
 cd SBOM-GAP
 npm install
 ```
+
+If, after running `npm install`, you do not see a list of Docker containers like the following when running `docker ps -a`:
+```sh
+vboxuser@testbinwaLlk:~$ docker ps -a
+
+CONTAINER ID    IMAGE                         COMMAND                    CREATED             STATUS           PORTS  NAMES
+
+5a2541bb6992    sbom-gap-nqmvul                "python ./ccscanner/.."    2 days ago          Exited (2)       2 days ago  sbom-gap-nqmvul-1
+
+717bb93ecc87    ionutngm/depscanner:latest    "python ./ccscanner/.."    2 days ago          Exited (1)       2 days ago  sbom-gap-ccscanner-1
+
+6bb149d9d68e    anchore/grype                   "/grype"                  2 days ago          Exited (1)       2 days ago  sbom-gap-grype-1
+
+4442271050da    anchore/syft                    "/syft"                   2 days ago          Exited (1)       2 days ago  sbom-gap-syft-1
+
+4d9869d9be3a    ionutngm/binwalk_v4:latest    "binwalk"                  2 days ago          Exited (1)       2 days ago  sbom-gap-binwalk-1
+
+```
+This could indicate that the Docker Compose version on your system differs from the expected version, or that the container images haven't been downloaded. To resolve this, you can try the following:
+1. Check Docker and Docker Compose Installation: Ensure Docker and Docker Compose are installed and functioning correctly. Run `docker --version` and `docker-compose --version` or `docker compose version` to verify their versions.
+
+2. Run Docker Compose with Root Permissions: If you suspect permission issues, you can run the following command to ensure all containers are started:
+
+```sh
+sudo docker compose up -d
+```
+or
+```sh
+sudo docker-compose up -d
+```
+
 
 ### Create a Global Symlink to nqmvul Tool:
 Make the nqmvul tool globally accessible by creating a symlink.
