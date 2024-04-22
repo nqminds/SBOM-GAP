@@ -18,6 +18,9 @@ This project leverages several open-source tools and APIs, contributing signific
 ### CENTRIS:
 * Presents a precise and scalable methodology for identifying the reuse of modified open-source software (OSS), addressing the challenges of vulnerability propagation and license violation inherent in unmanaged OSS components. [Read the Paper on arXiv](https://arxiv.org/abs/2102.06182)
 
+### Binwalk
+* "Binwalk is a fast, easy to use tool for analyzing, reverse engineering, and extracting firmware images". [GitHub Repository](https://github.com/ReFirmLabs/binwalk)
+
 ## APIs
 
 ### Nist Vulnerabilities API:
