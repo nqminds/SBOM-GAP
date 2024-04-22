@@ -26,6 +26,7 @@ import { getGHSAInfo, processVulnerabilities } from './src/get-git-ghsas.mjs';
 import { classifyCwe } from './src/classify_cwe.mjs';
 import { mapCpeCveCwe } from './src/show-cpe-history.mjs';
 import { genGrypeReport, addCpeToSbom } from './src/utils.mjs';
+import { generateBinwalkReport } from './src/binwalk-scan.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -63,6 +64,7 @@ async function main() {
     -generateCCPPReport     Absolute path to project and a project name
     -generateDockerSbom     Image name and a project name, e.g. nginx:latest nginx
     -addCpe                 Path to SBOM.json file and CPE 2.3 format, e.g. path/to/sbom.json "cpe:2.3:a:postgresql:postgresql:9.6.2:*:*:*:*:*:*:*"
+    -binwalk                Current path(use "$(pwd)" for Linux) -binwalk_command file.bin
     `);
   }
 
@@ -474,7 +476,23 @@ async function main() {
           );
         }
         break;
+      case '-binwalk':
+        console.log(args[2]);
+        if (args.length === 4) {
+          await generateBinwalkReport(args[1], args[2], args[3]);
+        } else if (args.length === 3) {
+          const binwalk_flag = '';
+          await generateBinwalkReport(args[1], binwalk_flag, args[2]);
+        } else {
+          console.log(`
+            Make sure you enter the command as:
+            nqmvul -binwalk /path/to/current/directory "[-binwalk_command]" file.bin
 
+            For Linux systems, you can use:
+            nqmvul -binwalk "$(pwd)" "[-binwalk_command]" file.bin
+            `);
+        }
+        break;
       default:
         console.error(`Unknown flag: ${args[0]}`);
         break;
