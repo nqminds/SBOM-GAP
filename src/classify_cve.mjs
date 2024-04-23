@@ -20,14 +20,16 @@ async function openaiRequest(
   backoffTime = 1,
   retries = 0,
 ) {
-  let openai;
-  if (openaiApiKey !== '') {
-    openai = new OpenAI(openaiApiKey);
-  } else if (apiKey) {
-    openai = new OpenAI(apiKey);
-  } else {
-    openai = new OpenAI();
+  if (!openaiApiKey && !apiKey) {
+    return {
+      result: 'api_key_missing',
+      response: 'Error: OpenAI API key is required to make a request.',
+      promptTokensProcessed: 0,
+      responseTokensProcessed: 0,
+    };
   }
+  const apiKeyToUse = openaiApiKey || apiKey;
+  const openai = new OpenAI(apiKeyToUse);
 
   const promptTokensProcessed = 0;
   const responseTokensProcessed = 0;
@@ -160,8 +162,12 @@ export async function makeClassificationRequest(
     let classification;
     try {
       const formattedResponse = formatResponseString(response.response);
-      const responseData = JSON.parse(formattedResponse);
 
+      if (formattedResponse.includes('OpenAI API key is required')) {
+        return { classification: 'Unknown' };
+      }
+
+      const responseData = JSON.parse(formattedResponse);
       classification = responseData.classification;
     } catch (error) {
       console.error('Failed to parse response:', error);

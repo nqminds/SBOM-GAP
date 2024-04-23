@@ -25,7 +25,7 @@ import { generateDummySBOM } from './src/gen-bom-from-cpes.mjs';
 import { getGHSAInfo, processVulnerabilities } from './src/get-git-ghsas.mjs';
 import { classifyCwe } from './src/classify_cwe.mjs';
 import { mapCpeCveCwe } from './src/show-cpe-history.mjs';
-import { genGrypeReport, addCpeToSbom } from './src/utils.mjs';
+import { genGrypeReport, addCpeToSbom, getCpeVendor } from './src/utils.mjs';
 import { generateBinwalkReport } from './src/binwalk-scan.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -317,19 +317,13 @@ async function main() {
         if (args[1]) {
           console.log(args[1]);
           let spinner;
-          let includeHistoricalCpes;
-          if (args[2] === 'false') {
-            includeHistoricalCpes = false;
-          } else {
-            includeHistoricalCpes = true;
-          }
+          const includeHistoricalCpes = args[2] !== 'false';
           try {
             console.log(
               `Trying to find related cpes for ${args[1]}, this may take a while...`,
             );
             const spinnerChars = ['|', '/', '-', '\\'];
             let spinnerIndex = 0;
-            let previousCPE = '';
             spinner = setInterval(() => {
               process.stdout.write(
                 `\r${spinnerChars[spinnerIndex]} Processing...`,
@@ -352,14 +346,7 @@ async function main() {
               (max, entry) => Math.max(max, entry.cve.length),
               0,
             );
-            const maxCweLength = cpeCveCweMap.reduce((max, entry) => {
-              const longestCwe = entry.cwe.reduce(
-                (cweMax, cwe) => Math.max(cweMax, cwe.length),
-                0,
-              );
-              return Math.max(max, longestCwe);
-            }, 0);
-
+            let previousCPE = '';
             const data = cpeCveCweMap
               .map((entry) => {
                 const alignedCpe =
@@ -368,28 +355,32 @@ async function main() {
                     : ' '.repeat(maxCpeLength);
                 previousCPE = entry.cpe;
                 const alignedCve = entry.cve.padEnd(maxCveLength);
-                const cweList = entry.cwe.map((cwe) =>
-                  cwe.padEnd(maxCweLength),
-                );
-                const alignedCwe = cweList.join(
+                const cweClassifications = entry.cwe.map((cwe, index) => {
+                  const alignedCwe = cwe.padEnd(20);
+                  const weakType = entry.weakType[index] || 'No info';
+                  return `${alignedCwe} - ${weakType}`;
+                });
+                const formattedCwe = cweClassifications.join(
                   `\n${' '.repeat(maxCpeLength + maxCveLength + 6)}`,
                 );
-                return `${alignedCpe} - ${alignedCve} - ${alignedCwe} - ${entry.weakType}`;
+
+                return `${alignedCpe} - ${alignedCve} - ${formattedCwe}`;
               })
               .join('\n');
 
             console.log(data);
+            const fileName = await getCpeVendor(args[1]);
+            const outputDir = path.join(
+              __dirname,
+              'vulnerability-reports/output',
+            );
+            const outputFile = path.join(outputDir, `${fileName}.txt`);
 
-            try {
-              const outputDir = path.join(__dirname, 'output');
-              const outputFile = path.join(outputDir, 'output.txt');
-
-              await fs.promises.mkdir(outputDir, { recursive: true });
-              await fs.promises.writeFile(outputFile, data);
-              console.log('Data saved to output/output.txt');
-            } catch (error) {
-              console.log(error);
-            }
+            await fs.promises.mkdir(outputDir, { recursive: true });
+            await fs.promises.writeFile(outputFile, data);
+            console.log(
+              `Data saved to vulnerability-reports/output/${fileName}.txt`,
+            );
           } catch (error) {
             console.error(
               `Error encountered processing the command: ${error.stack}`,

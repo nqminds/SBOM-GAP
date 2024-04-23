@@ -8,7 +8,11 @@ const execAsync = promisify(exec);
 
 describe('nqmvul -getHistory command', () => {
   const projectRoot = process.cwd();
-  const outputFilePath = path.join(projectRoot, 'output', 'output.txt');
+  const outputFilePath = path.join(
+    projectRoot,
+    'vulnerability-reports/output',
+    'sec_project.txt',
+  );
 
   afterAll(() => {
     if (fs.existsSync(outputFilePath)) {
@@ -27,7 +31,9 @@ describe('nqmvul -getHistory command', () => {
     expect(stdout).toContain(
       'Trying to find related cpes for cpe:2.3:a:sec_project:sec:-, this may take a while...',
     );
-    expect(stdout).toContain('Data saved to output/output.txt');
+    expect(stdout).toContain(
+      'Data saved to vulnerability-reports/output/sec_project.txt',
+    );
     const fileExists = fs.existsSync(outputFilePath);
     expect(fileExists).toBe(true);
   });
