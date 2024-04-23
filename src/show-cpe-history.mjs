@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable guard-for-in */
 import fs from 'fs';
@@ -7,7 +8,8 @@ import { fileURLToPath } from 'url';
 import { cleanCpe } from './get-syft-cpes.mjs';
 import { fetchCVEsForCPE } from './list-vulnerabilities.mjs';
 import { classifyCwe } from './classify_cwe.mjs';
-import { previousCpeVersion } from './utils.mjs';
+import { previousCpeVersion, getCpeVendor } from './utils.mjs';
+import { makeClassificationRequest } from './classify_cve.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -75,8 +77,7 @@ export async function mapCpeCveCwe(cpe, includeHistoricalCpes = true) {
     for (const element of cpeVersions[key]) {
       const cpe23 = cleanCpe(element);
 
-      // create a promise for each element
-      const promise = fetchCVEsForCPE(cpe23).then((cves) => {
+      const promise = fetchCVEsForCPE(cpe23).then(async (cves) => {
         const innerPromises = [];
         if (cves && cves.length > 0) {
           for (const vulnerability of cves) {
@@ -87,35 +88,68 @@ export async function mapCpeCveCwe(cpe, includeHistoricalCpes = true) {
                 ? [vulnerability.weakness]
                 : ['N/A'];
 
-            const innerPromise = classifyCwe(cweWeakness[0]).then(
-              (weakType) => {
-                cpeCveMap.push({
-                  cpe: element,
-                  cve: cveId,
-                  cwe: cweWeakness,
-                  weakType: weakType || 'No Info',
-                });
-              },
-            );
+            const classifications = [];
 
-            innerPromises.push(innerPromise);
+            for (const cwe of cweWeakness) {
+              let classification = 'No info';
+              if (
+                cwe === 'NVD-CWE-noinfo' ||
+                cwe === 'No info' ||
+                cwe === 'NVD-CWE-Other'
+              ) {
+                classification = await makeClassificationRequest(
+                  vulnerability.description,
+                );
+              }
+
+              const validClassification =
+                typeof classification === 'string' ? classification : 'No info';
+
+              const innerPromise = classifyCwe(cwe).then((weakType) => {
+                classifications.push(weakType || validClassification);
+              });
+
+              innerPromises.push(innerPromise);
+            }
+
+            await Promise.all(innerPromises);
+
+            cpeCveMap.push({
+              cpe: element,
+              cve: cveId,
+              cwe: cweWeakness,
+              weakType: classifications,
+            });
           }
         } else {
           cpeCveMap.push({
             cpe: element,
             cve: 'CVE No Info',
             cwe: ['CWE No Info'],
-            weakType: 'Type No Info',
+            weakType: ['Type No Info'],
           });
         }
-        return Promise.all(innerPromises); // resolve all inner promises
       });
 
       allPromises.push(promise);
     }
   }
 
-  // resolve all promises
   await Promise.all(allPromises);
+
+  const reportDirectory = path.resolve(
+    __dirname,
+    '../vulnerability-reports/output',
+  );
+
+  if (!fs.existsSync(reportDirectory)) {
+    fs.mkdirSync(reportDirectory, { recursive: true });
+  }
+
+  const fileName = await getCpeVendor(cpe);
+  const histMap = path.join(reportDirectory, `${fileName}.json`);
+
+  fs.writeFileSync(histMap, JSON.stringify(cpeCveMap, null, 2));
+
   return cpeCveMap;
 }

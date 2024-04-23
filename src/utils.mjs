@@ -412,3 +412,16 @@ export async function validateCPE(cpeToValidate) {
     await db.close();
   }
 }
+
+/**
+ *
+ * @param {string} cpe - Cpe to parse
+ * @returns {string} - The cpe vendor
+ */
+export function getCpeVendor(cpe) {
+  const cpeParts = cpe.split(':');
+  if (cpeParts.length > 3) {
+    return cpeParts[3];
+  }
+  throw new Error('Invalid CPE format');
+}
