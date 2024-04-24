@@ -49,7 +49,6 @@ export function initialiseDatabase(databasePath) {
             cpe TEXT PRIMARY KEY,
             name TEXT,
             version TEXT,
-            licenses TEXT,
             cves TEXT,
             last_updated INTEGER
             )
@@ -81,7 +80,6 @@ export function initialiseDatabase(databasePath) {
  * @param {string} cpe - cpe
  * @param {string} name - library name
  * @param {string} version - version
- * @param {string []} licensesJSON - list of licencess if present
  * @param {object} cvesJSON - cve data
  * @param {string} databasePath - path to sqlite database
  *
@@ -90,7 +88,6 @@ export async function insertOrUpdateCPEData(
   cpe,
   name,
   version,
-  licensesJSON,
   cvesJSON,
   databasePath,
 ) {
@@ -98,8 +95,8 @@ export async function insertOrUpdateCPEData(
   try {
     await new Promise((resolve, reject) => {
       db.run(
-        'INSERT OR REPLACE INTO cpe_cache (cpe, name, version, licenses, cves, last_updated) VALUES (?, ?, ?, ?, ?, ?)',
-        [cpe, name, version, licensesJSON, cvesJSON, Date.now()],
+        'INSERT OR REPLACE INTO cpe_cache (cpe, name, version, cves, last_updated) VALUES (?, ?, ?, ?, ?)',
+        [cpe, name, version, cvesJSON, Date.now()],
         (err) => {
           if (err) reject(err);
           resolve();
