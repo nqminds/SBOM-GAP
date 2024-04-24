@@ -1,3 +1,6 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-console */
+/* eslint-disable consistent-return */
 import { fileURLToPath } from 'url';
 import fs, { promises as fsPromise } from 'fs';
 import axios from 'axios';
@@ -5,7 +8,13 @@ import path from 'node:path';
 import { dirname } from 'path';
 import Bottleneck from 'bottleneck';
 import { cleanCpe } from './get-syft-cpes.mjs';
-import { getApiKey, readOrParseSbom, validateCPE } from './utils.mjs';
+import {
+  getApiKey,
+  readOrParseSbom,
+  validateCPE,
+  getVersion,
+  extractCpeName,
+} from './utils.mjs';
 import {
   initialiseDatabase,
   insertOrUpdateCPEData,
@@ -72,52 +81,83 @@ export async function fetchCVEsForCPE(cpeName, nistApiKey = '') {
     headers.apiKey = nistApiKey;
   }
 
+  let cves;
+  const name = await extractCpeName(cpeName);
+  const version = await getVersion(cpeName);
   const isValid = await validateCPE(cpeName);
 
   if (!isValid) {
-    // eslint-disable-next-line no-console
     console.error(`CPE ${cpeName} not found in local database.`);
     return null;
   }
-
+  await initialiseDatabase(databasePath);
   const formattedUrl = `${baseUrl}?cpeName=${cpeName}`;
   try {
-    const response = await limiter.schedule(() =>
-      axios.get(formattedUrl, { headers }),
-    );
-    // more data can be added here as needed
-    const cves = response.data.vulnerabilities
-      .map((vulnerability) => {
-        const weaknesses = vulnerability.cve.weaknesses?.map(
-          (weakness) =>
-            weakness.description?.find((desc) => desc.lang === 'en')?.value ||
-            'Not Found',
-        );
-        const baseScore =
-          findPropertyRecursively(vulnerability.cve.metrics, 'baseScore') ||
-          '0';
-        const baseSeverity =
-          findPropertyRecursively(vulnerability.cve.metrics, 'baseSeverity') ||
-          '0';
+    const existingData = await getCPEData(cpeName, databasePath);
 
-        return {
-          id: vulnerability.cve.id,
-          description:
-            vulnerability.cve.descriptions?.find((desc) => desc.lang === 'en')
-              ?.value || 'Not Found',
-          weakness: weaknesses,
-          baseScore,
-          baseSeverity,
-        };
-      })
-      .filter((cve) => cve && cve.id && cve.description);
-    cveData[cpeName] = cves;
-    // Store the response in the previousResponses array
+    if (existingData) {
+      cves = JSON.parse(existingData.cves);
+      cveData[cpeName] = cves;
+    } else {
+      const response = await limiter.schedule(() =>
+        axios.get(formattedUrl, { headers }),
+      );
+
+      cves = response.data.vulnerabilities
+        .map((vulnerability) => {
+          const weaknesses = vulnerability.cve.weaknesses?.map(
+            (weakness) =>
+              weakness.description?.find((desc) => desc.lang === 'en')?.value ||
+              'Not Found',
+          );
+          const baseScore =
+            findPropertyRecursively(vulnerability.cve.metrics, 'baseScore') ||
+            '0';
+          const baseSeverity =
+            findPropertyRecursively(
+              vulnerability.cve.metrics,
+              'baseSeverity',
+            ) || '0';
+          return {
+            id: vulnerability.cve.id,
+            description:
+              vulnerability.cve.descriptions?.find((desc) => desc.lang === 'en')
+                ?.value || 'Not Found',
+            weakness: weaknesses,
+            baseScore,
+            baseSeverity,
+          };
+        })
+        .filter((cve) => cve && cve.id && cve.description);
+      await insertOrUpdateCPEData(
+        cpeName,
+        name,
+        version,
+        JSON.stringify(cves),
+        databasePath,
+      );
+      cveData[cpeName] = cves;
+    }
     previousResponses.push({ cpeName, cves });
     return cves;
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(`Error for ${cpeName}:`, error);
+    if (axios.isAxiosError(error)) {
+      const status = error.response ? error.response.status : 'Unknown';
+      const statusText = error.response ? error.response.statusText : 'Unknown';
+      const errorMessage = `AxiosError: ${status} - ${statusText}`;
+
+      console.error(`Error for ${cpeName}: ${errorMessage}`);
+
+      if (status === 404) {
+        console.error(`The resource for ${cpeName} was not found.`);
+      } else if (status === 401) {
+        console.error('Unauthorized request. Please check your API key.');
+      } else if (status === 500) {
+        console.error('Server error. Try again later.');
+      }
+      return null;
+    }
+    console.error(`Unexpected error for ${cpeName}: ${error.message}`);
     return null;
   }
 }
@@ -125,52 +165,26 @@ export async function fetchCVEsForCPE(cpeName, nistApiKey = '') {
 /**
  * Function to control the rate of API requests.
  *
- * @param {string|object} sbomPath - Path to sbomFile or json object
+ * @param {string|object} sbomPath - Path to SBOM file or JSON object.
  *
- * @returns {string[]} Array of  CVEs.
+ * @returns {object} - An object where each key is a CPE, and the value is the corresponding array of CVEs.
  */
 export async function fetchCVEsWithRateLimit(sbomPath) {
   cveData = {};
   const sbomJson = await readOrParseSbom(sbomPath, __dirname);
-  await initialiseDatabase(databasePath);
+
   try {
-    // eslint-disable-next-line consistent-return
     const cvePromises = sbomJson.components.map(async (component) => {
       if (!component.cpe || component.cpe.trim() === '') {
-        return null; // Skip this component if CPE is not defined or is empty
+        return null; // Skip if CPE is not defined or is empty
       }
-
-      const name = component.name || '';
-      const version = component.version || '';
-      const licenses = component.licenses
-        ? component.licenses
-            .filter((lic) => lic && lic.license && lic.license.name) // Filter out null or undefined licenses and license names
-            .map((lic) => lic.license.name)
-        : [];
       const cpeName = await cleanCpe(component.cpe);
-      // Check local database for existing, up-to-date CPE data
-      const cpeData = await getCPEData(cpeName, databasePath);
-      if (cpeData) {
-        // Data is present, use it directly
-        cveData[cpeName] = JSON.parse(cpeData.cves);
-      } else {
-        // Data needs to be fetched from the API
-        const fetchedCves = await fetchCVEsForCPE(cpeName, apiKey);
-        if (fetchedCves) {
-          // Update local database with new CVE data
-          await insertOrUpdateCPEData(
-            cpeName,
-            name,
-            version,
-            licenses,
-            JSON.stringify(fetchedCves),
-            databasePath,
-          );
-          cveData[cpeName] = fetchedCves;
-        }
+      const fetchedCves = await fetchCVEsForCPE(cpeName, apiKey);
+      if (fetchedCves) {
+        cveData[cpeName] = fetchedCves;
       }
     });
-    // Wait for all promises to resolve
+
     await Promise.all(cvePromises);
   } catch (error) {
     throw new Error(`Error fetching CVEs with rate limit: ${error.message}`);
