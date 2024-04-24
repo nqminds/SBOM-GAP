@@ -10,9 +10,21 @@ import { fetchCVEsForCPE } from './list-vulnerabilities.mjs';
 import { classifyCwe } from './classify_cwe.mjs';
 import { previousCpeVersion, getCpeVendor } from './utils.mjs';
 import { makeClassificationRequest } from './classify_cve.mjs';
+import {
+  initialiseCveDatabase,
+  insertOrUpdateCVEData,
+  getCVEData,
+} from './cve_database.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+const databaseDir = path.join(__dirname, '../data');
+const databasePath = path.join(databaseDir, 'cached_cves.db');
+
+if (!fs.existsSync(databaseDir)) {
+  fs.mkdirSync(databaseDir, { recursive: true });
+}
 
 /**
  * Search the cpe_data.csv for a list of all known versions of a cpe
@@ -92,23 +104,41 @@ export async function mapCpeCveCwe(cpe, includeHistoricalCpes = true) {
 
             for (const cwe of cweWeakness) {
               let classification = 'No info';
+              const cweExists = await classifyCwe(cwe);
               if (
                 cwe === 'NVD-CWE-noinfo' ||
                 cwe === 'No info' ||
-                cwe === 'NVD-CWE-Other'
+                cwe === 'NVD-CWE-Other' ||
+                cweExists === null
               ) {
-                classification = await makeClassificationRequest(
-                  vulnerability.description,
+                await initialiseCveDatabase(databasePath);
+                const cveInfo = await getCVEData(
+                  vulnerability.id,
+                  databasePath,
                 );
+                if (!cveInfo) {
+                  classification = await makeClassificationRequest(
+                    vulnerability.description,
+                  );
+                  if (typeof classification === 'string') {
+                    await insertOrUpdateCVEData(
+                      vulnerability.id,
+                      vulnerability.description,
+                      classification,
+                      databasePath,
+                    );
+                  } else {
+                    classification = 'No info';
+                  }
+                } else {
+                  classification = cveInfo.classification;
+                }
               }
-
               const validClassification =
                 typeof classification === 'string' ? classification : 'No info';
-
               const innerPromise = classifyCwe(cwe).then((weakType) => {
                 classifications.push(weakType || validClassification);
               });
-
               innerPromises.push(innerPromise);
             }
 
