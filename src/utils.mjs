@@ -287,7 +287,7 @@ export async function readOrParseSbom(sbomPath, __dirname) {
   return sbomJson;
 }
 
-function extractCpeName(cpeString) {
+export function extractCpeName(cpeString) {
   // This regex handles both formats by capturing the text after "cpe:2.3:a:" or "cpe:/a:"
   const regex = /cpe:2\.3:a:([^:]+):|cpe:\/a:([^:]+):/;
   const matches = cpeString.match(regex);
