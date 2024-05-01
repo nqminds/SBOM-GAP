@@ -27,6 +27,7 @@ import { classifyCwe } from './src/classify_cwe.mjs';
 import { mapCpeCveCwe } from './src/show-cpe-history.mjs';
 import { genGrypeReport, addCpeToSbom, getCpeVendor } from './src/utils.mjs';
 import { generateBinwalkReport } from './src/binwalk-scan.mjs';
+import { compareSBOMs, printComparisonResult } from './src/compare-sboms.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -65,6 +66,7 @@ async function main() {
     -generateDockerSbom     Image name and a project name, e.g. nginx:latest nginx
     -addCpe                 Path to SBOM.json file and CPE 2.3 format, e.g. path/to/sbom.json "cpe:2.3:a:postgresql:postgresql:9.6.2:*:*:*:*:*:*:*"
     -binwalk                Current path(use "$(pwd)" for Linux) -binwalk_command file.bin
+    -compare                Paths to sboms e.g. nqmvul -compare <absolute/path/to/sbom1> <absolute/path/to/sbom2>
     `);
   }
 
@@ -468,7 +470,6 @@ async function main() {
         }
         break;
       case '-binwalk':
-        console.log(args[2]);
         if (args.length === 4) {
           await generateBinwalkReport(args[1], args[2], args[3]);
         } else if (args.length === 3) {
@@ -482,6 +483,16 @@ async function main() {
             For Linux systems, you can use:
             nqmvul -binwalk "$(pwd)" "[-binwalk_command]" file.bin
             `);
+        }
+        break;
+      case '-compare':
+        // TODO: ADD possibility to chose file name
+        if (args.length > 2) {
+          const sbomPaths = args.slice(1);
+          const comparisonResult = await compareSBOMs(sbomPaths);
+          await printComparisonResult(comparisonResult, sbomPaths);
+        } else {
+          console.log('Please provide at least two SBOM path.');
         }
         break;
       default:
