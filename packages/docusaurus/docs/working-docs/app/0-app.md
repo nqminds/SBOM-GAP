@@ -42,3 +42,8 @@ The pie chart offers a breakdown of vulnerabilities by type, such as those relat
 ### CPE Specific Visualisation:
 The CPE History Visualization page offers a unique visual representation for a selected CPE, detailing the number of CVEs associated with each version, aiding in identifying patterns or spikes in vulnerabilities that warrant further investigation.
 
+### Pareto Chart:
+The Pareto chart provides insights into the cumulative impact of different severity levels across various CVEs, aiding in understanding the distribution of severity scores and identifying the most impactful vulnerabilities.
+
+### Time Series Chart:
+The time series chart offers a temporal view of the security posture changes over different versions of a CPE, tracking the evolution of vulnerabilities across different severities, helping to identify trends and improvements over time.
