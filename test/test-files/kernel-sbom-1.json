@@ -1,0 +1,43 @@
+{
+    "bomFormat": "CycloneDX",
+    "components": [
+      {
+        "cpe": "cpe:/a:kernel:util-linux:2.24.2",
+        "group": "",
+        "licenses": [
+          {
+            "license": {
+              "name": "N/A"
+            }
+          }
+        ],
+        "name": "kernel",
+        "supplier": {
+          "name": "N/A"
+        },
+        "type": "N/A",
+        "version": "2.24.2"
+      },
+      {
+        "cpe": "cpe:/a:openssl:openssl:3.0.0:alpha1:*:*:*:*:*:*",
+        "group": "",
+        "licences": [
+          {
+            "license": {
+              "name": "Apache-2.0"
+            }
+          }
+        ],
+        "supplier": {
+          "name": "Ubuntu developers"
+        },
+        "name": "libssl3",
+        "type": "library",
+        "version": "3.0.0~~alpha1"
+      }
+    ],
+    "serialNumber": "urn:uuid:00000000-0000-0000-0000-000000000000",
+    "specVersion": "1.4",
+    "version": 1
+  }
+  

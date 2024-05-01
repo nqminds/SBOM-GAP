@@ -1,0 +1,43 @@
+{
+    "bomFormat": "CycloneDX",
+    "components": [
+      {
+        "cpe": "cpe:/a:kernel:util-linux:2.24.2-1",
+        "group": "",
+        "licenses": [
+          {
+            "license": {
+              "name": "N/A"
+            }
+          }
+        ],
+        "name": "kernel",
+        "supplier": {
+          "name": "N/A"
+        },
+        "type": "N/A",
+        "version": "2.24.2-1"
+      },
+      {
+        "cpe": "cpe:/a:sqlite:sqlite:3.5.9:*:*:*:*:*:*:*",
+        "group": "",
+        "licences": [
+          {
+            "license": {
+              "name": "Public Domain"
+            }
+          }
+        ],
+        "supplier": {
+          "name": "Ubuntu developers"
+        },
+        "name": "libsqlite3-0",
+        "type": "library",
+        "version": "3.5.9"
+      }
+    ],
+    "serialNumber": "urn:uuid:00000000-0000-0000-0000-000000000000",
+    "specVersion": "1.4",
+    "version": 1
+  }
+  
