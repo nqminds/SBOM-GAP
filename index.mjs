@@ -84,9 +84,22 @@ async function main() {
         displayHelp();
         break;
       case '-getCpes':
-        if (args[1]) {
+        if (args.length === 2) {
           const cpes = await getCpes(args[1]);
           console.log(cpes);
+        } else if (args.length >= 3) {
+          const cpes = await getCpes(args[1]);
+          const outputDir = path.join(
+            __dirname,
+            'vulnerability-reports/cpe-lists',
+          );
+          const outputFile = path.join(outputDir, `${args[2]}.json`);
+          console.log(`CPE list saved to ${outputDir}`);
+
+          const jsonData = JSON.stringify(cpes, null, 2);
+
+          await fs.promises.mkdir(outputDir, { recursive: true });
+          await fs.promises.writeFile(outputFile, jsonData);
         } else {
           console.error('Please provide a valid path to SBOM.');
         }
