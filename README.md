@@ -245,7 +245,12 @@ nqmvul -help
 * The `-getCpes` flag will parse an SBOM and return a list of CPEs in the 2.3 format.
 
 ```sh
-nqmvul -getCpes <path_to_sbom.json>
+nqmvul -getCpes <absolute_path_to_sbom.json>
+```
+To save the cpe to a file use:
+
+```sh
+nqmvul -getCpes <absolute_path_to_sbom.json> <filename>
 ```
 
 <br>
