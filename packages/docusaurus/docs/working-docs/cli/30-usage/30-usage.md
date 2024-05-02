@@ -1008,7 +1008,7 @@ nqmvul -binwalk <directory_path> "[-binwalk_flags]" <file_name>
 
 `<file_name>`: The name of the firmware file to be analysed.
 
-## Examples
+#### Binwalk Examples
 
 Here’s how you can use the command on a `Linux` system where you want to apply the `-Me` flag (for recursive extraction) to a specific firmware file:
 ```sh
@@ -1061,7 +1061,7 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 --------------------------------------------------------------------------------
 ```
 
-## Example with multiple flags
+#### Binwalk Example with multiple flags
 
 If you want to use multiple flags with Binwalk, such as `-M` for matryoshka (recursive) scanning and `-e` for extraction, you would format your command as follows:
 
@@ -1071,8 +1071,146 @@ nqmvul -binwalk /path/to/current/directory "[-M -e]" your_firmware_file.bin
 
 This setup directs `nqmvul` to execute Binwalk with both the `-M` and `-e` flags on `your_firmware_file.bin` located at the specified path.
 
-## Important Notes
+#### Binwalk Important Notes
 
 * Ensure the path to the directory and the file name are correctly specified.
 * Always enclose Binwalk flags within square brackets and quotes "[]" to ensure they are parsed correctly as a single argument by the script.
 * Verify that your Docker container has access to the directory where the file resides, as Docker might have restrictions based on your system’s Docker configuration.
+
+
+### compare
+
+The `-compare` command compares components, versions, and vulnerabilities across multiple `CycloneDX` `JSON` `SBOMs`. It helps to visualize differences and similarities between the `SBOMs`, making it easier to identify discrepancies in components, versions, and vulnerabilities. This command takes multiple paths to SBOM files as arguments and generates a comprehensive report comparing them.
+
+#### Compare Usage
+```sh
+nqmvul -compare <absolute/path/to/sbom1> <absolute/path/to/sbom2> <additional SBOM paths...>
+```
+The output will be saved by default to `vulnerability-reports/comparisons/comparison-result.txt`
+
+If you want to specify a different file name to be saved, please use the following format:
+
+```sh
+nqmvul -compare "[<absolute/path/to/sbom-1.json> <absolute/path/to/sbom-2.json> <additional SBOM paths...>]" filename
+```
+#### Compare Output:
+The output is structured in three sections:
+
+* `Components Comparison`: Displays which components are present or missing across the SBOMs.
+* `Version Information`: Shows the version information of the components found in the SBOMs.
+* `Vulnerabilities`: Lists the vulnerabilities associated with the components in each SBOM, detailing the CVEs.
+
+Example output 
+
+```sh
+nqmvul -compare "[/test/test-files/kernel-sbom-1.json test/test-files/kernel-sbom-2.json /test/test-files/kernel-sbom-3.json]" test-comp
+
+------------------ SBOM Comparison Results ------------------
+
+1. Components Comparison:
+-------------------------------------------------------------------------------------
+| Component Name      | kernel-sbom-1.json | kernel-sbom-2.json | kernel-sbom-3.json |
+-------------------------------------------------------------------------------------
+| kernel               | Present            | Present            | Present            |
+-------------------------------------------------------------------------------------
+| openssl              | Present            | Missing            | Missing            |
+-------------------------------------------------------------------------------------
+| sqlite               | Missing            | Present            | Missing            |
+-------------------------------------------------------------------------------------
+| protobuf-c_project   | Missing            | Missing            | Present            |
+-------------------------------------------------------------------------------------
+
+2. Version Information:
+-------------------------------------------------------------------------------------
+| Component Name      | kernel-sbom-1.json | kernel-sbom-2.json | kernel-sbom-3.json |
+-------------------------------------------------------------------------------------
+| kernel               | 2.24.2             | 2.24.2             | 2.32.0             |
+-------------------------------------------------------------------------------------
+| openssl              | 3.0.0              |                    |                    |
+-------------------------------------------------------------------------------------
+| sqlite               |                    | 3.5.9              |                    |
+-------------------------------------------------------------------------------------
+| protobuf-c_project   |                    |                    | 1.3.3              |
+-------------------------------------------------------------------------------------
+
+3. Vulnerabilities:
+-------------------------------------------------------------------------------------
+| Component Name      | kernel-sbom-1.json | kernel-sbom-2.json | kernel-sbom-3.json |
+-------------------------------------------------------------------------------------
+| kernel               | CVE-2014-9114      | CVE-2016-2779      | CVE-2021-37600     |
+| kernel               | CVE-2016-5011      | CVE-2014-9114      | CVE-2022-0563      |
+| kernel               | CVE-2015-5224      | CVE-2016-5011      |                    |
+| kernel               | CVE-2018-7738      | CVE-2015-5224      |                    |
+| kernel               | CVE-2021-37600     | CVE-2018-7738      |                    |
+| kernel               | CVE-2022-0563      | CVE-2021-37600     |                    |
+| kernel               | CVE-2020-21583     | CVE-2022-0563      |                    |
+| kernel               |                    | CVE-2020-21583     |                    |
+-------------------------------------------------------------------------------------
+| openssl              | CVE-2009-1390      |                    |                    |
+| openssl              | CVE-2009-3765      |                    |                    |
+| openssl              | CVE-2009-3766      |                    |                    |
+| openssl              | CVE-2009-3767      |                    |                    |
+| openssl              | CVE-2019-0190      |                    |                    |
+| openssl              | CVE-2021-4044      |                    |                    |
+| openssl              | CVE-2021-4160      |                    |                    |
+| openssl              | CVE-2022-0778      |                    |                    |
+| openssl              | CVE-2022-1292      |                    |                    |
+| openssl              | CVE-2022-1343      |                    |                    |
+| openssl              | CVE-2022-1434      |                    |                    |
+| openssl              | CVE-2022-1473      |                    |                    |
+| openssl              | CVE-2022-2068      |                    |                    |
+| openssl              | CVE-2022-2097      |                    |                    |
+| openssl              | CVE-2022-3358      |                    |                    |
+| openssl              | CVE-2022-3602      |                    |                    |
+| openssl              | CVE-2022-3786      |                    |                    |
+| openssl              | CVE-2022-3996      |                    |                    |
+| openssl              | CVE-2022-4304      |                    |                    |
+| openssl              | CVE-2022-4450      |                    |                    |
+| openssl              | CVE-2023-0215      |                    |                    |
+| openssl              | CVE-2023-0216      |                    |                    |
+| openssl              | CVE-2023-0217      |                    |                    |
+| openssl              | CVE-2023-0286      |                    |                    |
+| openssl              | CVE-2023-0401      |                    |                    |
+| openssl              | CVE-2022-4203      |                    |                    |
+| openssl              | CVE-2023-0464      |                    |                    |
+| openssl              | CVE-2023-0465      |                    |                    |
+| openssl              | CVE-2023-0466      |                    |                    |
+| openssl              | CVE-2023-1255      |                    |                    |
+| openssl              | CVE-2023-2650      |                    |                    |
+| openssl              | CVE-2023-2975      |                    |                    |
+| openssl              | CVE-2023-3817      |                    |                    |
+| openssl              | CVE-2023-4807      |                    |                    |
+| openssl              | CVE-2023-5363      |                    |                    |
+| openssl              | CVE-2023-5678      |                    |                    |
+| openssl              | CVE-2023-6129      |                    |                    |
+| openssl              | CVE-2024-0727      |                    |                    |
+-------------------------------------------------------------------------------------
+| sqlite               |                    | CVE-2015-3414      |                    |
+| sqlite               |                    | CVE-2015-3415      |                    |
+| sqlite               |                    | CVE-2015-3416      |                    |
+| sqlite               |                    | CVE-2015-3717      |                    |
+| sqlite               |                    | CVE-2015-5895      |                    |
+| sqlite               |                    | CVE-2015-6607      |                    |
+| sqlite               |                    | CVE-2016-6153      |                    |
+| sqlite               |                    | CVE-2017-10989     |                    |
+| sqlite               |                    | CVE-2018-8740      |                    |
+| sqlite               |                    | CVE-2018-20346     |                    |
+| sqlite               |                    | CVE-2018-20505     |                    |
+| sqlite               |                    | CVE-2018-20506     |                    |
+| sqlite               |                    | CVE-2019-19645     |                    |
+| sqlite               |                    | CVE-2019-19646     |                    |
+| sqlite               |                    | CVE-2020-11655     |                    |
+| sqlite               |                    | CVE-2020-11656     |                    |
+| sqlite               |                    | CVE-2020-13434     |                    |
+| sqlite               |                    | CVE-2020-13435     |                    |
+| sqlite               |                    | CVE-2020-13630     |                    |
+| sqlite               |                    | CVE-2020-13631     |                    |
+| sqlite               |                    | CVE-2020-13632     |                    |
+| sqlite               |                    | CVE-2020-15358     |                    |
+| sqlite               |                    | CVE-2022-35737     |                    |
+| sqlite               |                    | CVE-2023-7104      |                    |
+-------------------------------------------------------------------------------------
+| protobuf-c_project   |                    |                    | CVE-2022-48468     |
+-------------------------------------------------------------------------------------
+
+```
