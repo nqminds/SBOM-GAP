@@ -26,6 +26,7 @@
 * [-generateDockerSbom](#generatedockersbom)
 * [-addCpe](#addcpe)
 * [-binwalk](#binwalk)
+* [-compare](#compare)
 ---
 
 ### Clone the repository
@@ -487,6 +488,28 @@ This setup directs `nqmvul` to execute Binwalk with both the `-M` and `-e` flags
 * Ensure the path to the directory and the file name are correctly specified.
 * Always enclose Binwalk flags within square brackets and quotes "[]" to ensure they are parsed correctly as a single argument by the script.
 * Verify that your Docker container has access to the directory where the file resides, as Docker might have restrictions based on your system’s Docker configuration.
+
+## compare
+
+The `-compare` command compares components, versions, and vulnerabilities across multiple `CycloneDX` `JSON` SBOMs. It helps to visualize differences and similarities between the SBOMs, making it easier to identify discrepancies in components, versions, and vulnerabilities. This command takes multiple paths to SBOM files as arguments and generates a comprehensive report comparing them.
+
+#### Usage
+```sh
+nqmvul -compare <absolute/path/to/sbom1> <absolute/path/to/sbom2> <additional SBOM paths...>
+```
+The output will be saved by default to `vulnerability-reports/comparisons/comparison-result.txt`
+
+If you want to specify a different file name to be saved, please use the following format:
+
+```sh
+nqmvul -compare "[<absolute/path/to/sbom-1.json> <absolute/path/to/sbom-2.json> <additional SBOM paths...>]" filename
+```
+#### Output:
+The output is structured in three sections:
+
+* `Components Comparison`: Displays which components are present or missing across the SBOMs.
+* `Version Information`: Shows the version information of the components found in the SBOMs.
+* `Vulnerabilities`: Lists the vulnerabilities associated with the components in each SBOM, detailing the CVEs.
 
 # Testing
 

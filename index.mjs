@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-case-declarations */
 /* eslint-disable no-console */
 import path from 'node:path';
 import { fileURLToPath } from 'url';
@@ -27,6 +28,7 @@ import { classifyCwe } from './src/classify_cwe.mjs';
 import { mapCpeCveCwe } from './src/show-cpe-history.mjs';
 import { genGrypeReport, addCpeToSbom, getCpeVendor } from './src/utils.mjs';
 import { generateBinwalkReport } from './src/binwalk-scan.mjs';
+import { compareSBOMs, printComparisonResult } from './src/compare-sboms.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -65,6 +67,7 @@ async function main() {
     -generateDockerSbom     Image name and a project name, e.g. nginx:latest nginx
     -addCpe                 Path to SBOM.json file and CPE 2.3 format, e.g. path/to/sbom.json "cpe:2.3:a:postgresql:postgresql:9.6.2:*:*:*:*:*:*:*"
     -binwalk                Current path(use "$(pwd)" for Linux) -binwalk_command file.bin
+    -compare                Paths to sboms e.g. nqmvul -compare <absolute/path/to/sbom1> <absolute/path/to/sbom2>
     `);
   }
 
@@ -468,7 +471,6 @@ async function main() {
         }
         break;
       case '-binwalk':
-        console.log(args[2]);
         if (args.length === 4) {
           await generateBinwalkReport(args[1], args[2], args[3]);
         } else if (args.length === 3) {
@@ -482,6 +484,44 @@ async function main() {
             For Linux systems, you can use:
             nqmvul -binwalk "$(pwd)" "[-binwalk_command]" file.bin
             `);
+        }
+        break;
+      case '-compare':
+        let sbomPaths;
+        let fileName;
+        const bracketsPattern = /\[.*?\]/;
+        const joinedArgs = args.slice(1).join(' ');
+        const bracketMatch = joinedArgs.match(bracketsPattern);
+
+        if (bracketMatch) {
+          const pathsStr = bracketMatch[0].slice(1, -1).trim();
+          sbomPaths = pathsStr.split(/\s+/);
+
+          const remainingArgs = joinedArgs
+            .split(bracketMatch[0])
+            .map((arg) => arg.trim())
+            .filter(Boolean);
+          fileName = remainingArgs.length
+            ? remainingArgs[0]
+            : 'comparison-result';
+        } else {
+          sbomPaths = args.slice(1, args.length);
+          fileName = 'comparison-result';
+        }
+
+        if (sbomPaths.length < 2) {
+          console.log(`
+          Invalid command usage. Please follow these examples:
+          
+          With custom filename:
+          nqmvul -compare "[</absolute/path/to/sbom1> </absolute/path/to/sbom2> <additional SBOM paths...>]" custom-filename
+          
+          Without custom filename (uses default 'comparison-result.txt'):
+          nqmvul -compare </absolute/path/to/sbom1> </absolute/path/to/sbom2> <additional SBOM paths...>
+          `);
+        } else {
+          const comparisonResult = await compareSBOMs(sbomPaths);
+          await printComparisonResult(comparisonResult, sbomPaths, fileName);
         }
         break;
       default:
