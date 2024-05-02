@@ -495,10 +495,15 @@ The `-compare` command compares components, versions, and vulnerabilities across
 
 #### Usage
 ```sh
-nqmvul -compare <absolute/path/to/sbom1> <absolute/path/to/sbom2> [additional SBOM paths...]
+nqmvul -compare <absolute/path/to/sbom1> <absolute/path/to/sbom2> <additional SBOM paths...>
 ```
-The output will be saved by default to `vulnerability-reports/comparisons/result.txt`
+The output will be saved by default to `vulnerability-reports/comparisons/comparison-result.txt`
 
+If you want to specify a different file name to be saved, please use the following format:
+
+```sh
+nqmvul -compare "[<absolute/path/to/sbom-1.json> <absolute/path/to/sbom-2.json> <additional SBOM paths...>]" filename
+```
 #### Output:
 The output is structured in three sections:
 
