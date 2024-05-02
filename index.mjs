@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-case-declarations */
 /* eslint-disable no-console */
 import path from 'node:path';
 import { fileURLToPath } from 'url';
@@ -486,13 +487,41 @@ async function main() {
         }
         break;
       case '-compare':
-        // TODO: ADD possibility to chose file name
-        if (args.length > 2) {
-          const sbomPaths = args.slice(1);
-          const comparisonResult = await compareSBOMs(sbomPaths);
-          await printComparisonResult(comparisonResult, sbomPaths);
+        let sbomPaths;
+        let fileName;
+        const bracketsPattern = /\[.*?\]/;
+        const joinedArgs = args.slice(1).join(' ');
+        const bracketMatch = joinedArgs.match(bracketsPattern);
+
+        if (bracketMatch) {
+          const pathsStr = bracketMatch[0].slice(1, -1).trim();
+          sbomPaths = pathsStr.split(/\s+/);
+
+          const remainingArgs = joinedArgs
+            .split(bracketMatch[0])
+            .map((arg) => arg.trim())
+            .filter(Boolean);
+          fileName = remainingArgs.length
+            ? remainingArgs[0]
+            : 'comparison-result';
         } else {
-          console.log('Please provide at least two SBOM path.');
+          sbomPaths = args.slice(1, args.length);
+          fileName = 'comparison-result';
+        }
+
+        if (sbomPaths.length < 2) {
+          console.log(`
+          Invalid command usage. Please follow these examples:
+          
+          With custom filename:
+          nqmvul -compare "[</absolute/path/to/sbom1> </absolute/path/to/sbom2> <additional SBOM paths...>]" custom-filename
+          
+          Without custom filename (uses default 'comparison-result.txt'):
+          nqmvul -compare </absolute/path/to/sbom1> </absolute/path/to/sbom2> <additional SBOM paths...>
+          `);
+        } else {
+          const comparisonResult = await compareSBOMs(sbomPaths);
+          await printComparisonResult(comparisonResult, sbomPaths, fileName);
         }
         break;
       default:

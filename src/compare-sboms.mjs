@@ -59,7 +59,6 @@ export async function printComparisonResult(
     fileSaveName = 'result';
   }
 
-  // TODO: ADD possibility to chose file name
   const outputDir = path.join(
     __dirname,
     '../vulnerability-reports/comparisons',
