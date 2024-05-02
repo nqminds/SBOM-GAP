@@ -275,6 +275,12 @@ nqmvul -getCpes /sbom-cli/vulnerability-reports/sboms/cyber_sbom.json
   'cpe:2.3:a:@babel/core:@babel/core:7.23.3:*:*:*:*:*:*:*',
 ]
 ```
+To save the cpe to a file use:
+
+```sh
+nqmvul -getCpes <absolute_path_to_sbom.json> <filename>
+```
+
 ### listCpeDetails
 
 The `-listCpeDetails` flag will parse an SBOM and return detailed information about each CPE, such as CVEs and CWEs
