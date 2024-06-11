@@ -48,7 +48,10 @@ const config = {
       },
     ]
   ],
-
+  themes: ['@docusaurus/theme-mermaid'],
+  markdown: {
+    mermaid: true,
+  },
   plugins: [
     [
       'docusaurus-lunr-search', {},
@@ -59,7 +62,6 @@ const config = {
         id: "app",
         path: "./docs/working-docs/app",
         routeBasePath: "app",
-        remarkPlugins: [require('remark-mermaid-dataurl')],
         editUrl,
       },
     ],
@@ -69,7 +71,6 @@ const config = {
         id: "cli",
         path: "./docs/working-docs/cli",
         routeBasePath: "cli",
-        remarkPlugins: [require('remark-mermaid-dataurl')],
         editUrl,
       },
     ],
@@ -79,7 +80,6 @@ const config = {
         id: "schemas",
         path: "./docs/schemas",
         routeBasePath: "schemas",
-        remarkPlugins: [require('remark-mermaid-dataurl')],
       },
     ],
   ],
