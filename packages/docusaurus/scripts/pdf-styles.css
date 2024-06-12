@@ -1,0 +1,46 @@
+body {
+  font-family: Arial, sans-serif !important;
+  box-shadow: none !important;
+}
+
+p , li {
+  font-family: Arial, sans-serif !important;
+  text-align: justify;
+  font-size: 11px;
+};
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Arial, sans-serif !important;
+}
+
+.table-wrappe {
+  width: 100%;
+  overflow: hidden; /* Prevent overflow */
+  page-break-inside: avoid; /* Avoid page break inside the table */
+  position: relative; /* Positioning for the rotated table */
+  top: 0; /* Reset top positioning */
+  left: 0; /* Reset left positioning */
+  transform: rotate(-90deg); /* Rotate the table */
+  transform-origin: top left; /* Set the rotation origin */
+}
+.table-wrapper table {
+  width: auto; /* Make the table take full width of the container */
+  font-size: 8px; /* Reduce font size to fit more content */
+  table-layout: fixed; /* Ensure table layout is fixed */
+  border-collapse: collapse; /* Collapse borders for better layout */
+  border-spacing: 0; /* No spacing between cells */
+}
+.table-wrapper th, .table-wrapper td {
+  padding: 4px; /* Adjust padding to fit more content */
+  word-wrap: break-word; /* Ensure long words break to fit within cells */
+}
+
+code {
+  width: 100%;
+  position: relative;
+}
+
+svg[role="graphics-document document"] {
+  border: 1px solid black; /* Add a border */
+  background-color: lightgray; /* Set a background color */
+}

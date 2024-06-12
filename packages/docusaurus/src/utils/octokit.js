@@ -9,6 +9,10 @@ class OctokitTools {
     const {siteConfig: {customFields}} = useDocusaurusContext();
     const octokitToken = customFields.octokitToken;
 
+    if(!octokitToken){
+      throw new Error("No Token found")
+    }
+
     this.owner = config.GITHUB_OWNER;
     this.repo = config.GITHUB_REPO;
         
