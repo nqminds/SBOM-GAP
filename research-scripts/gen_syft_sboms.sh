@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SOURCE_DIR="/home/ionut/Repositories/Sbom_cli/TEST_SCANNERS/source_code/OS_source-code/code/OSs"
-DEST_DIR="/home/ionut/Repositories/Sbom_cli/TEST_SCANNERS/source_code/OS_source-code/sboms/OSs_sboms/trivy_sboms"
+DEST_DIR="/home/ionut/Repositories/Sbom_cli/TEST_SCANNERS/source_code/OS_source-code/sboms/OSs_sboms/syft_sboms"
 
 mkdir -p "$DEST_DIR"
 
@@ -12,7 +12,8 @@ for dir in "$SOURCE_DIR"/*; do
         output_file="$DEST_DIR/${dir_name}_sbom.cyclonedx.json"
         
         echo "Generating SBOM in CycloneDX format for $dir..."
-        trivy fs --format cyclonedx --output "$output_file" "$dir"
+        
+        syft "$dir" -o cyclonedx-json > "$output_file"
         
         if [ $? -eq 0 ]; then
             echo "SBOM saved to $output_file"

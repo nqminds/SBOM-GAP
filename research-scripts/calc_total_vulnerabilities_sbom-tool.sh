@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SBOM_DIR="/home/ionut/Repositories/Sbom_cli/TEST_SCANNERS/dlink/dlink-397-101/sbom-tool_sboms"
-OUTPUT_FILE="sbom_tool_vulnerability_summary.txt"
+SBOM_DIR="/home/ionut/Repositories/Sbom_cli/TEST_SCANNERS/source_code/OS_source-code/sboms/OSs_sboms/sbom-tool_sboms"
+OUTPUT_FILE="sbom_tool_vulnerability_summary_OSs_sourcecode.txt"
 
 echo "Vulnerability Scan Summary" > "$OUTPUT_FILE"
 echo "--------------------------" >> "$OUTPUT_FILE"

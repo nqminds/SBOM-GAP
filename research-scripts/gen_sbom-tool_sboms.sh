@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SOURCE_DIR="/home/ionut/Repositories/Sbom_cli/TEST_SCANNERS/dlink/dlink-397-101/extracted_images"
-DEST_DIR="/home/ionut/Repositories/Sbom_cli/TEST_SCANNERS/dlink/dlink-397-101/sbom-tool_sboms/test"
+SOURCE_DIR="/home/ionut/Repositories/Sbom_cli/TEST_SCANNERS/source_code/OS_source-code/code/OSs"
+DEST_DIR="/home/ionut/Repositories/Sbom_cli/TEST_SCANNERS/source_code/OS_source-code/sboms/OSs_sboms/sbom-tool_sboms"
 
 mkdir -p "$DEST_DIR"
 

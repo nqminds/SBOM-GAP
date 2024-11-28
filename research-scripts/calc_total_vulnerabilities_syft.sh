@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Directory containing SBOM files
-SBOM_DIR="/home/ionut/Repositories/Sbom_cli/TEST_SCANNERS/dlink/dlink-397-101/trivy_sboms"  # Update this path
-OUTPUT_FILE="trivy_vulnerability_summary.txt"
+SBOM_DIR="/home/ionut/Repositories/Sbom_cli/TEST_SCANNERS/source_code/OS_source-code/sboms/OSs_sboms/syft_sboms"  # Update this path
+OUTPUT_FILE="syft_vulnerability_summary_OSs_source-code.txt"
 
 # Ensure the output file is empty before starting
 echo "Vulnerability Scan Summary" > "$OUTPUT_FILE"
