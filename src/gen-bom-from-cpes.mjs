@@ -114,7 +114,11 @@ function createCycloneDxSBOMJson(cpeMapping) {
  * @param {string} projectName - name of your project
  * @param {string} bomFormat - json or xml
  */
-export async function generateDummySBOM(projectName, bomFormat) {
+export async function generateDummySBOM(
+  projectName,
+  bomFormat,
+  outputDir = null,
+) {
   let cycloneDxSBOM;
   const dirPath = path.resolve(__dirname, '../vulnerability-reports/sboms');
   let sbomFilePath = path.resolve(
@@ -144,9 +148,11 @@ export async function generateDummySBOM(projectName, bomFormat) {
         `../vulnerability-reports/sboms/${projectName}_sbom.json`,
       );
     }
-
+    const sbomDirectory = outputDir
+      ? path.resolve(outputDir, `${projectName}_sbom.json`)
+      : sbomFilePath;
     fs.mkdirSync(dirPath, { recursive: true }); // create directory if dosen't exist
-    fs.writeFileSync(sbomFilePath, cycloneDxSBOM);
+    fs.writeFileSync(sbomDirectory, cycloneDxSBOM);
   } catch (error) {
     throw new Error(
       `Error trying writing CycloneDX SBOM file: ${error.message}`,

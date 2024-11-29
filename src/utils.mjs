@@ -181,7 +181,11 @@ export function getApiKey(name) {
  * @param {string} sbomFilePath - Path to sbom file
  * @param {string} projectName - Project name
  */
-export async function genGrypeReport(sbomFilePath, projectName) {
+export async function genGrypeReport(
+  sbomFilePath,
+  projectName,
+  outputDir = null,
+) {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
   const reportDirectory = path.resolve(
@@ -204,9 +208,9 @@ export async function genGrypeReport(sbomFilePath, projectName) {
       'run',
       '--rm',
       '-v',
-      `${path.dirname(sbomFilePath)}:/vulnerability-reports`, // Mount the directory containing the SBOM file
+      `${path.dirname(sbomFilePath)}:/vulnerability-reports`,
       'anchore/grype',
-      `/vulnerability-reports/${path.basename(sbomFilePath)}`, // Reference the SBOM file by its name inside the container
+      `/vulnerability-reports/${path.basename(sbomFilePath)}`,
       '-o',
       'table',
     ];
@@ -216,10 +220,13 @@ export async function genGrypeReport(sbomFilePath, projectName) {
       maxBuffer: 1024 * 5000,
     });
 
-    fs.writeFileSync(vulnerabilityReportFile, tableOutput);
+    const sbomDirectory = outputDir
+      ? path.resolve(outputDir, `${projectName}`)
+      : vulnerabilityReportFile;
+    fs.writeFileSync(sbomDirectory, tableOutput);
 
     console.log(tableOutput);
-    console.log(`Vulnerability report saved to: ${vulnerabilityReportFile}`);
+    console.log(`Vulnerability report saved to: ${sbomDirectory}`);
   } catch (error) {
     throw new Error(
       `Error generating vulnerability report for: ${vulnerabilityReportFile}, ${error}`,
