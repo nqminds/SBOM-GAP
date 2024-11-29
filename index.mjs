@@ -54,7 +54,7 @@ async function main() {
     -getHistoricalCves      Supported CVE format: "CVE-2022-48174"
     -getCweInfo             CWE. If multiple CWEs, separate by commas without white space. e.g. 'CWE-476,CWE-681'
     -listVulnerabilities    Absolute path to grype vulnerability report file
-    -generateSbom           Absolute path to project and a project name
+    -generateSbom           Absolute path to project and a project name, optional --out path/to/output/dir
     -generateConan          Project Name. Please ensure the dependencies exist for /vulnerability-reports/ccsDependencies/<project_name>_dependencies
     -genDependencies        Absolute path to cppDierectory and projectName
     -mapCpes                Project Name. Please ensure that vulnerability-reports/conan-files/<project_name>/conanfile.txt exists
@@ -177,7 +177,12 @@ async function main() {
         break;
       case '-generateSbom':
         if (args[2]) {
-          await generateVulnerabilityReport(args[1], args[2]);
+          const outFlagIndex = args.indexOf('--out');
+          const outputDir =
+            outFlagIndex !== -1 && args[outFlagIndex + 1]
+              ? args[outFlagIndex + 1]
+              : null;
+          await generateVulnerabilityReport(args[1], args[2], outputDir);
         } else {
           console.log(
             'Please ensure the path is correct and provide project name e.g: -generateSbom <project_path> <project_name>',
