@@ -54,7 +54,7 @@ async function main() {
     -getHistoricalCves      Supported CVE format: "CVE-2022-48174"
     -getCweInfo             CWE. If multiple CWEs, separate by commas without white space. e.g. 'CWE-476,CWE-681'
     -listVulnerabilities    Absolute path to grype vulnerability report file
-    -generateSbom           Absolute path to project and a project name, optional --out path/to/output/dir
+    -generateSbom           Absolute path to project and a project name, optional --out absolute/path/to/output/dir
     -generateConan          Project Name. Please ensure the dependencies exist for /vulnerability-reports/ccsDependencies/<project_name>_dependencies
     -genDependencies        Absolute path to cppDierectory and projectName
     -mapCpes                Project Name. Please ensure that vulnerability-reports/conan-files/<project_name>/conanfile.txt exists
@@ -63,7 +63,7 @@ async function main() {
     -extractGhsas           Absolute path to grype vulnerability report file
     -classifyCwe            CWE Id, e.g. CWE-354
     -getHistory             CPE e.g. cpe:2.3:a:busybox:busybox:1.33.2
-    -generateCCPPReport     Absolute path to project and a project name
+    -generateCCPPReport     Absolute path to project and a project name, optional --out absolute/path/to/output/dir
     -generateDockerSbom     Image name and a project name, e.g. nginx:latest nginx
     -addCpe                 Path to SBOM.json file and CPE 2.3 format, e.g. path/to/sbom.json "cpe:2.3:a:postgresql:postgresql:9.6.2:*:*:*:*:*:*:*"
     -binwalk                Current path(use "$(pwd)" for Linux) -binwalk_command file.bin
@@ -415,6 +415,14 @@ async function main() {
         break;
       case '-generateCCPPReport':
         if (args[2]) {
+          const outFlagIndex = args.indexOf('--out');
+          const outputDir =
+            outFlagIndex !== -1 && args[outFlagIndex + 1]
+              ? args[outFlagIndex + 1]
+              : null;
+          const outputSbom = outputDir
+            ? path.join(outputDir, `${args[2]}_sbom.json`)
+            : null;
           try {
             console.log(
               `Starting full report generation for project ${args[1]}...`,
@@ -440,25 +448,25 @@ async function main() {
 
             // 3. Generate SBOM
             console.log(`Generating SBOM in ${args[2]} format...`);
-            await generateDummySBOM(args[2], 'json');
+            await generateDummySBOM(args[2], 'json', outputDir);
             console.log(
-              `SBOM generation completed. Check vulnerability-reports/sboms/${args[2]}_sbom.json for the SBOM.`,
+              `SBOM generation completed. Check ${outputDir}/${args[2]}_sbom.json for the SBOM.`,
             );
 
             console.log(
               `Full report generation for project ${args[2]} completed successfully.`,
             );
 
-            const sbomPath = path.join(
-              __dirname,
-              `vulnerability-reports/sboms/${args[2]}_sbom.json`,
-            );
-            console.log(sbomPath);
-
+            const sbomPath =
+              outputSbom ||
+              path.join(
+                __dirname,
+                `vulnerability-reports/sboms/${args[2]}_sbom.json`,
+              );
             console.log(
               `Generating Vulnerability report for ${args[2]}_sbom.json`,
             );
-            await genGrypeReport(sbomPath, args[2]);
+            await genGrypeReport(sbomPath, args[2], outputDir);
           } catch (error) {
             console.error(
               `Error encountered during full report generation for project ${args[2]}: ${error}`,
