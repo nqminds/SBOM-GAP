@@ -18,15 +18,28 @@ const __dirname = dirname(__filename);
  * @param {string} directoryPath - Path to the directory.
  * @param {string} fileName - Name of the output JSON file for the SBOM.
  */
-export function generateVulnerabilityReport(directoryPath, fileName) {
-  const sbomDirectory = path.resolve(
+export function generateVulnerabilityReport(
+  directoryPath,
+  fileName,
+  outputDir = null,
+) {
+  const defaultSbomDirectory = path.resolve(
     __dirname,
     '../vulnerability-reports/sboms',
   );
-  const reportDirectory = path.resolve(
+  const defaultReportDirectory = path.resolve(
     __dirname,
     '../vulnerability-reports/reports',
   );
+
+  // Use the provided output directory or default directories
+  const sbomDirectory = outputDir
+    ? path.resolve(outputDir)
+    : defaultSbomDirectory;
+  const reportDirectory = outputDir
+    ? path.resolve(outputDir)
+    : defaultReportDirectory;
+
   const sbomFile = path.join(sbomDirectory, `${fileName}.json`);
   const vulnerabilityReportFile = path.join(
     reportDirectory,
