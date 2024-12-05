@@ -1,0 +1,6 @@
+{
+    "cpeBaseUrl": "https://services.nvd.nist.gov/rest/json/cpes/2.0?",
+    "cveHistUrl": "https://services.nvd.nist.gov/rest/json/cvehistory/2.0?",
+    "cveBaseUrl": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+    "gitAdvisoryDbPath": "/home/ionut/Repositories/advisory-database/advisories"
+  }
