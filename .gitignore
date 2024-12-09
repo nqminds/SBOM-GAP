@@ -10,3 +10,4 @@ binwalk-reports
 # Schemas DIR
 /packages/schemas/output
 packages/sbom-gap-cli/Sbom-GAP-Firmware-Prediction-Model/notebooks/cve_database.db
+**/data/
