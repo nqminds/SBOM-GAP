@@ -6,26 +6,13 @@ import fs, { promises as fsPromise } from 'fs';
 import axios from 'axios';
 import path from 'node:path';
 import { dirname } from 'path';
-import Bottleneck from 'bottleneck';
 import { cleanCpe } from './get-syft-cpes.mjs';
-import {
-  getApiKey,
-  readOrParseSbom,
-  validateCPE,
-  getVersion,
-  extractCpeName,
-} from './utils.mjs';
-import {
-  initialiseDatabase,
-  insertOrUpdateCPEData,
-  getCPEData,
-} from './database.mjs';
+import { getApiKey, readOrParseSbom, validateCPE } from './utils.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const databaseDir = path.join(__dirname, '../data');
-const databasePath = path.join(databaseDir, 'cached_cpes.db');
 
 // Check if the directory exists, if not, create it
 if (!fs.existsSync(databaseDir)) {
@@ -39,125 +26,91 @@ const config = JSON.parse(configContent);
 const apiKey = getApiKey('nist');
 const baseUrl = config.cveBaseUrl;
 let cveData = {};
-const previousResponses = [];
 const headers = {};
 
 if (apiKey) {
   headers.apiKey = apiKey;
 }
 
-// 30000ms / 50ms = 600ms, 50 requests per 30 second = 1 request per 600ms
-const limiter = new Bottleneck({
-  minTime: 600,
-  maxConcurrent: 1,
-});
-
-function findPropertyRecursively(obj, propertyName) {
-  // eslint-disable-next-line no-prototype-builtins
-  if (obj.hasOwnProperty(propertyName)) {
-    return obj[propertyName];
-  }
-
-  for (const key in obj) {
-    if (typeof obj[key] === 'object' && obj[key] !== null) {
-      const found = findPropertyRecursively(obj[key], propertyName);
-      if (found !== undefined) {
-        return found;
-      }
-    }
-  }
-  return undefined;
-}
-
 /**
  *Function to fetch CVEs for a single CPE
  *
  * @param {string} cpeName - The base CPE name eg: cpe:2.3:a:busybox:busybox:0.60.0:*:*:*:*:*:*:*.
- * @param {string} nistApiKey - Nist API Key
+ * @param {string} apiEndpoint - API Endpoint
  * @returns {object[]} - For each CPE returns an array of CVEs. {"cpe": [{CVE}, {CVE} ... ]}
  */
-export async function fetchCVEsForCPE(cpeName, nistApiKey = '') {
-  if (nistApiKey !== '') {
-    headers.apiKey = nistApiKey;
-  }
-
-  let cves;
-  const name = await extractCpeName(cpeName);
-  const version = await getVersion(cpeName);
-  const isValid = await validateCPE(cpeName);
-
-  if (!isValid) {
-    console.error(`CPE ${cpeName} not found in local database.`);
+export async function fetchCVEsForCPE(cpeName, apiEndpoint = baseUrl) {
+  if (!cpeName) {
+    console.error('CPE name is required');
     return null;
   }
-  await initialiseDatabase(databasePath);
-  const formattedUrl = `${baseUrl}?cpeName=${cpeName}`;
+
   try {
-    const existingData = await getCPEData(cpeName, databasePath);
+    const isValid = await validateCPE(cpeName);
+    if (!isValid) {
+      console.error(`Invalid CPE: ${cpeName}`);
+      return null;
+    }
 
-    if (existingData) {
-      cves = JSON.parse(existingData.cves);
-      cveData[cpeName] = cves;
-    } else {
-      const response = await limiter.schedule(() =>
-        axios.get(formattedUrl, { headers }),
-      );
+    const response = await axios.post(apiEndpoint, { cpe: cpeName });
 
-      cves = response.data.vulnerabilities
-        .map((vulnerability) => {
-          const weaknesses = vulnerability.cve.weaknesses?.map(
-            (weakness) =>
-              weakness.description?.find((desc) => desc.lang === 'en')?.value ||
-              'Not Found',
-          );
+    if (response.status === 200 && response.data) {
+      const { data, matches } = response.data;
+
+      if (data && matches) {
+        const cves = data.map((vulnerability) => {
+          let description =
+            vulnerability.cve_data.cve.description?.description_data?.find(
+              (desc) => desc.lang === 'en',
+            )?.value || 'Not Found';
+
+          // Sanitize description to remove excessive newlines
+          description = description.replace(/\n+/g, ' ').trim();
+
+          const weaknesses =
+            vulnerability.cve_data.cve.problemtype?.problemtype_data?.map(
+              (problem) =>
+                problem.description?.find((desc) => desc.lang === 'en')
+                  ?.value || 'Not Found',
+            );
+
           const baseScore =
-            findPropertyRecursively(vulnerability.cve.metrics, 'baseScore') ||
+            vulnerability.cve_data.impact?.baseMetricV3?.cvssV3?.baseScore ||
+            vulnerability.cve_data.impact?.baseMetricV2?.cvssV2?.baseScore ||
             '0';
+
           const baseSeverity =
-            findPropertyRecursively(
-              vulnerability.cve.metrics,
-              'baseSeverity',
-            ) || '0';
+            vulnerability.cve_data.impact?.baseMetricV3?.cvssV3?.baseSeverity ||
+            vulnerability.cve_data.impact?.baseMetricV2?.severity ||
+            'Unknown';
+
           return {
-            id: vulnerability.cve.id,
-            description:
-              vulnerability.cve.descriptions?.find((desc) => desc.lang === 'en')
-                ?.value || 'Not Found',
+            id: vulnerability.cve_id,
+            description,
             weakness: weaknesses,
             baseScore,
             baseSeverity,
           };
-        })
-        .filter((cve) => cve && cve.id && cve.description);
-      await insertOrUpdateCPEData(
-        cpeName,
-        name,
-        version,
-        JSON.stringify(cves),
-        databasePath,
-      );
-      cveData[cpeName] = cves;
-    }
-    previousResponses.push({ cpeName, cves });
-    return cves;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const status = error.response ? error.response.status : 'Unknown';
-      const statusText = error.response ? error.response.statusText : 'Unknown';
-      const errorMessage = `AxiosError: ${status} - ${statusText}`;
+        });
 
-      console.error(`Error for ${cpeName}: ${errorMessage}`);
-
-      if (status === 404) {
-        console.error(`The resource for ${cpeName} was not found.`);
-      } else if (status === 401) {
-        console.error('Unauthorized request. Please check your API key.');
-      } else if (status === 500) {
-        console.error('Server error. Try again later.');
+        return cves;
       }
+      console.warn(`No CVE data returned for CPE: ${cpeName}`);
       return null;
     }
-    console.error(`Unexpected error for ${cpeName}: ${error.message}`);
+    console.error(
+      `Failed to fetch CVEs: ${response.status} - ${response.statusText}`,
+    );
+    return null;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        `Axios error for CPE ${cpeName}:`,
+        error.response?.data || error.message,
+      );
+    } else {
+      console.error(`Unexpected error for CPE ${cpeName}:`, error.message);
+    }
     return null;
   }
 }
