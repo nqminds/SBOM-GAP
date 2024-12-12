@@ -2,17 +2,19 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-console */
 /* eslint-disable prefer-promise-reject-errors */
-
+const dotenv = require('dotenv');
 const { Pool } = require('pg');
-const { performance } = require('perf_hooks');
 
+dotenv.config();
+
+const { DB_USER, DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT } = process.env;
 // PostgreSQL database connection details
 const pool = new Pool({
-  user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  database: process.env.DB_NAME || 'cve_database',
-  password: process.env.DB_PASSWORD || 'ionut',
-  port: process.env.DB_PORT || 5432,
+  user: DB_USER,
+  host: DB_HOST,
+  database: DB_NAME,
+  password: DB_PASSWORD,
+  port: DB_PORT,
 });
 
 /**
@@ -45,37 +47,50 @@ async function getCVEsByCPE(cpe) {
   }
 }
 
-// // Usage example
-// (async () => {
-//   const cpe = 'cpe:2.3:a:solarwinds:serv-u:*:*:*:*:*:*:*:*';
+/**
+ * Extract vendor and product name from a full CPE string.
+ *
+ * @param {string} cpe - The full CPE string in the form: cpe:2.3:a:vendor:product:***.
+ * @returns {string} The base CPE identifier (up to the product name).
+ */
+function extractBaseCPE(cpe) {
+  const parts = cpe.split(':');
+  return parts.slice(0, 5).join(':');
+}
 
-//   try {
-//     const startTime = performance.now(); // Record start time
+/**
+ * Get all known versions of a CPE.
+ *
+ * @param {string} cpe - The input CPE string to match.
+ * @returns {object} An object containing the matches and unique CPEs.
+ */
+async function getCPEVersions(cpe) {
+  try {
+    const baseCPE = extractBaseCPE(cpe);
+    const query = `
+      SELECT DISTINCT cpe_id
+      FROM cve
+      WHERE cpe_id LIKE $1
+    `;
+    const values = [`${baseCPE}%`];
 
-//     const { matches, data } = await getCVEsByCPE(cpe);
+    // Execute the query
+    const { rows } = await pool.query(query, values);
 
-//     const endTime = performance.now(); // Record end time
-//     const timeTaken = (endTime - startTime).toFixed(2); // Calculate time taken in milliseconds
+    if (rows.length === 0) {
+      return { matches: 0, cpes: [] };
+    }
 
-//     console.log(`Query completed in ${timeTaken} ms`);
-//     console.log(`Total matches found: ${matches}`);
+    // Remove duplicates and return
+    const uniqueCPEs = [...new Set(rows)];
 
-//     if (matches === 0) {
-//       console.log('No matching CVEs found for the given CPE.');
-//     } else {
-//       console.log('Matching CVEs:');
-//       data.forEach((result) => {
-//         console.log(result);
-//       });
-//     }
-//   } catch (error) {
-//     console.error('Error:', error);
-//   } finally {
-//     // Close the PostgreSQL pool
-//     await pool.end();
-//   }
-// })();
+    return { matches: uniqueCPEs.length, cpes: uniqueCPEs };
+  } catch (err) {
+    return Promise.reject(`Database query failed: ${err.message}`);
+  }
+}
 
 module.exports = {
   getCVEsByCPE,
+  getCPEVersions,
 };
