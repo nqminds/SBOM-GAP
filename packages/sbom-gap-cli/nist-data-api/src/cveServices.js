@@ -1,53 +1,44 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-console */
-/* eslint-disable prefer-promise-reject-errors */
-const sqlite3 = require('sqlite3').verbose();
+const dotenv = require('dotenv');
+const { Pool } = require('pg');
+
+dotenv.config();
+
+const { DB_USER, DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT } = process.env;
+// PostgreSQL database connection details
+const pool = new Pool({
+  user: DB_USER,
+  host: DB_HOST,
+  database: DB_NAME,
+  password: DB_PASSWORD,
+  port: DB_PORT,
+});
 
 /**
- * Query CVE data by CPE.
- * @param {string} cpe - The CPE string to search for (e.g., cpe:2.3:a:solarwinds:serv-u:*:*:*:*:*:*:*:*).
- * @param {string} dbPath - Path to the SQLite database file.
- * @returns {Promise<object[]>} - A promise that resolves to an array of matching CVEs.
+ * Search the database for a specific CVE ID and return its data.
+ *
+ * @param {string} cveId - The CVE ID to search for (e.g., "CVE-2022-48174").
+ * @returns {object|null} - The CVE data if found, or null if not found.
  */
-function getCVEsByCPE(cpe, dbPath) {
-  return new Promise((resolve, reject) => {
-    const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY, (err) => {
-      if (err) {
-        return reject(`Failed to open database: ${err.message}`);
-      }
-    });
+async function getCVEById(cveId) {
+  try {
+    const query = `
+      SELECT cve_id, cve_data
+      FROM cve
+      WHERE cve_id = $1
+    `;
+    const values = [cveId];
+    const { rows } = await pool.query(query, values);
 
-    const query = 'SELECT * FROM cve WHERE cpe_id LIKE ?';
+    if (rows.length === 0) {
+      return null;
+    }
 
-    db.all(query, [`${cpe}%`], (err, rows) => {
-      db.close();
-
-      if (err) {
-        return reject(`Database query failed: ${err.message}`);
-      }
-
-      if (rows.length === 0) {
-        return resolve([]); // No matches
-      }
-
-      resolve(rows);
-    });
-  });
+    return rows[0];
+  } catch (err) {
+    throw new Error(`Database query failed: ${err.message}`);
+  }
 }
 
-// Usage example
-(async () => {
-  const cpe = 'cpe:2.3:a:busybox:busybox:1.33.2:*:*:*:*:*:*:*';
-  const dbPath = '../data/cve_database.db';
-
-  try {
-    const results = await getCVEsByCPE(cpe, dbPath);
-    if (results.length === 0) {
-      console.log('No matching CVEs found for the given CPE.');
-    } else {
-      console.log('Matching CVEs:', results);
-    }
-  } catch (error) {
-    console.error('Error:', error);
-  }
-})();
+module.exports = {
+  getCVEById,
+};
