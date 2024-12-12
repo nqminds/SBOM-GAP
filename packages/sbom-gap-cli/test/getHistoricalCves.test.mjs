@@ -1,9 +1,10 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { describe, test, expect } from '@jest/globals';
-import { fetchHistoricalCVEs } from '../src/get-historical-cves.mjs';
+import { getCVEinfo } from '../src/get-historical-cves.mjs';
 
 describe('fetchHistoricalCpes', () => {
   test('should return an array of json objects', async () => {
-    const result = await fetchHistoricalCVEs('CVE-2022-0934');
+    const result = await getCVEinfo('CVE-2022-0934');
 
     const isValid = result.every(
       (item) => (
