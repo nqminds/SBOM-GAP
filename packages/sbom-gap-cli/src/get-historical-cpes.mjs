@@ -28,7 +28,7 @@ export async function fetchHistoricalCPEs(cpeName) {
 
     if (response.data && Array.isArray(response.data.cpes)) {
       historicalCPEs = response.data.cpes.map((cpe) => ({
-        cpeName: cpe,
+        cpeName: cpe.cpe_id,
         title: 'N/A',
         lastModified: 'N/A',
         created: 'N/A',
