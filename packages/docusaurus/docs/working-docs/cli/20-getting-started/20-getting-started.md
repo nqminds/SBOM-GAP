@@ -23,11 +23,6 @@ git clone https://github.com/nqminds/SBOM-GAP.git
 
 - vulnerability-reports directory can be downloaded from [here](https://drive.google.com/file/d/1ZV302sOZXYu7JUiM5fVgrMi3lYxGw1VH/view?usp=drive_link). This also contains all the (National Vulnerability Database)[NVD](https://nvd.nist.gov/) CPE/CWE data. (recommended)
 
-### Download the cpe2.3 database
-
-- Cpe2.3 database [link](https://drive.google.com/file/d/12xd1ze7x7QB7GCNTpzyDGp9BOK52OlG7/view?usp=sharing)
-- Unzip this and add it to data/
-
 ### Ensure Node.js and npm are Installed: 
 Verify the installation and versions of Node.js and npm.
 
@@ -112,14 +107,7 @@ If you're using GHSA vulnerability codes, download the Git Advisory Database and
 }
 ```
 
-### Obtain and Configure [NIST API Key](https://nvd.nist.gov/developers/request-an-api-key): 
-For improved performance with NIST API requests, obtain an API key and add it to a .env file in the root directory.
-
-```yaml=
-NIST_API_KEY=your_NIST_api_key
-```
-
-### Include [OpenAI API Key](https://platform.openai.com/api-keys):
+### (Optional) Include [OpenAI API Key](https://platform.openai.com/api-keys):
 For advanced classification of weaknesses, include your OpenAI API key in the .env file.
 
 ```yaml=
