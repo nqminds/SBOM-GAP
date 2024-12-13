@@ -13,7 +13,7 @@ describe('nqmvul -help command', () => {
       expect(stdout).toContain('-getCves');
       expect(stdout).toContain('-writeCves');
       expect(stdout).toContain('-getHistoricalCpes');
-      expect(stdout).toContain('-getHistoricalCves');
+      expect(stdout).toContain('-getCveInfo');
       expect(stdout).toContain('-getCweInfo');
       expect(stdout).toContain('-listVulnerabilities');
       expect(stdout).toContain('-generateSbom');
