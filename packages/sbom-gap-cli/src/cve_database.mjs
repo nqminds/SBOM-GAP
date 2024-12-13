@@ -1,5 +1,37 @@
-import { connectToDatabase, closeDatabase } from './database.mjs';
+import sqlite3 from 'sqlite3';
 
+/**
+ * Connects to sqlite3 database
+ *
+ * @param {string} databasePath - Path to sqlite database.db
+ * @returns {sqlite3.Database} - an instance of a SQLite3 database connection.
+ */
+export function connectToDatabase(databasePath) {
+  return new sqlite3.Database(
+    databasePath,
+    // eslint-disable-next-line no-bitwise
+    sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
+    (err) => {
+      if (err) {
+        throw new Error('Error connecting to the database:', err);
+      }
+    },
+  );
+}
+
+/**
+ * Close a database
+ *
+ *@param {sqlite3.Database} db -  Path to sqlite database.db
+ */
+export function closeDatabase(db) {
+  // Close the database connection
+  db.close((closeErr) => {
+    if (closeErr) {
+      throw new Error('Error closing the database:', closeErr.message);
+    }
+  });
+}
 /**
  * Initialise the database if it doesn't exist
  *
