@@ -11,7 +11,7 @@
 * [-getCves](#getcves)
 * [-writeCves](#writecves)
 * [-getHistoricalCpes](#gethistoricalcpes)
-* [-getHistoricalCves](#gethistoricalcves)
+* [-getCveInfo](#getcveinfo)
 * [-getCweInfo](#getcweinfo)
 * [-listVulnerabilities](#listvunlerabilities)
 * [-generateSbom](#generatesbom)
@@ -40,11 +40,6 @@ git clone https://github.com/nqminds/SBOM-GAP.git
 ### Download the vulnerability-reports folder and place it in SBOM-GAP module:
 
 - vulnerability-reports directory can be downloaded from [here](https://drive.google.com/file/d/1ZV302sOZXYu7JUiM5fVgrMi3lYxGw1VH/view?usp=drive_link). This also contains all the (National Vulnerability Database)[NVD](https://nvd.nist.gov/) CPE/CWE data. (recommended)
-
-### Download the cpe2.3 database
-
-- Cpe2.3 database [link](https://drive.google.com/file/d/12xd1ze7x7QB7GCNTpzyDGp9BOK52OlG7/view?usp=sharing)
-- Unzip this and add it to data/
 
 
 ---
@@ -137,15 +132,7 @@ The above is necessary only for getting information about GHSA vulnerability cod
 
 ---
 
-### For speeding NIST API requests an API key cen be obtained from [here](https://nvd.nist.gov/developers/request-an-api-key). Please create a .env file in the root directory and add the key as:
-
-```yaml
-NIST_API_KEY=your_NIST_api_key
-```
-
----
-
-### To improve the classification of weaknesses, include an OpenAi API key to the global .env. An API key can be obtain from [here](https://platform.openai.com/api-keys):
+### (Optional) To improve the classification of weaknesses, include an OpenAi API key to the global .env. An API key can be obtain from [here](https://platform.openai.com/api-keys):
 
 ```yaml
 OPENAI_API_KEY=your_OpenAi_api_key
@@ -295,9 +282,9 @@ nqmvul -getHistoricalCpes <CPE>
 
 <br>
 
-## getHistoricalCves
+## getCveInfo
 
-* The `-getHistoricalCves` flag will return all known versions of the input CVE. Supported CVE format: `CVE-2022-48174`
+* The `-getCveInfo` flag will return information such as description, base score etc for a named CVE. Supported CVE format: `CVE-2022-48174`
 
 ```sh
 nqmvul -getHistoricalCves <CVE>
