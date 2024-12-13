@@ -146,7 +146,7 @@ async function main() {
         break;
       case '-getCveInfo':
         if (args[1]) {
-          console.log('Fetching historical CVEs from API');
+          console.log('Fetching CVE Info from API');
           const histCVEs = await getCVEinfo(args[1]);
           console.log(histCVEs);
         } else {
