@@ -10,8 +10,6 @@ import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { execFileSync } from 'child_process';
 import semver from 'semver';
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
 
 /**
  * Mapps dependencies to cpes
@@ -359,65 +357,6 @@ export async function addCpeToSbom(sbomFilePath, cpe) {
     throw new Error(`Error processing the SBOM file: ${error.message}`);
   }
   await genGrypeReport(sbomFilePath, fileName);
-}
-
-/**
- * Normalizes a CPE name to a structured object.
- *
- * @param {string} cpeName - The CPE name.
- * @returns {object} - Structured CPE object.
- */
-function normalizeCPE(cpeName) {
-  const parts = cpeName.split(':');
-  return {
-    vendor: parts[3] || '',
-    product: parts[4] || '',
-    version: parts[5] || '',
-  };
-}
-
-/**
- * Opens a connection to the SQLite database.
- */
-async function openDb() {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = dirname(__filename);
-  return open({
-    filename: path.resolve(__dirname, '../data/cpe_2_3.db'),
-    driver: sqlite3.Database,
-  });
-}
-
-/**
- * Validates a given CPE against the CPEs listed in the SQLite database.
- *
- * @param {string} cpeToValidate - The CPE to validate.
- * @returns {Promise<boolean>} - A promise that resolves to true if the CPE exists in the database, false otherwise.
- */
-export async function validateCPE(cpeToValidate) {
-  const db = await openDb();
-  const normalizedCPEToValidate = normalizeCPE(cpeToValidate);
-
-  try {
-    const query = `
-      SELECT COUNT(*) AS count
-      FROM cpe_names
-      WHERE cpe_name LIKE ?
-    `;
-    const wildcardSearch = `%:${normalizedCPEToValidate.vendor}:${normalizedCPEToValidate.product}:%`;
-
-    const result = await db.get(query, wildcardSearch);
-
-    if (result.count > 0) {
-      return true;
-    }
-    return false;
-  } catch (error) {
-    console.error('Error querying the SQLite database:', error);
-    throw error;
-  } finally {
-    await db.close();
-  }
 }
 
 /**

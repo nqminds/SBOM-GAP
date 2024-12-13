@@ -7,7 +7,7 @@ import axios from 'axios';
 import path from 'node:path';
 import { dirname } from 'path';
 import { cleanCpe } from './get-syft-cpes.mjs';
-import { getApiKey, readOrParseSbom, validateCPE } from './utils.mjs';
+import { readOrParseSbom } from './utils.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,14 +23,8 @@ const configContent = await fsPromise.readFile(
   path.join(__dirname, '../config/config.json'),
 );
 const config = JSON.parse(configContent);
-const apiKey = getApiKey('nist');
 const baseUrl = config.cveBaseUrl;
 let cveData = {};
-const headers = {};
-
-if (apiKey) {
-  headers.apiKey = apiKey;
-}
 
 /**
  *Function to fetch CVEs for a single CPE
@@ -46,12 +40,6 @@ export async function fetchCVEsForCPE(cpeName, apiEndpoint = baseUrl) {
   }
 
   try {
-    const isValid = await validateCPE(cpeName);
-    if (!isValid) {
-      console.error(`Invalid CPE: ${cpeName}`);
-      return null;
-    }
-
     const response = await axios.post(apiEndpoint, { cpe: cpeName });
 
     if (response.status === 200 && response.data) {
@@ -132,7 +120,7 @@ export async function fetchCVEsWithRateLimit(sbomPath) {
         return null; // Skip if CPE is not defined or is empty
       }
       const cpeName = await cleanCpe(component.cpe);
-      const fetchedCves = await fetchCVEsForCPE(cpeName, apiKey);
+      const fetchedCves = await fetchCVEsForCPE(cpeName);
       if (fetchedCves) {
         cveData[cpeName] = fetchedCves;
       }
