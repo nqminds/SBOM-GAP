@@ -24,18 +24,18 @@ BASE_DIR = "../data/CVEs"
 
 # === CODE BLOCK 1: Download and Extract CVE Data ===
 def download_and_extract_cve_data(start_year=2002, end_year=2024, base_url="https://nvd.nist.gov/feeds/json/cve/1.1/"):
-    # List of extra links that don't match the yearly structure
+    # List of additional links in .gz format
     extra_links = [
-        {"name": "recent", "url": f"{base_url}nvdcve-1.1-recent.json.zip"},
-        {"name": "modified", "url": f"{base_url}nvdcve-1.1-modified.json.zip"}
+        {"name": "recent", "url": f"{base_url}nvdcve-1.1-recent.json.gz"},
+        {"name": "modified", "url": f"{base_url}nvdcve-1.1-modified.json.gz"}
     ]
 
     # Process yearly CVE files
     for year in range(start_year, end_year + 1):
+        url = f"{base_url}nvdcve-1.1-{year}.json.gz"
         folder_name = f"../data/CVEs/{str(year)}"
         file_name = f"nvdcve-1.1-{year}.json.gz"
         output_json = f"nvdcve-1.1-{year}.json"
-        url = f"{base_url}nvdcve-1.1-{year}.json.gz"
 
         if not os.path.exists(folder_name):
             os.makedirs(folder_name)
@@ -44,7 +44,6 @@ def download_and_extract_cve_data(start_year=2002, end_year=2024, base_url="http
         print(f"Downloading {file_name}...")
         response = requests.get(url, stream=True)
         gz_path = os.path.join(folder_name, file_name)
-
         with open(gz_path, 'wb') as gz_file:
             gz_file.write(response.content)
         
@@ -59,28 +58,29 @@ def download_and_extract_cve_data(start_year=2002, end_year=2024, base_url="http
 
     # Process the extra links
     for link in extra_links:
-        folder_name = f"../data/CVEs/{link['name']}"
-        file_name = f"nvdcve-1.1-{link['name']}.json.zip"
-        output_json = f"nvdcve-1.1-{link['name']}.json"
+        name = link["name"]
         url = link["url"]
+        folder_name = "../data/CVEs/extra"
+        file_name = f"nvdcve-1.1-{name}.json.gz"
+        output_json = f"nvdcve-1.1-{name}.json"
 
 
         if not os.path.exists(folder_name):
             os.makedirs(folder_name)
-        
-        # Download the file
+
+        # Download and extract
         print(f"Downloading {file_name}...")
         response = requests.get(url, stream=True)
-        zip_path = os.path.join(folder_name, file_name)
+        gz_path = os.path.join(folder_name, file_name)
+        with open(gz_path, 'wb') as gz_file:
+            gz_file.write(response.content)
 
-        with open(zip_path, 'wb') as zip_file:
-            zip_file.write(response.content)
-        
-        # Extract the .zip file
         print(f"Extracting {file_name}...")
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(folder_name)
-        
+        json_path = os.path.join(folder_name, output_json)
+        with gzip.open(gz_path, 'rb') as f_in:
+            with open(json_path, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+
         print(f"Extracted {output_json} to folder {folder_name}.\n")
 
     print("Download and extraction completed.")
