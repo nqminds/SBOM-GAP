@@ -162,33 +162,62 @@ def update_database():
             return Version(version_str)
         except InvalidVersion:
             return None
+        
+    def is_version_in_range(version, start_including=None, end_excluding=None):
+        """Check if a version is within a given range."""
+        version_obj = parse_version(version)
+        if not version_obj:
+            return False
+
+        if start_including:
+            start_version = parse_version(start_including)
+            if start_version and version_obj < start_version:
+                return False
+        if end_excluding:
+            end_version = parse_version(end_excluding)
+            if end_version and version_obj >= end_version:
+                return False
+        return True
 
     def process_json_for_version_ranges(file_path):
+        """Identify CVEs with version ranges and update the PostgreSQL database."""
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
+
         for item in data.get("CVE_Items", []):
             cve_id = item.get("cve", {}).get("CVE_data_meta", {}).get("ID", "Unknown")
-            full_cve_data = json.dumps(item)
+            full_cve_data = json.dumps(item)  # Store the full CVE object
+
             configurations = item.get("configurations", {}).get("nodes", [])
             for node in configurations:
                 for cpe in node.get("cpe_match", []):
                     cpe_uri = cpe.get("cpe23Uri")
                     version_start = cpe.get("versionStartIncluding")
                     version_end = cpe.get("versionEndExcluding")
+
                     if cpe_uri and (version_start or version_end):
+                        # Extract the base CPE name
                         base_cpe = ":".join(cpe_uri.split(":")[:5])
+
+                        # Query the database for all matching CPEs
                         cursor.execute("SELECT cpe_id FROM cpe WHERE cpe_id LIKE %s", (f"{base_cpe}%",))
                         matching_cpes = cursor.fetchall()
+
                         for matching_cpe_row in matching_cpes:
                             matching_cpe = matching_cpe_row[0]
-                            version = matching_cpe.split(":")[5]
-                            if parse_version(version):
-                                cursor.execute("""
-                                INSERT INTO cve (cpe_id, cve_id, cve_data)
-                                VALUES (%s, %s, %s)
-                                ON CONFLICT DO NOTHING
-                                """, (matching_cpe, cve_id, full_cve_data))
+                            # Extract the version from the matching CPE
+                            cpe_parts = matching_cpe.split(":")
+                            if len(cpe_parts) > 5:  # Ensure version exists
+                                version = cpe_parts[5]
+                                if is_version_in_range(version, version_start, version_end):
+                                    # Add the CVE to the database for this CPE
+                                    cursor.execute("""
+                                    INSERT INTO cve (cpe_id, cve_id, cve_data)
+                                    VALUES (%s, %s, %s)
+                                    ON CONFLICT (cpe_id, cve_id) DO NOTHING
+                                    """, (matching_cpe, cve_id, full_cve_data))
         conn.commit()
+
 
     for root, _, files in os.walk(BASE_DIR):
         for file in files:
