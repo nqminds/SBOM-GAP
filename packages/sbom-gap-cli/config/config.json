@@ -1,6 +1,6 @@
 {
-    "cpeBaseUrl": "http://localhost:3000/api/cpe-versions",
-    "cveHistUrl": "http://localhost:3000/api/cve-id",
-    "cveBaseUrl": "http://localhost:3000/api/cve",
+    "cpeBaseUrl": "http://localhost:3003/api/cpe-versions",
+    "cveHistUrl": "http://localhost:3003/api/cve-id",
+    "cveBaseUrl": "http://localhost:3003/api/cve",
     "gitAdvisoryDbPath": "/home/ionut/Repositories/advisory-database/advisories"
   }
