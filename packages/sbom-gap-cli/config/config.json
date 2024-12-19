@@ -1,6 +1,0 @@
-{
-    "cpeBaseUrl": "http://192.168.1.111:3003/api/cpe-versions",
-    "cveHistUrl": "http://192.168.1.111:3003/api/cve-id",
-    "cveBaseUrl": "http://192.168.1.111:3003/api/cve",
-    "gitAdvisoryDbPath": "/home/ionut/Repositories/advisory-database/advisories"
-  }
