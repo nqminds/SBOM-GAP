@@ -155,6 +155,12 @@ pm2 startup
 
 ## Testing the API
 
+Run tests
+
+```bash
+npm test -- --detectOpenHandles
+```
+
 Use the following curl commands to test each endpoint:
 
 * Fetch CVEs by CPE:
