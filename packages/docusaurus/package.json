@@ -38,6 +38,7 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.3.2",
     "@docusaurus/types": "3.0.1",
+    "@nqminds/verifiable-schemas-toolchain": "^2.1.0-alpha.2",
     "docs-to-pdf": "^0.6.2",
     "dotenv": "^16.4.5"
   },
