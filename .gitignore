@@ -12,4 +12,4 @@ binwalk-reports
 packages/sbom-gap-cli/Sbom-GAP-Firmware-Prediction-Model/notebooks/cve_database.db
 **/data/
 
-**/config/*
+packages/sbom-gap-cli/config/*
