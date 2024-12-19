@@ -7,7 +7,7 @@ describe('fetchCVEsWithRateLimit', () => {
       bomFormat: 'CycloneDX',
       components: [
         {
-          cpe: 'cpe:/a:busybox:busybox:1.33.2',
+          cpe: 'cpe:2.3:a:busybox:busybox:1.33.2',
           group: '',
           licenses: [
             {
@@ -24,7 +24,7 @@ describe('fetchCVEsWithRateLimit', () => {
           version: '1.33.2',
         },
         {
-          cpe: 'cpe:/a:thekelleys:dnsmasq:2.85',
+          cpe: 'cpe:2.3:a:thekelleys:dnsmasq:0.4:*:*:*:*:*:*:*',
           group: '',
           licenses: [
             {

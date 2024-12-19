@@ -12,7 +12,7 @@ import {
   writeCvesToFile,
 } from './src/list-vulnerabilities.mjs';
 import { fetchHistoricalCPEs } from './src/get-historical-cpes.mjs';
-import { fetchHistoricalCVEs } from './src/get-historical-cves.mjs';
+import { getCVEinfo } from './src/get-historical-cves.mjs';
 import { getCweInfo } from './src/get-CWEs-info.mjs';
 import { getVulnerabilities } from './src/get-grype-vulnerabilities.mjs';
 import {
@@ -51,7 +51,7 @@ async function main() {
     -getCves                CPE2.3 format e.g. "cpe:2.3:a:busybox:busybox:1.33.2"
     -writeCves              Path to SBOM.json file, absolute path to required output directory
     -getHistoricalCpes      CPE2.3 format e.g. "cpe:2.3:a:busybox:busybox:1.33.2"
-    -getHistoricalCves      Supported CVE format: "CVE-2022-48174"
+    -getCveInfo             Supported CVE format: "CVE-2022-48174"
     -getCweInfo             CWE. If multiple CWEs, separate by commas without white space. e.g. 'CWE-476,CWE-681'
     -listVulnerabilities    Absolute path to grype vulnerability report file
     -generateSbom           Absolute path to project and a project name, optional --out absolute/path/to/output/dir
@@ -144,10 +144,10 @@ async function main() {
           );
         }
         break;
-      case '-getHistoricalCves':
+      case '-getCveInfo':
         if (args[1]) {
-          console.log('Fetching historical CVEs from API');
-          const histCVEs = await fetchHistoricalCVEs(args[1]);
+          console.log('Fetching CVE Info from API');
+          const histCVEs = await getCVEinfo(args[1]);
           console.log(histCVEs);
         } else {
           console.error('Please provide a valid CVE type. e.g. CVE-2022-48174');

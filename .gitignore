@@ -3,10 +3,13 @@ input/*
 output/
 .env
 data/
-vulnerability-reports/*
+packages/sbom-gap-cli/vulnerability-reports/*
 node_modules/
 binwalk-reports
 
 # Schemas DIR
 /packages/schemas/output
-/Sbom-GAP-Firmware-Prediction-Model/notebooks/cve_database.db
+packages/sbom-gap-cli/Sbom-GAP-Firmware-Prediction-Model/notebooks/cve_database.db
+**/data/
+
+packages/sbom-gap-cli/config/*

@@ -24,7 +24,7 @@ nqmvul -help
     -getCves                CPE2.3 format e.g. "cpe:2.3:a:busybox:busybox:1.33.2"
     -writeCves              Path to SBOM.json file, absolute path to required output directory
     -getHistoricalCpes      CPE2.3 format e.g. "cpe:2.3:a:busybox:busybox:1.33.2"
-    -getHistoricalCves      Supported CVE format: "CVE-2022-48174"
+    -getCveInfo             Supported CVE format: "CVE-2022-48174"
     -getCweInfo             CWE. If multiple CWEs, separate by commas without white space. e.g. 'CWE-476,CWE-681'
     -listVulnerabilities    Absolute path to grype vulnerability report file
     -generateSbom           Absolute path to project and a project name
@@ -431,36 +431,24 @@ Fetching historical CPEs from API
     deprecated: false
   }, ... 63 more items
 ```
-### getHistoricalCves
+### -getCveInfo
 
-The `-getHistoricalCves` flag will return all known versions of the input CVE. Supported CVE format: `CVE-2021-42376`
+The `--getCveInfo` flag will return all known versions of the input CVE. Supported CVE format: `CVE-2022-48174`
 
 ```sh
- nqmvul -getHistoricalCves CVE-2021-42376 
-Fetching historical CVEs from API
+ nqmvul -getCveInfo CVE-2022-48174
+Fetching CVE Info from API
 [
   {
-    cveId: 'CVE-2021-42376',
-    cveChangeId: '6E91C58C-F0AA-4874-8946-FE2C2DA4175A',
-    created: '2021-11-17T19:44:19.073',
-    mewCWEId: [ 'NIST CWE-476' ],
-    oldCWEId: []
-  },
-  {
-    cveId: 'CVE-2021-42376',
-    cveChangeId: '4160FCB4-8DF4-48A8-9981-C05EBE6C1C91',
-    created: '2021-11-19T16:51:46.827',
-    mewCWEId: [],
-    oldCWEId: []
-  },
-  {
-    cveId: 'CVE-2021-42376',
-    cveChangeId: '9333A583-855D-46EE-8D8A-65222D3B04D4',
-    created: '2021-11-25T03:15:07.063',
-    mewCWEId: [],
-    oldCWEId: []
-  },
-     ...
+    cve: 'CVE-2022-48174',
+    description: 'There is a stack overflow vulnerability in ash.c:6030 in busybox before 1.35. In the environment of Internet of Vehicles, this vulnerability can be executed from command to arbitrary code execution.',
+    baseScore: 9.8,
+    impactScore: 5.9,
+    exploitabilityScore: 3.9,
+    publishedDate: '2023-08-22T19:16Z',
+    lastModifiedDate: '2024-11-29T12:15Z',
+    cveDataVersion: '4.0'
+  }
 ]
 
 ```

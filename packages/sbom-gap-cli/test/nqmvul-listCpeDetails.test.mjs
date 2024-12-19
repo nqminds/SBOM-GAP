@@ -13,6 +13,6 @@ describe('nqmvul -listCpeDetails command', () => {
     const { stdout, stderr } = await execAsync(`nqmvul -listCpeDetails ${testPath}`);
 
     expect(stderr).toBeFalsy();
-    expect(stdout).toContain('cpe:2.3:a:thekelleys:dnsmasq:2.85');
+    expect(stdout).toContain('cpe:2.3:a:thekelleys:dnsmasq:0.4:*:*:*:*:*:*:*');
   });
 });

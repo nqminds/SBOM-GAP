@@ -37,29 +37,25 @@ export function closeDatabase(db) {
  *
  * @param {string} databasePath - path to data.db
  */
-export function initialiseDatabase(databasePath) {
+export function initialiseCveDatabase(databasePath) {
   return new Promise((resolve, reject) => {
-    // Connect to the database using the provided path
     const db = connectToDatabase(databasePath);
 
-    // Create the table if it doesn't exist
     db.run(
       `
-            CREATE TABLE IF NOT EXISTS cpe_cache (
-            cpe TEXT PRIMARY KEY,
-            name TEXT,
-            version TEXT,
-            cves TEXT,
-            last_updated INTEGER
-            )
-        `,
+              CREATE TABLE IF NOT EXISTS cve_cache (
+              cve TEXT PRIMARY KEY,
+              description TEXT,
+              classification TEXT,
+              last_updated INTEGER
+              )
+          `,
       (err) => {
         if (err) {
           reject(new Error(`Error creating table: ${err.message}`));
           return;
         }
 
-        // Close the database connection
         db.close((closeErr) => {
           if (closeErr) {
             reject(
@@ -77,26 +73,24 @@ export function initialiseDatabase(databasePath) {
 /**
  * Insert or update the database
  *
- * @param {string} cpe - cpe
- * @param {string} name - library name
- * @param {string} version - version
- * @param {object} cvesJSON - cve data
- * @param {string} databasePath - path to sqlite database
+ * @param {string} cve - cve
+ * @param {string} description - cve description
+ * @param {string} classification - type
+ * @param {string} databasePath - path to database
  *
  */
-export async function insertOrUpdateCPEData(
-  cpe,
-  name,
-  version,
-  cvesJSON,
+export async function insertOrUpdateCVEData(
+  cve,
+  description,
+  classification,
   databasePath,
 ) {
   const db = connectToDatabase(databasePath);
   try {
     await new Promise((resolve, reject) => {
       db.run(
-        'INSERT OR REPLACE INTO cpe_cache (cpe, name, version, cves, last_updated) VALUES (?, ?, ?, ?, ?)',
-        [cpe, name, version, cvesJSON, Date.now()],
+        'INSERT OR REPLACE INTO cve_cache (cve, description, classification, last_updated) VALUES (?, ?, ?, ?)',
+        [cve, description, classification, Date.now()],
         (err) => {
           if (err) reject(err);
           resolve();
@@ -104,7 +98,6 @@ export async function insertOrUpdateCPEData(
       );
     });
   } finally {
-    // Close the database connection
     closeDatabase(db);
   }
 }
@@ -112,20 +105,19 @@ export async function insertOrUpdateCPEData(
 /**
  * Get data from database where cpe matches
  *
- * @param {string} cpe - cpe
+ * @param {string} cve - cve
  * @param {string} databasePath - path to sqlite database
- * @returns {Promise} - All cpe data
+ * @returns {Promise} - All cve data
  */
-export function getCPEData(cpe, databasePath) {
+export function getCVEData(cve, databasePath) {
   const db = connectToDatabase(databasePath);
-  // update the data if is older than 3 months
   const threeMonthsAgo = Date.now() - 3 * 30 * 24 * 60 * 60 * 1000; // ~ 3 months in milliseconds
 
   try {
     return new Promise((resolve, reject) => {
       db.get(
-        'SELECT * FROM cpe_cache WHERE cpe = ? AND last_updated > ?',
-        [cpe, threeMonthsAgo],
+        'SELECT * FROM cve_cache WHERE cve = ? AND last_updated > ?',
+        [cve, threeMonthsAgo],
         (err, row) => {
           if (err) reject(err);
           resolve(row);
@@ -133,7 +125,6 @@ export function getCPEData(cpe, databasePath) {
       );
     });
   } finally {
-    // Close the database connection
     closeDatabase(db);
   }
 }

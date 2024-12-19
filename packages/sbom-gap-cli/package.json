@@ -16,12 +16,16 @@
   },
   "author": "nqminds",
   "license": "UNLICENSED",
+  "engines": {
+    "node": ">=16.0.0 <17.0.0"
+  },
   "dependencies": {
     "axios": "^1.3.4",
     "bottleneck": "2.19.5",
     "config": "^3.3.9",
     "csv-parser": "^3.0.0",
     "dotenv": "^16.3.1",
+    "express": "^4.21.1",
     "openai": "^4.19.0",
     "p-queue": "^7.4.1",
     "sax": "^1.3.0",

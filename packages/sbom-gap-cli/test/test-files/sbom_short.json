@@ -2,7 +2,7 @@
   "bomFormat": "CycloneDX",
   "components": [
     {
-      "cpe": "cpe:/a:thekelleys:dnsmasq:2.85",
+      "cpe": "cpe:2.3:a:thekelleys:dnsmasq:0.4:*:*:*:*:*:*:*",
       "group": "",
       "licenses": [
         {
